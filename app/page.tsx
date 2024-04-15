@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Home() {
   const setNewView = async () => {
-    const { data, error } = await supabaseAdmin.from("views").insert({
+    const { data, error } = await supabaseAdmin.from("view").insert({
       name: "random name",
     });
 

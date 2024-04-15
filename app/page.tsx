@@ -1,8 +1,24 @@
-import Image from "next/image";
-
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return (
+      <main className="flex min-h-screen flex-col items-center text-[#fff] justify-between p-24 bg-[#000]">
+        <Link href={"/login"}>
+          You are not logged in. Click here to go login.
+        </Link>
+      </main>
+    );
+  }
   return (
     <div className="container mx-auto py-8">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

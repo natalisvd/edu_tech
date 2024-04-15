@@ -1,8 +1,19 @@
+import { supabaseAdmin } from "@/lib/supabase";
 import Image from "next/image";
 
 import Link from "next/link";
 
 export default function Home() {
+  const setNewView = async () => {
+    const { data, error } = await supabaseAdmin.from("views").insert({
+      name: "random name",
+    });
+
+    if (data) console.log(data);
+    if (error) console.log(error);
+  };
+
+  setNewView();
   return (
     <div className="container mx-auto py-8">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

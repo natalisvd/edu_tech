@@ -1,9 +1,13 @@
-import { supabaseAdmin } from "@/lib/supabase";
+"use client";
+
+import { supabase, supabaseAdmin } from "@/lib/supabase";
 import Image from "next/image";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const setNewView = async () => {
     const { data, error } = await supabaseAdmin.from("view").insert({
       name: "random name",
@@ -14,8 +18,18 @@ export default function Home() {
   };
 
   setNewView();
+
+  const logOut = async () => {
+    await supabase.auth.signOut();
+
+    router.refresh();
+  };
+
   return (
     <div className="container mx-auto py-8">
+      <div>
+        <button onClick={logOut}>kfdjfdsj</button>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <Link href="/frontend">
           <div className="bg-white p-8 rounded shadow-md cursor-pointer transition-colors duration-300 hover:bg-blue-200">

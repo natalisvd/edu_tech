@@ -5,6 +5,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { styles } from "./styles";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -52,8 +53,8 @@ export default function LoginPage() {
 
   if (user) {
     return (
-      <div className="h-screen flex flex-col justify-center items-center bg-gray-100">
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-md w-96 text-center">
+      <div className={styles.wrapper}>
+        <div className={styles.form}>
           <h1 className="mb-4 text-xl font-bold text-gray-700 dark:text-gray-300">
             You're already logged in
           </h1>
@@ -69,13 +70,11 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="h-screen flex items-center justify-center bg-[#fff] p-6 relative">
-      <form className="shadow-lg p-8 rounded-lg shadow-md w-[526px] z-20">
+    <main className={styles.wrapper}>
+      <form className={styles.form}>
         <div className="w-96 m-auto py-8">
-          <h2 className="text-[#000] text-3xl font-semibold text-center mt-[8px] mb-[8px]">
-            Login
-          </h2>
-          <div className="border-b border-b-[1px] border-[#BDBDBD] justify-items-center flex">
+          <h2 className={styles.loginHeader}>Login</h2>
+          <div className={styles.inputWrapper}>
             <Image
               src="/icons/user.svg"
               alt="User Icon"
@@ -89,7 +88,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
-              className="w-full p-3 text-sm text-[#BDBDBD] placeholder-[#BDBDBD] focus:outline-none focus:border-blue-500"
+              className={styles.input}
             />
           </div>
 
@@ -97,8 +96,8 @@ export default function LoginPage() {
             <Image
               src="/icons/password.svg"
               alt="Password Icon"
-              width='18'
-              height='18'
+              width="18"
+              height="18"
               priority
             />
             <input
@@ -107,24 +106,19 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full p-3 text-sm text-[#BDBDBD] placeholder-[#BDBDBD] focus:outline-none focus:border-blue-500"
+              className={styles.input}
             />
           </div>
 
-          <div className="mt-5 flex">
+          <div className={styles.checkboxWrapper}>
             <input type="checkbox" />
-            <span className="text-black text-sm font-light ml-2">
-              Remember me
-            </span>
+            <span className={styles.rememberMeText}>Remember me</span>
           </div>
-          <button
-            onClick={handleSignIn}
-            className="w-full mt-5 p-3 rounded-full bg-[#03A473] font-medium text-sm text-white hover:bg-gray-600 focus:outline-none"
-          >
+          <button onClick={handleSignIn} className={styles.signInButton}>
             Sign In
           </button>
           <div className="flex justify-center mt-5">
-            <span className="text-black text-sm font-light">
+            <span className={styles.registerLink}>
               don't have an account?{" "}
               <Link href={"/signup"} className="text-[#0aa274] font-semibold">
                 register
@@ -134,19 +128,19 @@ export default function LoginPage() {
         </div>
       </form>
 
-      <div className="absolute bg-[#fff] top-0 right-0 z-10  w-[210px] h-[140px] md:w-[750px] md:h-[500px]">
+      <div className={styles.bgImageWrapperTR}>
         <Image
           src="/bg_rt.svg"
           alt="Background Right Top Image"
-          className="bg-[#fff]"
+          className={styles.bgImage}
           fill
           priority
         />
       </div>
-      <div className="absolute bottom-0  bg-[#fff] left-0 z-10 w-[210px] h-[140px] md:w-[750px] md:h-[500px]">
+      <div className={styles.bgImageWrapperLB}>
         <Image
           src="/bg_lb.svg"
-          className="bg-[#fff]"
+          className={styles.bgImage}
           alt="Background Left Bottom Image"
           fill
           priority

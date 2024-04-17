@@ -97,8 +97,8 @@ export default function LoginPage() {
             <Image
               src="/icons/password.svg"
               alt="Password Icon"
-              width={18}
-              height={18}
+              width='18'
+              height='18'
               priority
             />
             <input
@@ -139,7 +139,7 @@ export default function LoginPage() {
           src="/bg_rt.svg"
           alt="Background Right Top Image"
           className="bg-[#fff]"
-          layout="fill"
+          fill
           priority
         />
       </div>
@@ -148,7 +148,7 @@ export default function LoginPage() {
           src="/bg_lb.svg"
           className="bg-[#fff]"
           alt="Background Left Bottom Image"
-          layout="fill"
+          fill
           priority
         />
       </div>

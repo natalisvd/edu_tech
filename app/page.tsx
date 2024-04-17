@@ -1,4 +1,6 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseAdmin } from "@/lib/supabase";
+
 import { cookies } from "next/headers";
 import Link from "next/link";
 
@@ -19,6 +21,19 @@ export default async function Home() {
       </main>
     );
   }
+
+  const setNewView = async () => {
+    const { data, error } = await supabaseAdmin.from("views").insert({
+      name: "random name",
+    });
+    console.log("data", data)
+    if (data) console.log(data);
+    if (error) console.log(error);
+  };
+
+  setNewView();
+
+
   return (
     <div className="container mx-auto py-8">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

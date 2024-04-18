@@ -3,6 +3,7 @@ import { supabaseAdmin } from "@/lib/supabase";
 
 import { cookies } from "next/headers";
 import Link from "next/link";
+import Button from "@/components/Button/Button";
 
 export default async function Home() {
   const cookieStore = cookies();
@@ -23,16 +24,20 @@ export default async function Home() {
   }
 
   const setNewView = async () => {
+    console.log("hi");
     const { data, error } = await supabaseAdmin.from("views").insert({
       name: "random name",
     });
-    console.log("data", data)
+    console.log("data", data);
     if (data) console.log(data);
     if (error) console.log(error);
   };
 
-  setNewView();
+  const handleclick = () => {
+    setNewView();
+  };
 
+  setNewView();
 
   return (
     <div className="container mx-auto py-8">
@@ -56,6 +61,7 @@ export default async function Home() {
           </div>
         </Link>
       </div>
+      <Button />
     </div>
   );
 }

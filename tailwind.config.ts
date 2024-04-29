@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import daisyui from 'daisyui';
+import daisyui from "daisyui";
 
 const config: Config = {
   content: [
@@ -7,6 +7,34 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  daisyui: {
+    themes: [
+      {
+        light: {
+          ...require("daisyui/src/theming/themes")["light"],
+          primary: "#03A473",
+          accent: "#038f00",
+          neutral: "#E0E0E0",
+          "base-100": "#fff",
+          "base-200": "#E0E0E0",
+          "base-300": "#5B5B5B",
+          "base-content": "#363636"
+        },
+      },
+      {
+        dark: {
+          ...require("daisyui/src/theming/themes")["dark"],
+          primary: "#03A473",
+          accent: "#038f00",
+          neutral: "#232323",
+          "base-100": "#101010",
+          "base-200": "#232323",
+          "base-300": "#5B5B5B",
+          "base-content": "#888"
+        },
+      },
+    ],
+  },
   theme: {
     extend: {
       backgroundImage: {

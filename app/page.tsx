@@ -19,7 +19,9 @@ export default function Home() {
 
   setNewView();
 
-  const logOut = async () => {
+  const logOut = async (e: any) => {
+    e.preventDefault();
+    console.log("hi");
     await supabase.auth.signOut();
 
     router.refresh();
@@ -28,7 +30,7 @@ export default function Home() {
   return (
     <div className="container mx-auto py-8">
       <div>
-        <button onClick={logOut}>kfdjfdsj</button>
+        <button onClick={logOut}>LogOut</button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <Link href="/frontend">

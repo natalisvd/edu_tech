@@ -1,6 +1,7 @@
 "use client";
 
 import { supabase } from "@/lib/supabase";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -65,6 +66,15 @@ export default function Login() {
         >
           Login
         </button>
+
+        <div className="flex justify-center mt-5">
+          <span>
+            don't have an account?{" "}
+            <Link href={"/signup"} className="text-[#0aa274] font-semibold">
+              register
+            </Link>
+          </span>
+        </div>
       </div>
     </div>
   );

@@ -2,19 +2,20 @@
 
 import { supabase, supabaseAdmin } from "@/lib/supabase";
 import Image from "next/image";
+import { createClient } from "@/utils/supabase/server";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const supabase = createClient();
   const router = useRouter();
   const setNewView = async () => {
-    const { data, error } = await supabaseAdmin.from("view").insert({
-      name: "random name",
-    });
-
-    if (data) console.log(data);
-    if (error) console.log(error);
+    // const { data, error } = await supabaseAdmin.from("view").insert({
+    //   name: "random name",
+    // });
+    // if (data) console.log(data);
+    // if (error) console.log(error);
   };
 
   setNewView();

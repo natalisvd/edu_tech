@@ -47,6 +47,7 @@ export default function Login() {
           name="email"
           value={data?.email}
           onChange={handleChange}
+          className="input input-primary"
         />
       </div>
       <div className="grid">
@@ -56,11 +57,12 @@ export default function Login() {
           name="password"
           value={data?.password}
           onChange={handleChange}
+          className="input input-primary"
         />
       </div>
       <div>
         <button
-          className="px-4 py-2 bg-blue-500 rounded cursor-pointer"
+          className="btn btn-primary"
           onClick={login}
         >
           Login

@@ -1,36 +1,22 @@
-"use client";
-
-import { supabase, supabaseAdmin } from "@/lib/supabase";
-import Image from "next/image";
-
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { LogoutButton } from "./components/LogoutButton/LogoutButton";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  const router = useRouter();
-  const setNewView = async () => {
-    const { data, error } = await supabaseAdmin.from("view").insert({
-      name: "random name",
-    });
+export default async function Home() {
+  const supabase = createClient();
 
-    if (data) console.log(data);
-    if (error) console.log(error);
-  };
+  const { data, error } = await supabase.auth.getUser();
+  console.log("data.user", data?.user);
 
-  setNewView();
-
-  const logOut = async (e: any) => {
-    e.preventDefault();
-    console.log("hi");
-    await supabase.auth.signOut();
-
-    router.refresh();
-  };
+  if (error || !data?.user) {
+    redirect("/login");
+  }
 
   return (
     <div className="container mx-auto py-8">
       <div>
-        <button className="btn btn-primary" onClick={logOut}>LogOut</button>
+        <LogoutButton />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <Link href="/frontend">

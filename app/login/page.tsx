@@ -1,83 +1,72 @@
-"use client";
-
-import { supabase } from "@/lib/supabase";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { login } from "./actions";
+import Image from "next/image";
+import { styles } from "./styles";
 
 export default function Login() {
-  const [data, setData] = useState<{
-    email: string;
-    password: string;
-  }>({
-    email: "",
-    password: "",
-  });
-
-  const router = useRouter();
-
-  const login = async () => {
-    try {
-      let { data: dataUser, error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
-
-      if (dataUser) {
-        router.refresh();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setData((prev: any) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   return (
-    <div className="container mx-auto w-[400px] grid gap-4">
-      <div className="grid">
-        <label>Email</label>
-        <input
-          type="text"
-          name="email"
-          value={data?.email}
-          onChange={handleChange}
-          className="input input-bordered"
-        />
-      </div>
-      <div className="grid">
-        <label>Password</label>
-        <input
-          type="password"
-          name="password"
-          value={data?.password}
-          onChange={handleChange}
-          className="input input-bordered"
-        />
-      </div>
-      <div>
-        <button
-          className="btn btn-primary"
-          onClick={login}
-        >
-          Login
-        </button>
+    <main className={styles.wrapper}>
+      <form className={styles.form}>
+        <div className="w-96 m-auto py-8">
+          <h2 className={styles.loginHeader}>Login</h2>
+          <div className={styles.inputWrapper}>
+            <Image
+              src="/icons/user.svg"
+              alt="User Icon"
+              width={18}
+              height={18}
+              priority
+            />
+            <input id="email" name="email" type="email" required />
+          </div>
 
-        <div className="flex justify-center mt-5">
-          <span>
-            don't have an account?{" "}
-            <Link href={"/signup"} className="text-[#0aa274] font-semibold">
-              register
-            </Link>
-          </span>
+          <div className="border-b  mt-5 border-b-[1px] border-[#BDBDBD] justify-items-center flex">
+            <Image
+              src="/icons/password.svg"
+              alt="Password Icon"
+              width="18"
+              height="18"
+              priority
+            />
+            <input id="password" name="password" type="password" required />
+          </div>
+
+          <div className={styles.checkboxWrapper}>
+            <input type="checkbox" />
+            <span className={styles.rememberMeText}>Remember me</span>
+          </div>
+          <button formAction={login} className={styles.signInButton}>
+            Sign In
+          </button>
+          <div className="flex justify-center mt-5">
+            <span className={styles.registerLink}>
+              don't have an account?{" "}
+              <Link href={"/signup"} className="text-[#0aa274] font-semibold">
+                register
+              </Link>
+            </span>
+          </div>
         </div>
+      </form>
+
+      <div className={styles.bgImageWrapperTR}>
+        <Image
+          src="/bg_rt.svg"
+          alt="Background Right Top Image"
+          className={styles.bgImage}
+          fill
+          priority
+        />
       </div>
-    </div>
+      <div className={styles.bgImageWrapperLB}>
+        <Image
+          src="/bg_lb.svg"
+          className={styles.bgImage}
+          alt="Background Left Bottom Image"
+          fill
+          priority
+        />
+      </div>
+    </main>
   );
 }

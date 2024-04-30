@@ -1,15 +1,13 @@
-"use client";
-
 import { supabase, supabaseAdmin } from "@/lib/supabase";
 import Image from "next/image";
 import { createClient } from "@/utils/supabase/server";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Button from "./components/Button/Button";
 
 export default function Home() {
-  const supabase = createClient();
-  const router = useRouter();
+  // const router = useRouter();
   const setNewView = async () => {
     // const { data, error } = await supabaseAdmin.from("view").insert({
     //   name: "random name",
@@ -20,18 +18,11 @@ export default function Home() {
 
   setNewView();
 
-  const logOut = async (e: any) => {
-    e.preventDefault();
-    console.log("hi");
-    await supabase.auth.signOut();
-
-    router.refresh();
-  };
-
   return (
     <div className="container mx-auto py-8">
       <div>
-        <button onClick={logOut}>LogOut</button>
+        {/* <button onClick={logOut}>LogOut</button> */}
+        <Button />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <Link href="/frontend">

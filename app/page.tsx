@@ -1,7 +1,18 @@
 import Link from "next/link";
 import { LogoutButton } from "./components/LogoutButton/LogoutButton";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.auth.getUser()
+  console.log('data.user', data?.user)
+
+  if (error || !data?.user) {
+    redirect('/login')
+  }
+
   return (
     <div className="container mx-auto py-8">
       <div>

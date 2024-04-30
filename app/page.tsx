@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Button from "./components/Button/Button";
+import { logOut } from "./login/action";
 
 export default function Home() {
   // const router = useRouter();
@@ -21,8 +22,8 @@ export default function Home() {
   return (
     <div className="container mx-auto py-8">
       <div>
-        {/* <button onClick={logOut}>LogOut</button> */}
-        <Button />
+        <button onClick={logOut}>LogOut</button>
+        {/* <Button /> */}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <Link href="/frontend">

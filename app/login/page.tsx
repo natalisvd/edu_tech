@@ -7,7 +7,7 @@ export default function Login() {
   return (
     <main className={styles.wrapper}>
       <form className={styles.form}>
-        <div className="w-96 m-auto py-8">
+        <div className="w-full m-auto py-8">
           <h2 className={styles.loginHeader}>Login</h2>
           <div className={styles.inputWrapper}>
             <Image
@@ -16,19 +16,21 @@ export default function Login() {
               width={18}
               height={18}
               priority
+              style={{ width: 'auto', height: "18px" }}
             />
-            <input id="email" name="email" type="email" required />
+            <input id="email" name="email" type="email" required className="w-full" />
           </div>
 
-          <div className="border-b  mt-5 border-b-[1px] border-[#BDBDBD] justify-items-center flex">
+          <div className="border-b  mt-5 border-neutral justify-items-center flex">
             <Image
               src="/icons/password.svg"
               alt="Password Icon"
-              width="18"
-              height="18"
+              width={18}
+              height={18}
               priority
+              style={{ width: 'auto', height: "18px" }}
             />
-            <input id="password" name="password" type="password" required />
+            <input id="password" name="password" type="password" required className="w-full" />
           </div>
 
           <div className={styles.checkboxWrapper}>
@@ -49,19 +51,17 @@ export default function Login() {
         </div>
       </form>
 
-      <div className={styles.bgImageWrapperTR}>
+      <div className="absolute top-0 right-0 z-10  w-[210px] h-[140px] md:w-[750px] md:h-[500px]">
         <Image
-          src="/bg_rt.svg"
+          src="/bg_rt.png"
           alt="Background Right Top Image"
-          className={styles.bgImage}
           fill
           priority
         />
       </div>
-      <div className={styles.bgImageWrapperLB}>
+      <div className="absolute bottom-0 left-0 z-10 w-[210px] h-[140px] md:w-[750px] md:h-[500px]">
         <Image
-          src="/bg_lb.svg"
-          className={styles.bgImage}
+          src="/bg_lb.png"
           alt="Background Left Bottom Image"
           fill
           priority

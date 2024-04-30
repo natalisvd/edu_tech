@@ -1,19 +1,23 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/server";
-import { useRouter } from "next/navigation";
+import { supabaseAdmin } from "@/lib/supabase";
 
-const Button = () => {
-  const supabase = createClient();
-  const router = useRouter();
-  const logOut = async (e: any) => {
-    e.preventDefault();
-    console.log("hi");
-    await supabase.auth.signOut();
+const setNewView = async () => {
+  console.log("hi");
+  const { data, error } = await supabaseAdmin.from("views").insert({
+    name: "random name",
+  });
+  console.log("data", data);
+  if (data) console.log(data);
+  if (error) console.log(error);
+};
 
-    router.refresh();
-  };
-  return <div onClick={logOut}>LogOut</div>;
+const handleclick = () => {
+  setNewView();
+};
+
+const Button: React.FC<any> = ({ onClick }) => {
+  return <button onClick={handleclick}>Button</button>;
 };
 
 export default Button;

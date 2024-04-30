@@ -1,29 +1,11 @@
-import { supabase, supabaseAdmin } from "@/lib/supabase";
-import Image from "next/image";
-import { createClient } from "@/utils/supabase/server";
-
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import Button from "./components/Button/Button";
-import { logOut } from "./login/action";
+import { LogoutButton } from "./components/LogoutButton/LogoutButton";
 
 export default function Home() {
-  // const router = useRouter();
-  const setNewView = async () => {
-    // const { data, error } = await supabaseAdmin.from("view").insert({
-    //   name: "random name",
-    // });
-    // if (data) console.log(data);
-    // if (error) console.log(error);
-  };
-
-  setNewView();
-
   return (
     <div className="container mx-auto py-8">
       <div>
-        <button onClick={logOut}>LogOut</button>
-        {/* <Button /> */}
+        <LogoutButton />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <Link href="/frontend">

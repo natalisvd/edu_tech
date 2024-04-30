@@ -1,73 +1,16 @@
-"use client";
-
-import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { login } from './actions'
 
 export default function Login() {
-  const [data, setData] = useState<{
-    email: string;
-    password: string;
-  }>({
-    email: "",
-    password: "",
-  });
-
-  const router = useRouter();
-
-  const login = async () => {
-    const supabase = createClient();
-    try {
-      let { data: dataUser, error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
-
-      if (dataUser) {
-        router.refresh();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setData((prev: any) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   return (
     <div className="container mx-auto w-[400px] grid gap-4">
-      <div className="grid">
-        <label>Email</label>
-        <input
-          type="text"
-          name="email"
-          value={data?.email}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="grid">
-        <label>Password</label>
-        <input
-          type="password"
-          name="password"
-          value={data?.password}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <button
-          className="px-4 py-2 bg-blue-500 rounded cursor-pointer"
-          onClick={login}
-        >
-          Login
-        </button>
 
+      <form className="grid grid-flow-row">
+        <label htmlFor="email">Email:</label>
+        <input id="email" name="email" type="email" required />
+        <label htmlFor="password">Password:</label>
+        <input id="password" name="password" type="password" required />
+        <button formAction={login} className="btn btn-primary bg-[#0aa274] rounded place-self-center p-2 px-4">Log in</button>
         <div className="flex justify-center mt-5">
           <span>
             don't have an account?{" "}
@@ -76,7 +19,7 @@ export default function Login() {
             </Link>
           </span>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

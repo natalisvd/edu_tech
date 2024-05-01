@@ -2,6 +2,9 @@ import Link from "next/link";
 import { login } from "./actions";
 import Image from "next/image";
 import { styles } from "./styles";
+import { UserIcon } from "../components/Icons/UserIcon"; 
+import { PasswordLockIcon } from "../components/Icons/PasswordLockIcon";
+import { Input } from "../components/Input";
 
 export default function Login() {
   return (
@@ -9,41 +12,37 @@ export default function Login() {
       <form className={styles.form}>
         <div className="w-full m-auto py-8">
           <h2 className={styles.loginHeader}>Login</h2>
-          <div className={styles.inputWrapper}>
-            <Image
-              src="/icons/user.svg"
-              alt="User Icon"
-              width={18}
-              height={18}
-              priority
-              style={{ width: 'auto', height: "18px" }}
+          <div className="grid grid-flow-row gap-6">
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              required
+              placeholder="Email"
+              icon={<UserIcon className="input-icon w-5 h-5" />}
             />
-            <input id="email" name="email" type="email" required className="w-full" />
-          </div>
-
-          <div className="border-b  mt-5 border-neutral justify-items-center flex">
-            <Image
-              src="/icons/password.svg"
-              alt="Password Icon"
-              width={18}
-              height={18}
-              priority
-              style={{ width: 'auto', height: "18px" }}
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              required
+              placeholder="Password"
+              icon={<PasswordLockIcon className="input-icon w-5 h-5" />}
             />
-            <input id="password" name="password" type="password" required className="w-full" />
+            <div className="form-control w-max">
+              <label className="label cursor-pointer gap-3">
+                <input type="checkbox" defaultChecked className="checkbox checkbox-sm rounded-sm" />
+                <span className="label-text">Remember me</span> 
+              </label>
+            </div>
+            <button formAction={login} className={styles.signInButton}>
+              Sign In
+            </button>
           </div>
-
-          <div className={styles.checkboxWrapper}>
-            <input type="checkbox" />
-            <span className={styles.rememberMeText}>Remember me</span>
-          </div>
-          <button formAction={login} className={styles.signInButton}>
-            Sign In
-          </button>
           <div className="flex justify-center mt-5">
             <span className={styles.registerLink}>
               don't have an account?{" "}
-              <Link href={"/signup"} className="text-[#0aa274] font-semibold">
+              <Link href={"/signup"} className="text-primary font-semibold">
                 register
               </Link>
             </span>

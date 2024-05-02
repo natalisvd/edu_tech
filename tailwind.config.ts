@@ -15,10 +15,11 @@ const config: Config = {
           primary: "#03A473",
           accent: "#038f00",
           neutral: "#E0E0E0",
+          "neutral-content": "BDBDBD",
           "base-100": "#fff",
           "base-200": "#E0E0E0",
           "base-300": "#5B5B5B",
-          "base-content": "#363636"
+          "base-content": "#363636",
         },
       },
       {
@@ -27,6 +28,7 @@ const config: Config = {
           primary: "#03A473",
           accent: "#038f00",
           neutral: "#232323",
+          "neutral-content": "BDBDBD",
           "base-100": "#101010",
           "base-200": "#232323",
           "base-300": "#5B5B5B",

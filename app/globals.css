@@ -2,3 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .input-icon {
+    @apply fill-neutral-content hover:fill-base-content transition-colors dark:fill-base-content dark:hover:fill-neutral-content absolute mx-1 my-2;
+  }
+}

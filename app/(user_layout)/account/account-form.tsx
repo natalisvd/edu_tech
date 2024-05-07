@@ -3,13 +3,13 @@
 // import { useCallback, useEffect, useState } from 'react'
 // import { createClient } from '@/utils/supabase/client'
 import { type User } from '@supabase/supabase-js'
-import { LogoutButton } from '../components/LogoutButton/LogoutButton'
+// import { LogoutButton } from '../../components/LogoutButton/LogoutButton'
 import { useRouter } from 'next/navigation'
 
 export default function AccountForm({ user }: { user: User | null }) {
   const router = useRouter()
   return (
-    <div className='container'>
+    <div className='container grid grid-flow-row gap-5'>
       <h1 className='mb-3 text-xl'>Current User</h1>
       <div className='flex flex-row gap-4'>
         <p>Email:</p>
@@ -23,17 +23,16 @@ export default function AccountForm({ user }: { user: User | null }) {
         <p>Verified email:</p>
         <p>{user?.user_metadata?.email_verified ? 'true' : 'false'}</p>
       </div>
-      <LogoutButton />
-      <button className='btn btn-secondary btn-outline mt-5' onClick={() => router.push('/')}>go to Main Page</button>
+      {/* <LogoutButton /> */}
+      <button className='btn btn-primary btn-outline mt-5 max-w-fit' onClick={() => router.push('/')}>go to Main Page</button>
     </div>
   )
   // --- ToDo:  use it when user profiles will be created in db ---
 
   // const supabase = createClient()
   // const [loading, setLoading] = useState(true)
-  // const [fullname, setFullname] = useState<string | null>(null)
+  // const [firstname, setFirstname] = useState<string | null>(null)
   // const [username, setUsername] = useState<string | null>(null)
-  // const [website, setWebsite] = useState<string | null>(null)
   // const [avatar_url, setAvatarUrl] = useState<string | null>(null)
 
   // const getProfile = useCallback(async () => {
@@ -42,7 +41,7 @@ export default function AccountForm({ user }: { user: User | null }) {
 
   //     const { data, error, status } = await supabase
   //       .from('profiles')
-  //       .select(`full_name, username, website, avatar_url`)
+  //       .select(`first_name, username, avatar_url`)
   //       .eq('id', user?.id)
   //       .single()
 
@@ -52,9 +51,8 @@ export default function AccountForm({ user }: { user: User | null }) {
   //     }
 
   //     if (data) {
-  //       setFullname(data?.full_name || "no full_name")
+  //       setFirstname(data?.first_name || "no first_name")
   //       setUsername(data?.username || "no username")
-  //       setWebsite(data?.website || "no website")
   //       setAvatarUrl(data?.avatar_url || "no url")
   //     }
   //   } catch (error) {
@@ -70,12 +68,10 @@ export default function AccountForm({ user }: { user: User | null }) {
 
   // async function updateProfile({
   //   username,
-  //   website,
   //   avatar_url,
   // }: {
   //   username: string | null
-  //   fullname: string | null
-  //   website: string | null
+  //   firstname: string | null
   //   avatar_url: string | null
   // }) {
   //   try {
@@ -83,9 +79,8 @@ export default function AccountForm({ user }: { user: User | null }) {
 
   //     const { error } = await supabase.from('profiles').upsert({
   //       id: user?.id as string,
-  //       full_name: fullname,
+  //       first_name: firstname,
   //       username,
-  //       website,
   //       avatar_url,
   //       updated_at: new Date().toISOString(),
   //     })
@@ -105,12 +100,12 @@ export default function AccountForm({ user }: { user: User | null }) {
   //       <input id="email" type="text" value={user?.email} disabled />
   //     </div>
   //     <div>
-  //       <label htmlFor="fullName">Full Name</label>
+  //       <label htmlFor="firstname">Full Name</label>
   //       <input
-  //         id="fullName"
+  //         id="firstname"
   //         type="text"
-  //         value={fullname || ''}
-  //         onChange={(e) => setFullname(e.target.value)}
+  //         value={firstname || ''}
+  //         onChange={(e) => setFirstname(e.target.value)}
   //       />
   //     </div>
   //     <div>
@@ -122,27 +117,19 @@ export default function AccountForm({ user }: { user: User | null }) {
   //         onChange={(e) => setUsername(e.target.value)}
   //       />
   //     </div>
-  //     <div>
-  //       <label htmlFor="website">Website</label>
-  //       <input
-  //         id="website"
-  //         type="url"
-  //         value={website || ''}
-  //         onChange={(e) => setWebsite(e.target.value)}
-  //       />
-  //     </div>
 
   //     <div>
   //       <button
-  //         className="button primary block"
-  //         onClick={() => updateProfile({ fullname, username, website, avatar_url })}
+  //         className="btn btn-primary"
+  //         onClick={() => updateProfile({ firstname, username, avatar_url })}
   //         disabled={loading}
   //       >
   //         {loading ? 'Loading ...' : 'Update'}
   //       </button>
   //     </div>
 
-  //     <LogoutButton />
+  //     {/* <LogoutButton /> */}
+  //     <button className='btn btn-primary btn-outline mt-5 max-w-fit' onClick={() => router.push('/')}>go to Main Page</button>
   //   </div>
   // )
 }

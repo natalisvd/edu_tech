@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LogoutButton } from "./components/LogoutButton/LogoutButton";
+import { LogoutButton } from "../components/LogoutButton/LogoutButton";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 

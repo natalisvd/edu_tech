@@ -5,7 +5,8 @@ import { redirect } from 'next/navigation'
 
 import { createClient } from '@/utils/supabase/server'
 
-export async function login(formData: FormData) {
+export async function login(prevState: any, formData: FormData) {
+  // TODO: add validation form fields here
   const supabase = createClient()
 
   const data = {
@@ -18,7 +19,9 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
-    redirect('/error')
+    return {
+      message: error?.message || 'Failed to login. Try again later.'
+    }
   }
 
   revalidatePath('/', 'layout')

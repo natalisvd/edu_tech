@@ -1,5 +1,7 @@
 import React from "react";
 import Data from "./data";
+import Card from "./Card";
+import Select from "../../components/Select/Select";
 
 const Courses = async () => {
   return (
@@ -16,6 +18,12 @@ const Courses = async () => {
             placeholder="Search for Courses"
             className="input input-bordered w-full max-w"
           />
+          <Select />
+          <div className="flex">
+            <Card />
+            <Card />
+            <Card />
+          </div>
         </div>
       </div>
     </div>

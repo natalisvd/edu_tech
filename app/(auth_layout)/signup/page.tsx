@@ -8,6 +8,7 @@ import Link from "next/link";
 
 const SignUp = () => {
   // Todo: add validation for password confirmation
+  // Also add error handling (use login page and action as example)
   return (
     <FormCard>
       <form className="grid grid-flow-row gap-8">

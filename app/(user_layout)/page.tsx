@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { LogoutButton } from "../components/LogoutButton/LogoutButton";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -14,9 +13,6 @@ export default async function Home() {
 
   return (
     <div className="container mx-auto py-8">
-      <div>
-        <LogoutButton />
-      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <Link href="/frontend">
           <div className="bg-base-100 border border-base-200 p-8 rounded shadow-md cursor-pointer transition-colors duration-300 hover:bg-base-200">

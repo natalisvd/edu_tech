@@ -1,14 +1,20 @@
+"use client"
+
 import Link from "next/link";
 import { login } from "./actions";
 import { UserIcon } from "../../components/Icons/UserIcon";
 import { PasswordLockIcon } from "../../components/Icons/PasswordLockIcon";
 import { Input } from "../../components/Input";
 import { FormCard } from "@/app/components/FormCard";
+import { useFormState } from "react-dom";
 
+const initialState = { message: ''}
 export default function Login() {
+  const [state, formAction] = useFormState(login, initialState)
+
   return (
     <FormCard>
-      <form className="grid grid-flow-row gap-8">
+      <form className="grid grid-flow-row gap-8" action={formAction}>
         <h2 className="text-3xl font-semibold text-center mb-2">Login</h2>
         <Input
           id="email"
@@ -38,8 +44,11 @@ export default function Login() {
             <span className="label-text">Remember me</span>
           </label>
         </div>
+        {!!state.message.length && <div className="alert alert-error text-xs p-2 rounded">
+          {state.message}
+        </div>}
         <button
-          formAction={login}
+          formAction={formAction}
           className="btn btn-primary rounded-full w-full mt-5 text-base"
         >
           Sign In

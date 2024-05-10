@@ -3,10 +3,13 @@ import Data from "./data";
 import Card from "./Card";
 import Select from "../../components/Select/Select";
 import { createClient } from "@/utils/supabase/server";
+import { getCourses } from "./action";
 
 const Courses = async () => {
-  const supabase = createClient();
-  let { data: courses, error } = await supabase.from("courses").select("*");
+  const { courses } = await getCourses();
+  console.log('courses getServerSideProps', courses)
+  // const supabase = createClient();
+  // let { data: courses, error } = await supabase.from("courses").select("*");
   return (
     <div className="container mx-auto py-8">
       <div className="flex justify-center">
@@ -21,9 +24,11 @@ const Courses = async () => {
           />
           <Select />
           <div className="flex flex-wrap justify-center">
-            <Card />
-            <Card />
-            <Card />
+            {courses.map((course) => (
+              <Card key={course.id} title={course?.name} />
+            ))}
+            {/* <Card />
+            <Card /> */}
           </div>
         </div>
       </div>

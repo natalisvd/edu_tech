@@ -8,7 +8,7 @@ const Select = () => {
           <span className="label-text">Pick the best fantasy franchise</span>
           <span className="label-text-alt">Alt label</span>
         </div>
-        <select className="select select-bordered">
+        <select className="select select-bordered" value={"first"}>
           <option disabled selected>
             Pick one
           </option>

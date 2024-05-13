@@ -19,12 +19,12 @@ const Courses = async () => {
           <div>{/* <Data /> */}</div>
           <div className="mb-10"> Frontend & Fullstack Engineering Courses</div>
 
-          <Input corses={courses} />
+          <Input courses={courses} />
           <Select />
           <div className="flex flex-wrap justify-center">
-            {courses.map((course) => (
+            {/* {courses.map((course) => (
               <Card key={course.id} title={course?.name} />
-            ))}
+            ))} */}
             {/* <Card />
             <Card /> */}
           </div>

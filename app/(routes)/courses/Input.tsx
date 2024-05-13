@@ -37,7 +37,7 @@ const Input: React.FC<Props> = ({ courses }) => {
       />
       {filteredCourses?.map((course) => (
         // @ts-ignore
-        <Card key={course.id} title={course.name} />
+        <Card key={course.id} title={course.name} id={course.id} />
       ))}
     </div>
   );

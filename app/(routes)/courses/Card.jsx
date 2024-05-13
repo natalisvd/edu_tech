@@ -1,6 +1,7 @@
 import React from "react";
+import Link from "next/link";
 
-const Card = ({ description, title }) => {
+const Card = ({ description, title, id }) => {
   return (
     <div className="mr-5">
       {" "}
@@ -15,7 +16,10 @@ const Card = ({ description, title }) => {
           <h2 className="card-title">{title}</h2>
           <p>{description}</p>
           <div className="card-actions justify-end">
-            <button className="btn btn-primary">Watch</button>
+            <Link href={`/courses/${id}`}>
+              {/* <a className="btn btn-primary">Watch</a> */}
+              Watch
+            </Link>
           </div>
         </div>
       </div>

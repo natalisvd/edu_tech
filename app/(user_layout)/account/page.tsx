@@ -1,5 +1,7 @@
+import { Suspense } from 'react'
 import AccountForm from './account-form'
 import { createClient } from '@/utils/supabase/server'
+import { Loading } from './loading-form'
 
 export default async function Account() {
   const supabase = createClient()
@@ -10,7 +12,10 @@ export default async function Account() {
 
   return (
     <div className='container p-3'>
-      <AccountForm user={user} />
+      <h1 className='text-3xl font-semibold leading-loose mb-8'>Account Settings</h1>
+      <Suspense fallback={<Loading />}>
+        <AccountForm user={user} />
+      </Suspense>
     </div>
   )
 }

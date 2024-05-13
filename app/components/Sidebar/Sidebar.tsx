@@ -39,6 +39,7 @@ async function getRole() {
 
 export const Sidebar = async () => {
   const userRole = await getRole()
+  const isTeamleadOrAdmin = ['Teamlead', 'Admin'].includes(userRole)
 
   return (
     <div className='drawer-side mt-16'>
@@ -47,7 +48,7 @@ export const Sidebar = async () => {
           {/* All users links */}
           <UserMenu />
           {/* Teamlead links */}
-          {userRole === "Teamlead" && <TeamleadMenu />}
+          {isTeamleadOrAdmin && <TeamleadMenu />}
           {/* Admin links */}
           {userRole === "Admin" && <AdminMenu />}
         </ul>

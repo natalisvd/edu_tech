@@ -13,9 +13,11 @@ export default async function Account() {
   return (
     <div className='container p-3'>
       <h1 className='text-3xl font-semibold leading-loose mb-8'>Account Settings</h1>
-      <Suspense fallback={<Loading />}>
-        <AccountForm user={user} />
-      </Suspense>
+      <div className='max-w-md w-full mx-auto mb-10'>
+        <Suspense fallback={<Loading />}>
+          <AccountForm user={user} />
+        </Suspense>
+      </div>
     </div>
   )
 }

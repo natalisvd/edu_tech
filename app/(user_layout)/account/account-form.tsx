@@ -4,11 +4,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { type User } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
-
-type AlertProps = {
-  message: string
-  severity?: string
-}
+import { useForm } from 'react-hook-form'
+// import { updateProfilefromServer } from './actions'
+import { AccountFormValues as FormValues, AlertProps } from './types'
 
 function Alert ({ message, severity, onHide }: AlertProps & { onHide: () => void }) {
   return (
@@ -19,16 +17,25 @@ function Alert ({ message, severity, onHide }: AlertProps & { onHide: () => void
   )
 }
 
+const initialValues = {
+  firstname: '',
+  lastname: '',
+  username: '',
+  avatar_url: '',
+}
+
 export default function AccountForm({ user }: { user: User | null }) {
   const router = useRouter()
 
   const supabase = createClient()
   const [loading, setLoading] = useState(true)
-  const [firstname, setFirstname] = useState<string | null>(null)
-  const [lastname, setLastname] = useState<string | null>(null)
-  const [username, setUsername] = useState<string | null>(null)
-  const [avatar_url, setAvatarUrl] = useState<string | null>(null)
+  const [values, setValues] = useState<FormValues>()
   const [alert, setAlert] = useState<AlertProps | null>(null)
+
+  const { register, handleSubmit, formState: { errors, isValid }, getValues } = useForm<FormValues>({
+    defaultValues: initialValues,
+    values
+  })
 
   const getProfile = useCallback(async () => {
     try {
@@ -46,10 +53,12 @@ export default function AccountForm({ user }: { user: User | null }) {
       }
 
       if (data) {
-        setFirstname(data?.first_name)
-        setLastname(data?.last_name)
-        setUsername(data?.username)
-        setAvatarUrl(data?.avatar_url)
+        return setValues({
+          firstname: data?.first_name ?? '',
+          lastname: data?.last_name ?? '',
+          username: data?.username ?? '',
+          avatar_url: data?.avatar_url ?? '',
+        })
       }
     } catch (error) {
       setAlert({ message: 'Error loading user data!', severity: 'error' })
@@ -66,7 +75,7 @@ export default function AccountForm({ user }: { user: User | null }) {
     username,
     firstname,
     lastname,
-    // avatar_url,
+    avatar_url,
   }: {
     username: string | null
     firstname: string | null
@@ -84,10 +93,13 @@ export default function AccountForm({ user }: { user: User | null }) {
         // avatar_url,
         updated_at: new Date().toISOString(),
       })
-      if (error) throw error
+      // if (error)
+      if (error) {
+        throw error
+      }
       setAlert({ message: 'Profile updated!' })
     } catch (error) {
-      setAlert({message: 'Error updating the data!', severity: 'error'})
+      setAlert({ message: 'Error updating the data!', severity: 'error' })
     } finally {
       setLoading(false)
     }
@@ -96,53 +108,58 @@ export default function AccountForm({ user }: { user: User | null }) {
   return (
   <>
     {alert?.message && <Alert message={alert.message} severity={alert?.severity} onHide={() => setAlert(null)} />}
-    <div className="grid grid-flow-row gap-y-5">
-      <div className='form-control gap-2.5'>
-        <label htmlFor="email">Email</label>
-        <input className='input input-bordered' id="email" type="text" value={user?.email} disabled />
-      </div>
-      <div className='form-control gap-2.5'>
-        <label htmlFor="firstname">First Name</label>
+    <form className="grid grid-flow-row gap-y-5" onSubmit={handleSubmit(updateProfile)}>
+      <div className='form-control'>
+        <label htmlFor="email" className='label label-text'>Email</label>
         <input
+          className='input input-bordered'
+          id="email"
+          type="text"
+          value={user?.email}
+          // readOnly
+          disabled
+        />
+      </div>
+      <div className='form-control'>
+        <label htmlFor="firstname" className='label label-text'>First Name</label>
+        <input
+          {...register('firstname')}
           className='input input-bordered'
           id="firstname"
           type="text"
-          value={firstname || ''}
-          onChange={(e) => setFirstname(e.target.value)}
         />
       </div>
-      <div className='form-control gap-2.5'>
-        <label htmlFor="lastname">Last Name</label>
+      <div className='form-control'>
+        <label htmlFor="lastname" className='label label-text'>Last Name</label>
         <input
+          {...register('lastname')}
           className='input input-bordered'
           id="lastname"
           type="text"
-          value={lastname || ''}
-          onChange={(e) => setLastname(e.target.value)}
         />
       </div>
-      <div className='form-control gap-2.5'>
-        <label htmlFor="username">Username</label>
+      <div className='form-control'>
+        <label htmlFor="username" className='label label-text'>Username</label>
         <input
+          {...register('username', { required: 'Username is required', minLength: { value: 3, message: "Username must be at least 3 characters" }})}
           className='input input-bordered'
           id="username"
           type="text"
-          value={username || ''}
-          onChange={(e) => setUsername(e.target.value)}
         />
+        {errors?.username && <p className='label label-text-alt text-error'>{errors?.username?.message}</p>}
       </div>
 
-      <div className='grid grid-cols-2 gap-5'>
-        <button className='btn btn-primary btn-block btn-outline' onClick={() => router.push('/')}>go to Main Page</button>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+        <button type='button' className='btn btn-primary btn-block btn-outline order-last md:order-none' onClick={() => router.push('/')}>go to Main Page</button>
         <button
           className="btn btn-primary btn-block"
-          onClick={() => updateProfile({ firstname, username, lastname, avatar_url })}
-          disabled={loading}
+          type='submit'
+          disabled={loading || !isValid}
         >
           {loading ? 'Loading ...' : 'Update'}
         </button>
       </div>
-    </div>
+    </form>
     </>
   )
 }

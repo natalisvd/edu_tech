@@ -1,20 +1,20 @@
 export const Loading = () => {
   return (
     <div className="grid grid-flow-row gap-y-5">
-      <div className='form-control gap-2.5'>
-        <div className='h-6 w-32 skeleton' />
+      <div className='form-control'>
+        <div className='h-5 w-32 my-2 mx-1 skeleton' />
         <div className="h-12 skeleton w-full" />
       </div>
-      <div className='form-control gap-2.5'>
-        <div className='h-6 w-32 skeleton' />
+      <div className='form-control'>
+        <div className='h-5 w-32 my-2 mx-1 skeleton' />
         <div className="h-12 skeleton w-full" />
       </div>
-      <div className='form-control gap-2.5'>
-        <div className='h-6 w-32 skeleton' />
+      <div className='form-control'>
+        <div className='h-5 w-32 my-2 mx-1 skeleton' />
         <div className="h-12 skeleton w-full" />
       </div>
-      <div className='form-control gap-2.5'>
-        <div className='h-6 w-32 skeleton' />
+      <div className='form-control'>
+        <div className='h-5 w-32 my-2 mx-1 skeleton' />
         <div className="h-12 skeleton w-full" />
       </div>
 

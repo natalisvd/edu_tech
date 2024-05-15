@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 // import { updateProfilefromServer } from './actions'
 import { AccountFormValues as FormValues, AlertProps } from './types'
+import { Avatar } from './avatar'
 
 function Alert ({ message, severity, onHide }: AlertProps & { onHide: () => void }) {
   return (
@@ -106,8 +107,9 @@ export default function AccountForm({ user }: { user: User | null }) {
   }
 
   return (
-  <>
-    {alert?.message && <Alert message={alert.message} severity={alert?.severity} onHide={() => setAlert(null)} />}
+  <div className='grid md:grid-cols-[auto,_1fr] gap-5 mb-10 w-full justify-items-center md:justify-items-stretch'>
+    <Avatar url={'/icons/user.svg'} />
+    <div className='md:max-w-xl w-full'>
     <form className="grid grid-flow-row gap-y-5" onSubmit={handleSubmit(updateProfile)}>
       <div className='form-control'>
         <label htmlFor="email" className='label label-text'>Email</label>
@@ -148,6 +150,8 @@ export default function AccountForm({ user }: { user: User | null }) {
         />
         {errors?.username && <p className='label label-text-alt text-error'>{errors?.username?.message}</p>}
       </div>
+      
+      {alert?.message && <Alert message={alert.message} severity={alert?.severity} onHide={() => setAlert(null)} />}
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
         <button type='button' className='btn btn-primary btn-block btn-outline order-last md:order-none' onClick={() => router.push('/')}>go to Main Page</button>
@@ -155,11 +159,12 @@ export default function AccountForm({ user }: { user: User | null }) {
           className="btn btn-primary btn-block"
           type='submit'
           disabled={loading || !isValid}
-        >
+          >
           {loading ? 'Loading ...' : 'Update'}
         </button>
       </div>
     </form>
-    </>
+    </div>
+    </div>
   )
 }

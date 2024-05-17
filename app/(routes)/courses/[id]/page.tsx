@@ -2,12 +2,15 @@ import { useParams, usePathname } from "next/navigation";
 import { getCoursesById } from "../action";
 import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import Button from "../components/Button/button";
+import Modal from "../components/Modal/Modal";
 
 const Page = async () => {
   const supabase = createClient();
   const heads = headers();
   const pathname = heads.get("x-pathname");
   console.log(pathname?.match(/\/courses\/(\d+)/));
+
   // const match = pathname?.match(/\/courses\/(\d+)/);
   // const courseId = match ? match[1] : null;
   // console.log(courseId);
@@ -19,6 +22,15 @@ const Page = async () => {
   // console.log(pathname);
   // console.log(params.id);
   // getCoursesById(params.id);
+
+  // const updateColumn = async () => {
+  //   const { data, error } = await supabase
+  //     .from("courses")
+  //     .update({ other_column: "otherValue" })
+  //     .eq("some_column", "someValue")
+  //     .select();
+  // };
+
   let { data: course, error } = await supabase
     .from("courses")
     .select("*")
@@ -27,14 +39,24 @@ const Page = async () => {
 
   console.log(course[0].Description);
   if (course && course.length > 0) {
-    console.log(course[0].Description);
+    console.log(course[0]);
+
     return (
       <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold"> Title</h1>
-            <p className="py-6">{course[0].Description}</p>
-            <button className="btn btn-primary">Get Started</button>
+        <div className="hero-content flex-col lg:flex-row-reverse">
+          <embed
+            width="400"
+            height="400"
+            src={course[0].video_url}
+            allowfullscreen
+          ></embed>
+          <div>
+            <h1 className="text-5xl font-bold">Box Office News!</h1>
+            <p className="py-6">
+              {course[0].Description}{" "}
+              <Modal description={course[0].Description} />
+            </p>
+            {/* <Button description={course[0].Description} /> */}
           </div>
         </div>
       </div>

@@ -20,7 +20,7 @@ const Courses = async () => {
           <div className="mb-10"> Frontend & Fullstack Engineering Courses</div>
 
           <Input courses={courses} />
-          <Select />
+          {/* <Select /> */}
           <div className="flex flex-wrap justify-center">
             {/* {courses.map((course) => (
               <Card key={course.id} title={course?.name} />

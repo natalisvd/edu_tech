@@ -37,21 +37,20 @@ const Page = async () => {
     .eq("id", 1);
   // @ts-ignore
 
-  console.log(course[0].Description);
   if (course && course.length > 0) {
     console.log(course[0]);
-
+    console.log("questions", course[0]);
     return (
       <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content flex-col lg:flex-row-reverse">
+        <div className="flex lg:flex-row-reverse">
           <embed
-            width="400"
+            width="600"
             height="400"
             src={course[0].video_url}
-            allowfullscreen
+            allowFullScreen
           ></embed>
-          <div>
-            <h1 className="text-5xl font-bold">Box Office News!</h1>
+          <div className="mr-10">
+            <h1 className="text-3xl font-bold">{course[0].name}</h1>
             <p className="py-6">
               {course[0].Description}{" "}
               <Modal description={course[0].Description} />

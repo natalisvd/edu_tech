@@ -35,10 +35,13 @@ const Input: React.FC<Props> = ({ courses }) => {
         placeholder="Search for Courses"
         className="input input-bordered w-full max-w"
       />
-      {filteredCourses?.map((course) => (
-        // @ts-ignore
-        <Card key={course.id} title={course.name} id={course.id} />
-      ))}
+      <div className="flex mt-10">
+        {" "}
+        {filteredCourses?.map((course) => (
+          // @ts-ignore
+          <Card key={course.id} title={course.name} id={course.id} />
+        ))}
+      </div>
     </div>
   );
 };

@@ -18,7 +18,7 @@ export async function getCourses() {
   };
 }
 
-export async function getCoursesById(id: number) {
+export async function getCoursesById(id: any) {
   const supabase = creaClientonClien();
   let { data: course, error } = await supabase
     .from("courses")

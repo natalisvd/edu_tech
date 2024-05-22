@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import Button from "../components/Button/button";
 import Modal from "../components/Modal/Modal";
+import CourseDetails from "./components/CourseDetails/CourseDetails";
 
 const Page = async () => {
   const supabase = createClient();
@@ -49,14 +50,7 @@ const Page = async () => {
             src={course[0].video_url}
             allowFullScreen
           ></embed>
-          <div className="mr-10">
-            <h1 className="text-3xl font-bold">{course[0].name}</h1>
-            <p className="py-6">
-              {course[0].Description}{" "}
-              <Modal description={course[0].Description} />
-            </p>
-            {/* <Button description={course[0].Description} /> */}
-          </div>
+          <CourseDetails course={course} />
         </div>
       </div>
     );

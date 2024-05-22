@@ -6,36 +6,15 @@ import Button from "../components/Button/button";
 import Modal from "../components/Modal/Modal";
 import CourseDetails from "./components/CourseDetails/CourseDetails";
 
-const Page = async () => {
+const Page = async ({ params: { id } }) => {
   const supabase = createClient();
   const heads = headers();
   const pathname = heads.get("x-pathname");
-  console.log(pathname?.match(/\/courses\/(\d+)/));
-
-  // const match = pathname?.match(/\/courses\/(\d+)/);
-  // const courseId = match ? match[1] : null;
-  // console.log(courseId);
-  // const params = useParams<{
-  //   [x: string]: any;
-  //   tag: string;
-  //   item: string;
-  // }>();
-  // console.log(pathname);
-  // console.log(params.id);
-  // getCoursesById(params.id);
-
-  // const updateColumn = async () => {
-  //   const { data, error } = await supabase
-  //     .from("courses")
-  //     .update({ other_column: "otherValue" })
-  //     .eq("some_column", "someValue")
-  //     .select();
-  // };
 
   let { data: course, error } = await supabase
     .from("courses")
     .select("*")
-    .eq("id", 1);
+    .eq("id", id);
   // @ts-ignore
 
   if (course && course.length > 0) {
@@ -50,7 +29,7 @@ const Page = async () => {
             src={course[0].video_url}
             allowFullScreen
           ></embed>
-          <CourseDetails course={course} />
+          <CourseDetails course={course} id={id} />
         </div>
       </div>
     );

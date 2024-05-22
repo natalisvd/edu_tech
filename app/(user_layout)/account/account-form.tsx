@@ -108,7 +108,7 @@ export default function AccountForm({ user }: { user: User | null }) {
 
   return (
   <div className='grid md:grid-cols-[auto,_1fr] gap-5 mb-10 w-full justify-items-center md:justify-items-stretch'>
-    <Avatar url={'/icons/user.svg'} />
+    <Avatar url={values?.avatar_url} userName={values?.username || 'User' } />
     <div className='md:max-w-xl w-full'>
     <form className="grid grid-flow-row gap-y-5" onSubmit={handleSubmit(updateProfile)}>
       <div className='form-control'>

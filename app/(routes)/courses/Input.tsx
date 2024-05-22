@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Card from "./Card";
+import AddButton from "./components/AddButton/AddButton";
+import CoursesModal from "./components/CoursesModal/CoursesModal";
 
 interface Course {
   id: number;
@@ -28,15 +30,20 @@ const Input: React.FC<Props> = ({ courses }) => {
 
   return (
     <div>
-      <input
-        value={value}
-        onChange={handleChange}
-        type="text"
-        placeholder="Search for Courses"
-        className="input input-bordered w-full max-w"
-      />
-      <div className="flex mt-10">
-        {" "}
+      <div className="w-full">
+        <input
+          value={value}
+          onChange={handleChange}
+          type="text"
+          placeholder="Search for Courses"
+          className="input input-bordered w-full"
+        />
+        <div className="flex justify-end mt-2">
+          {/* <AddButton /> */}
+          <CoursesModal />
+        </div>
+      </div>
+      <div className="flex mt-10 flex-wrap">
         {filteredCourses?.map((course) => (
           // @ts-ignore
           <Card key={course.id} title={course.name} id={course.id} />

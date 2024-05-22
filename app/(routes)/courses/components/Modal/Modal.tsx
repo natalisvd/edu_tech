@@ -3,9 +3,10 @@ import { FC, useState } from "react";
 import Button from "../Button/button";
 interface ModalProps {
   description: any;
+  id: any;
 }
 
-const Modal: FC<ModalProps> = ({ description }) => {
+const Modal: FC<ModalProps> = ({ description, id }) => {
   const [modalValue, setModalValue] = useState(`${description}`);
   const handleChange = (event: any) => {
     setModalValue(event.target.value);

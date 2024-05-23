@@ -1,10 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, createContext } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { type User } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
+import { useForm, FormProvider } from 'react-hook-form'
 // import { updateProfilefromServer } from './actions'
 import { AccountFormValues as FormValues, AlertProps } from './types'
 import { Avatar } from './avatar'
@@ -17,26 +17,54 @@ function Alert ({ message, severity, onHide }: AlertProps & { onHide: () => void
     </div>
   )
 }
-
+const placeholder = 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg'
 const initialValues = {
   firstname: '',
   lastname: '',
   username: '',
   avatar_url: '',
+  avatar_file: undefined
 }
+type AvatarFileProps = { avatar_file?: FileList }
+
+export const AvatarContext = createContext<{
+  file: File | null;
+  resetFile: () => void;
+}>({ file: null, resetFile: () => {}})
 
 export default function AccountForm({ user }: { user: User | null }) {
   const router = useRouter()
 
   const supabase = createClient()
   const [loading, setLoading] = useState(true)
-  const [values, setValues] = useState<FormValues>()
+  const [values, setValues] = useState<FormValues & AvatarFileProps>()
   const [alert, setAlert] = useState<AlertProps | null>(null)
+  const [bufferImage, setBufferImage] = useState<File | null>(null)
 
-  const { register, handleSubmit, formState: { errors, isValid }, getValues } = useForm<FormValues>({
+  const methods = useForm<FormValues & AvatarFileProps>({
     defaultValues: initialValues,
     values
   })
+
+  const { register, handleSubmit, watch, formState: { errors, isValid }, resetField } = methods
+  
+  const watchedField = watch('avatar_file')
+  const resetFile = () => resetField('avatar_file')
+
+  const handleShowImage = useCallback(() => {
+    if (watchedField?.length) {
+      const image = watchedField[0]
+      return setBufferImage(image);
+    }
+    return setBufferImage(null)
+
+  }, [watchedField])
+
+  console.log('watchedField', watchedField)
+
+  useEffect (() => {
+    handleShowImage()
+  }, [handleShowImage])
 
   const getProfile = useCallback(async () => {
     try {
@@ -55,10 +83,11 @@ export default function AccountForm({ user }: { user: User | null }) {
 
       if (data) {
         return setValues({
-          firstname: data?.first_name ?? '',
-          lastname: data?.last_name ?? '',
-          username: data?.username ?? '',
-          avatar_url: data?.avatar_url ?? '',
+          ...initialValues,
+          firstname: data.first_name ?? '',
+          lastname: data.last_name ?? '',
+          username: data.username ?? '',
+          avatar_url: data.avatar_url ?? placeholder,
         })
       }
     } catch (error) {
@@ -85,6 +114,7 @@ export default function AccountForm({ user }: { user: User | null }) {
   }) {
     try {
       setLoading(true)
+      // ToDo: add avatar_url: upload file to supabase storage -> get storage url -> add new url to upsert values
 
       const { error } = await supabase.from('profiles').upsert({
         id: user?.id as string,
@@ -105,66 +135,76 @@ export default function AccountForm({ user }: { user: User | null }) {
       setLoading(false)
     }
   }
+  const url = watch('avatar_url')
 
   return (
-  <div className='grid md:grid-cols-[auto,_1fr] gap-5 mb-10 w-full justify-items-center md:justify-items-stretch'>
-    <Avatar url={values?.avatar_url} userName={values?.username || 'User' } />
-    <div className='md:max-w-xl w-full'>
-    <form className="grid grid-flow-row gap-y-5" onSubmit={handleSubmit(updateProfile)}>
-      <div className='form-control'>
-        <label htmlFor="email" className='label label-text'>Email</label>
-        <input
-          className='input input-bordered'
-          id="email"
-          type="text"
-          value={user?.email}
-          // readOnly
-          disabled
-        />
-      </div>
-      <div className='form-control'>
-        <label htmlFor="firstname" className='label label-text'>First Name</label>
-        <input
-          {...register('firstname')}
-          className='input input-bordered'
-          id="firstname"
-          type="text"
-        />
-      </div>
-      <div className='form-control'>
-        <label htmlFor="lastname" className='label label-text'>Last Name</label>
-        <input
-          {...register('lastname')}
-          className='input input-bordered'
-          id="lastname"
-          type="text"
-        />
-      </div>
-      <div className='form-control'>
-        <label htmlFor="username" className='label label-text'>Username</label>
-        <input
-          {...register('username', { required: 'Username is required', minLength: { value: 3, message: "Username must be at least 3 characters" }})}
-          className='input input-bordered'
-          id="username"
-          type="text"
-        />
-        {errors?.username && <p className='label label-text-alt text-error'>{errors?.username?.message}</p>}
-      </div>
-      
-      {alert?.message && <Alert message={alert.message} severity={alert?.severity} onHide={() => setAlert(null)} />}
+    <FormProvider {...methods}>
+      <div className='grid md:grid-cols-[auto,_1fr] gap-5 mb-10 w-full justify-items-center md:justify-items-stretch'>
+        <AvatarContext.Provider value={{ file: bufferImage, resetFile }}>
+          <Avatar
+            url={url}
+            userName={values?.username || 'User'}
+            />
+        </AvatarContext.Provider>
+        <div className='md:max-w-xl w-full'>
+          <form className='grid grid-flow-row gap-y-5' onSubmit={handleSubmit(updateProfile)}>
+            <div className='form-control'>
+              <label htmlFor='email' className='label label-text'>
+                Email
+              </label>
+              <input
+                className='input input-bordered'
+                id="email"
+                type="text"
+                value={user?.email}
+                // readOnly
+                disabled
+              />
+            </div>
+            <div className='form-control'>
+              <label htmlFor="firstname" className='label label-text'>First Name</label>
+              <input
+                {...register('firstname')}
+                className='input input-bordered'
+                id="firstname"
+                type="text"
+              />
+            </div>
+            <div className='form-control'>
+              <label htmlFor="lastname" className='label label-text'>Last Name</label>
+              <input
+                {...register('lastname')}
+                className='input input-bordered'
+                id="lastname"
+                type="text"
+              />
+            </div>
+            <div className='form-control'>
+              <label htmlFor="username" className='label label-text'>Username</label>
+              <input
+                {...register('username', { required: 'Username is required', minLength: { value: 3, message: "Username must be at least 3 characters" }})}
+                className='input input-bordered'
+                id="username"
+                type="text"
+              />
+              {errors?.username && <p className='label label-text-alt text-error'>{errors?.username?.message}</p>}
+            </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
-        <button type='button' className='btn btn-primary btn-block btn-outline order-last md:order-none' onClick={() => router.push('/')}>go to Main Page</button>
-        <button
-          className="btn btn-primary btn-block"
-          type='submit'
-          disabled={loading || !isValid}
-          >
-          {loading ? 'Loading ...' : 'Update'}
-        </button>
+            {alert?.message && <Alert message={alert.message} severity={alert?.severity} onHide={() => setAlert(null)} />}
+
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+              <button type='button' className='btn btn-primary btn-block btn-outline order-last md:order-none' onClick={() => router.push('/')}>go to Main Page</button>
+              <button
+                className="btn btn-primary btn-block"
+                type='submit'
+                disabled={loading || !isValid}
+                >
+                {loading ? 'Loading ...' : 'Update'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </form>
-    </div>
-    </div>
+    </FormProvider>
   )
 }

@@ -1,4 +1,5 @@
 export const Loading = () => {
+  // ToDo: extend skeleton with avatar section
   return (
     <div className="grid grid-flow-row gap-y-5">
       <div className='form-control'>

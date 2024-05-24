@@ -1,17 +1,12 @@
 import Image from 'next/image'
 import { FileInput } from './upload-file'
 import { useFormContext } from 'react-hook-form'
-import { PropsWithChildren, useContext } from 'react'
+import { PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { AvatarContext } from './account-form'
 import { TrashIcon } from '@/app/components/Icons/TrashIcon'
 import { EditIcon } from '@/app/components/Icons/EditIcon.'
-
-type AvatarUrl = string | undefined | null
-
-type AvatarProps = {
-  url: AvatarUrl
-  userName: string
-}
+import { createClient } from '@/utils/supabase/client'
+import { AvatarProps, AvatarUrl } from './types'
 
 const ButtonGroup = ({ children }: PropsWithChildren) => (
   <div className='absolute right-0 top-0 group-hover:visible invisible join join-vertical'>
@@ -20,25 +15,44 @@ const ButtonGroup = ({ children }: PropsWithChildren) => (
 )
 
 export const Avatar = ({ url, userName }: AvatarProps) => {
+  const [avatarUrl, setAvatarUrl] = useState<AvatarUrl>(url)
   const { register, getValues, setValue } = useFormContext()
   const { file, resetFile } = useContext(AvatarContext)
   const inputId = 'avatar-input'
+  
+  const supabase = createClient()
+  
+  useEffect(() => {
+    async function downloadImage(path: string) {
+      try {
+        const { data, error } = await supabase.storage.from("avatars").download(path);
+        if (error) {
+          throw error;
+        }
+
+        const url = URL.createObjectURL(data);
+        setAvatarUrl(url);
+      } catch (error) {
+        console.log("Error downloading image: ", error);
+      }
+    }
+
+    if (url) downloadImage(url);
+  }, [url, supabase]);
 
   const handleDeleteAvatar = () => {
     console.log('avatar_url', getValues('avatar_url')) // -- ToDo: add delete function
     // setValue('avatar_url', null)
   }
 
-  console.log('url', url)
-
   return (
     <div>
       <div className='avatar placeholder rounded border border-base-300'>
         <div className='w-72 text-neutral-content relative group'>
-          {url && !file && (
+          {avatarUrl && !file && (
             <>
               <div className='absolute w-full h-full transition-all group-hover:backdrop-brightness-75 group-hover:bg-base-300/30' />
-              <Image src={url} alt={`${userName}_avatar`} width={228} height={228} priority />
+              <Image src={avatarUrl} alt={`${userName}_avatar`} width={228} height={228} priority />
               <ButtonGroup>
                 <label htmlFor={inputId} className='btn btn-square btn-ghost rounded join-item' onClick={resetFile}>
                   <EditIcon />
@@ -63,13 +77,13 @@ export const Avatar = ({ url, userName }: AvatarProps) => {
               </ButtonGroup>
             </>
           )}
-          {!url && !file && (
+          {!avatarUrl && !file && (
             <label
               htmlFor={inputId}
               className='btn btn-ghost rounded btn-block h-full absolute'
             />
           )}
-          <FileInput id={inputId} {...register('avatar_file')} icon={!url && !file} />
+          <FileInput id={inputId} {...register('avatar_file')} icon={!avatarUrl && !file} />
         </div>
       </div>
     </div>

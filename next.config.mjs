@@ -9,6 +9,12 @@ const nextConfig = {
         port: '',
         pathname: '/images/**', // -- edit storage path if it needed
       },
+      {
+        protocol: 'https',
+        hostname: 'lzhxfeoqsblgzjlpazvd.supabase.co', // -- project supabase storage
+        port: '',
+        pathname: '/storage/v1/object/sign/avatars/**', // -- storage path for avatars
+      },
     ],
   },
 };

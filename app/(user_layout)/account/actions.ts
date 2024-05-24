@@ -5,25 +5,30 @@ import { AccountFormValues as FormValues } from "./types"
 
 const supabase = createClient()
 
-export const getProfileData = () => {
+export const getProfileData = async (userId?: string) => {
+  const { data, error, status } = await supabase
+  .from('profiles')
+  .select(`first_name, last_name, username, avatar_url`)
+  .eq('id', userId)
+  .single()
 
+  if (error && status !== 406) {
+    console.log(error)
+    throw error
+  }
+  return data
 }
 
-export async function updateProfilefromServer (data: FormValues) {
-  const user = (await supabase.auth.getUser()).data.user
-
+export async function updateProfileData (userId: string, data: FormValues) {
   const { error } = await supabase.from('profiles').upsert({
-    id: user?.id as string,
+    id: userId as string,
+    first_name: data.firstname,
+    last_name: data.lastname,
+    username: data.username,
+    avatar_url: data.avatar_url,
     updated_at: new Date().toISOString(),
-    username: data?.username || null,
-    first_name: data?.firstname || null,
-    last_name: data?.lastname || null,
-    avatar_url: data?.avatar_url || null
   })
-
   if (error) {
-    console.log('[error]', error)
+    throw error
   }
-
-  return { message: 'Profile updated!', severity: 'success' }
 }

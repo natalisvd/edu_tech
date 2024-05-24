@@ -5,9 +5,9 @@ import { createClient } from '@/utils/supabase/client'
 import { type User } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 import { useForm, FormProvider } from 'react-hook-form'
-// import { updateProfilefromServer } from './actions'
 import { AccountFormValues as FormValues, AlertProps } from './types'
 import { Avatar } from './avatar'
+import { getProfileData, updateProfileData } from './actions'
 
 function Alert ({ message, severity, onHide }: AlertProps & { onHide: () => void }) {
   return (
@@ -17,7 +17,7 @@ function Alert ({ message, severity, onHide }: AlertProps & { onHide: () => void
     </div>
   )
 }
-const placeholder = 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg'
+
 const initialValues = {
   firstname: '',
   lastname: '',
@@ -46,7 +46,7 @@ export default function AccountForm({ user }: { user: User | null }) {
     values
   })
 
-  const { register, handleSubmit, watch, formState: { errors, isValid }, resetField } = methods
+  const { register, handleSubmit, watch, formState: { errors, isValid }, resetField, setValue } = methods
   
   const watchedField = watch('avatar_file')
   const resetFile = () => resetField('avatar_file')
@@ -60,8 +60,6 @@ export default function AccountForm({ user }: { user: User | null }) {
 
   }, [watchedField])
 
-  console.log('watchedField', watchedField)
-
   useEffect (() => {
     handleShowImage()
   }, [handleShowImage])
@@ -69,25 +67,14 @@ export default function AccountForm({ user }: { user: User | null }) {
   const getProfile = useCallback(async () => {
     try {
       setLoading(true)
-
-      const { data, error, status } = await supabase
-        .from('profiles')
-        .select(`first_name, last_name, username, avatar_url`)
-        .eq('id', user?.id)
-        .single()
-
-      if (error && status !== 406) {
-        console.log(error)
-        throw error
-      }
-
+      const data = await getProfileData(user?.id)
       if (data) {
         return setValues({
           ...initialValues,
           firstname: data.first_name ?? '',
           lastname: data.last_name ?? '',
           username: data.username ?? '',
-          avatar_url: data.avatar_url ?? placeholder,
+          avatar_url: data.avatar_url ?? '',
         })
       }
     } catch (error) {
@@ -106,28 +93,18 @@ export default function AccountForm({ user }: { user: User | null }) {
     firstname,
     lastname,
     avatar_url,
-  }: {
-    username: string | null
-    firstname: string | null
-    lastname: string | null
-    avatar_url: string | null
-  }) {
+  }: FormValues ) {
     try {
       setLoading(true)
-      // ToDo: add avatar_url: upload file to supabase storage -> get storage url -> add new url to upsert values
-
-      const { error } = await supabase.from('profiles').upsert({
-        id: user?.id as string,
-        first_name: firstname,
-        last_name: lastname,
+      if (!user?.id) return
+      const userId = user.id
+      const filePath = await uploadAvatar(bufferImage, userId)
+      await updateProfileData(userId, {
         username,
-        // avatar_url,
-        updated_at: new Date().toISOString(),
+        firstname,
+        lastname,
+        avatar_url: filePath ?? avatar_url,
       })
-      // if (error)
-      if (error) {
-        throw error
-      }
       setAlert({ message: 'Profile updated!' })
     } catch (error) {
       setAlert({ message: 'Error updating the data!', severity: 'error' })
@@ -136,6 +113,26 @@ export default function AccountForm({ user }: { user: User | null }) {
     }
   }
   const url = watch('avatar_url')
+
+  const uploadAvatar = async (file: File | null, userId: string) => {
+    try {
+      if (!file) return null;
+      const fileExt = file.name.split('.').pop()
+      const filePath = `${userId}-${Math.random()}.${fileExt}`
+
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file)
+
+      if (uploadError) {
+        throw uploadError
+      }
+      setValue('avatar_url', filePath)
+      setAlert({ message: 'Avatar updated!', severity: 'success' })
+      return filePath
+    } catch (error) {
+      console.log('uploadAvatar [error]', error)
+      setAlert({ message: 'Error uploading avatar!', severity: 'error' })
+    }
+  }
 
   return (
     <FormProvider {...methods}>

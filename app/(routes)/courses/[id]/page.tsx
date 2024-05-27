@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import Button from "../components/Button/button";
 import Modal from "../components/Modal/Modal";
 import CourseDetails from "./components/CourseDetails/CourseDetails";
+import Lessons from "./components/Lessons/Lessons";
 
 const Page = async ({ params: { id } }) => {
   const supabase = createClient();
@@ -21,15 +22,22 @@ const Page = async ({ params: { id } }) => {
     console.log(course[0]);
     console.log("questions", course[0]);
     return (
-      <div className="hero min-h-screen bg-base-200">
-        <div className="flex lg:flex-row-reverse">
-          <embed
-            width="600"
-            height="400"
-            src={course[0].video_url}
-            allowFullScreen
-          ></embed>
-          <CourseDetails course={course} id={id} />
+      <div>
+        {" "}
+        <div className="hero min-h-screen bg-base-200">
+          <div className="flex lg:flex-row-reverse">
+            <embed
+              width="600"
+              height="400"
+              src={course[0].video_url}
+              allowFullScreen
+            ></embed>
+            <CourseDetails course={course} id={id} />
+          </div>
+        </div>
+        <div className="flex bg-base-200 justify-center">
+          {" "}
+          <Lessons />
         </div>
       </div>
     );

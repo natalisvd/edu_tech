@@ -4,7 +4,7 @@ export const UserMenu = () => {
   return (
     <>
       <MenuItem href="/account">Account Settings</MenuItem>
-      <MenuItem href="#">User link 2</MenuItem>
+      <MenuItem href="/my_skills">My Skills</MenuItem>
       <MenuItem href="#">User link 3</MenuItem>
     </>
   )

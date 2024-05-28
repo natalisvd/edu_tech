@@ -1,7 +1,8 @@
-import React from "react";
+"use client";
+
+import { createClient } from "@/utils/supabase/client";
 
 const Lessons = () => {
-  const handleClick = (event: any) => {};
   return (
     <div>
       <div className="card lg:card-side bg-base-100 shadow-xl">
@@ -12,12 +13,10 @@ const Lessons = () => {
           />
         </figure>
         <div className="card-body">
-          <h2 className="card-title">New album is released!</h2>
+          <h2 className="card-title">Lesson 1</h2>
           <p>Click the button to listen on Spotiwhy app.</p>
           <div className="card-actions justify-end">
-            <button className="btn btn-primary" onClick={handleClick}>
-              Listen
-            </button>
+            <button className="btn btn-primary">Listen</button>
           </div>
         </div>
       </div>

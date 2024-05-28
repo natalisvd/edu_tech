@@ -2,15 +2,24 @@ import { useParams, usePathname } from "next/navigation";
 import { getCoursesById } from "../action";
 import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import Button from "../components/Button/button";
+import Button from "../../../components/button/index";
 import Modal from "../components/Modal/Modal";
 import CourseDetails from "./components/CourseDetails/CourseDetails";
 import Lessons from "./components/Lessons/Lessons";
+import handleClick from "./action";
 
 const Page = async ({ params: { id } }) => {
   const supabase = createClient();
   const heads = headers();
   const pathname = heads.get("x-pathname");
+
+  // const handleClick = async (event: any) => {
+  //   const supabase = createClient();
+  //   const { data, error } = await supabase
+  //     .from("lessons")
+  //     .insert([{ lvl: "1", name: "react-course" }])
+  //     .select();
+  // };
 
   let { data: course, error } = await supabase
     .from("courses")
@@ -35,9 +44,17 @@ const Page = async ({ params: { id } }) => {
             <CourseDetails course={course} id={id} />
           </div>
         </div>
-        <div className="flex bg-base-200 justify-center">
+        <div className="flex justify-center bg-base-200 ">
           {" "}
-          <Lessons />
+          <div className="flex flex-col">
+            <div className="flex jus">
+              <Button handleChange={handleClick} text={"Create new lesson"} />
+            </div>
+            <div className="flex ">
+              {" "}
+              <Lessons />
+            </div>
+          </div>
         </div>
       </div>
     );

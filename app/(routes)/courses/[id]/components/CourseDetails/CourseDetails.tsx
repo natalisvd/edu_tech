@@ -13,9 +13,6 @@ interface CourseProps {
 }
 
 const CourseDetails: FC<CourseProps> = ({ id, course }) => {
-  // getCoursesById(1);
-
-  console.log(id);
   return (
     <div className="mr-10">
       <h1 className="text-3xl font-bold">{course[0]?.name}</h1>

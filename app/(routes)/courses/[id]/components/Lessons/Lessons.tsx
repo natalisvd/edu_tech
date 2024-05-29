@@ -1,10 +1,17 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
+import { FC } from "react";
 
-const Lessons = () => {
+interface LessonsProps {
+  id: number;
+  name: string;
+  description: string;
+  img: string;
+}
+
+const Lessons: FC<LessonsProps> = ({ id, name, description, img }) => {
   return (
-    <div>
+    <div className="mb-10">
       <div className="card lg:card-side bg-base-100 shadow-xl">
         <figure>
           <img
@@ -13,8 +20,9 @@ const Lessons = () => {
           />
         </figure>
         <div className="card-body">
-          <h2 className="card-title">Lesson 1</h2>
-          <p>Click the button to listen on Spotiwhy app.</p>
+          <h2 className="card-title">Lesson {id}</h2>
+          <p>{name}</p>
+          <p>{description}</p>
           <div className="card-actions justify-end">
             <button className="btn btn-primary">Listen</button>
           </div>

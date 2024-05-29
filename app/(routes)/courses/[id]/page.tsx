@@ -14,6 +14,10 @@ const Page = async ({ params: { id } }) => {
   const heads = headers();
   const pathname = heads.get("x-pathname");
 
+  const { data: lessons, error: lessonsError } = await supabase
+    .from("lessons")
+    .select("*");
+
   let { data: course, error } = await supabase
     .from("courses")
     .select("*")
@@ -21,8 +25,6 @@ const Page = async ({ params: { id } }) => {
   // @ts-ignore
 
   if (course && course.length > 0) {
-    console.log(course[0]);
-    console.log("questions", course[0]);
     return (
       <div>
         {" "}
@@ -40,13 +42,20 @@ const Page = async ({ params: { id } }) => {
         <div className="flex justify-center bg-base-200 ">
           {" "}
           <div className="flex flex-col">
-            <div className="flex jus">
+            <div className="flex justify-center mb-10">
               <CTAButton />
               {/* <Button handleChange={handleClick} text={"Create new lesson"} /> */}
             </div>
-            <div className="flex ">
+            <div className="flex flex-col">
               {" "}
-              <Lessons />
+              {lessons?.map((lesson) => (
+                <Lessons
+                  id={lesson.id}
+                  name={lesson.name}
+                  description={lesson.description}
+                  img={lesson.img}
+                />
+              ))}
             </div>
           </div>
         </div>

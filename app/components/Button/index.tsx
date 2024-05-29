@@ -8,6 +8,7 @@ interface ButtonProps {
 }
 
 const Button: FC<ButtonProps> = ({ handleChange, text }) => {
+  console.log('handleChange', handleChange)
   return (
     <button className="btn" onClick={handleChange}>
       {text}

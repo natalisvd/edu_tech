@@ -1,25 +1,18 @@
-import { useParams, usePathname } from "next/navigation";
+// import { useParams, usePathname } from "next/navigation";
 import { getCoursesById } from "../action";
 import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import Button from "../../../components/button/index";
+// import Button from "../../../components/button/index";
 import Modal from "../components/Modal/Modal";
 import CourseDetails from "./components/CourseDetails/CourseDetails";
 import Lessons from "./components/Lessons/Lessons";
 import handleClick from "./action";
+import { CTAButton } from "./components/button-action";
 
 const Page = async ({ params: { id } }) => {
   const supabase = createClient();
   const heads = headers();
   const pathname = heads.get("x-pathname");
-
-  // const handleClick = async (event: any) => {
-  //   const supabase = createClient();
-  //   const { data, error } = await supabase
-  //     .from("lessons")
-  //     .insert([{ lvl: "1", name: "react-course" }])
-  //     .select();
-  // };
 
   let { data: course, error } = await supabase
     .from("courses")
@@ -48,7 +41,8 @@ const Page = async ({ params: { id } }) => {
           {" "}
           <div className="flex flex-col">
             <div className="flex jus">
-              <Button handleChange={handleClick} text={"Create new lesson"} />
+              <CTAButton />
+              {/* <Button handleChange={handleClick} text={"Create new lesson"} /> */}
             </div>
             <div className="flex ">
               {" "}

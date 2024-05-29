@@ -30,7 +30,7 @@ const Modal: FC<ModalProps> = ({ description, id }) => {
             onChange={handleChange}
             className="textarea"
           >
-            {description}
+            {/* {description} */}
           </textarea>
           <div className="modal-action flex justify-between w-full">
             <form method="dialog" className="w-full flex justify-between">

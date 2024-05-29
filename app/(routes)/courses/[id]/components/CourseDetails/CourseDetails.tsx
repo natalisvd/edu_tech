@@ -19,11 +19,11 @@ const CourseDetails: FC<CourseProps> = ({ id, course }) => {
   return (
     <div className="mr-10">
       <h1 className="text-3xl font-bold">{course[0]?.name}</h1>
-      <p className="py-6">
-        {course[0]?.Description}
+      <div className="py-6">
+        <p>{course[0]?.Description}</p>
 
         <Modal description={course[0]?.Description} id={id} />
-      </p>
+      </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { getSkillsList, getUserSkills } from './actions'
 import { redirect } from 'next/navigation'
 import { SkillsToUser } from './types'
-import { AddNewSkill } from './AddNewSkill'
+import { AddSkillModal } from './AddSkillModal'
 
 export default async function Account() {
   const supabase = createClient()
@@ -23,13 +23,12 @@ export default async function Account() {
     <div className='container p-3'>
       <h1 className='text-3xl font-semibold leading-loose mb-8'>My Skills</h1>
       <div className='grid grid-flow-row gap-5'>
-        <label className='label'>
-          User skills:
-          <CurrentSkills skills={userSkills}/>
-        </label>
+        <h2 className='label label-text text-lg'>My current skills list:</h2>
+        <CurrentSkills skills={userSkills} />
         <label className='label'>
           Add new skill:
-          <AddNewSkill skillsList={skillsList} />
+          {/* ToDo: utilize it for edit skill too */}
+          <AddSkillModal skillsList={skillsList} />
         </label>
       </div>
     </div>

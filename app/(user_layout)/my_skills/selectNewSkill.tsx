@@ -3,13 +3,14 @@ import { Skills } from './types'
 
 interface SelectSkillProps {
   skillsList: Skills
+  defaultValue: number
 }
 export type Ref = HTMLSelectElement
 
-export const SelectSkill = forwardRef<Ref, SelectSkillProps>(({ skillsList, ...rest }, ref) => {
+export const SelectSkill = forwardRef<Ref, SelectSkillProps>(({ defaultValue, skillsList, ...rest }, ref) => {
   return (
-    <select className='select select-bordered w-full max-w-xs' ref={ref} {...rest}>
-      <option disabled value={0}>
+    <select className='select select-bordered w-full' ref={ref} {...rest}>
+      <option disabled value={defaultValue}>
         Choose
       </option>
       {skillsList.map((skill) => (

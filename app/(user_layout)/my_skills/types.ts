@@ -12,6 +12,17 @@ export interface Skill {
   skill_name: string | null
 }
 
+export interface SkillFormProps {
+  initialValues?: SkillFormValues
+  skillsList: Skills,
+  toggleModal: () => void
+}
+
+export type SkillFormValues = { 
+  skill: number | undefined
+  level: string
+}
+
 export type SkillsToUser = SkillToUser[] | []
 
 export type Skills = Skill[] | []

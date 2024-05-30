@@ -1,6 +1,8 @@
 "use client";
-import { FC, useState } from "react";
+import React, { FC, useState, useRef, useEffect } from "react";
+import ReactDOM from "react-dom";
 import Button from "../Button/button";
+
 interface ModalProps {
   description: any;
   id: any;
@@ -8,41 +10,59 @@ interface ModalProps {
 
 const Modal: FC<ModalProps> = ({ description, id }) => {
   const [modalValue, setModalValue] = useState(`${description}`);
-  const handleChange = (event: any) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const modalRef = useRef<HTMLDialogElement>(null);
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setModalValue(event.target.value);
   };
+
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    if (isOpen && modalRef.current) {
+      modalRef.current.showModal();
+    } else if (modalRef.current) {
+      modalRef.current.close();
+    }
+  }, [isOpen]);
+
+  const modalContent = (
+    <dialog id="my_modal_1" className="modal" ref={modalRef}>
+      <div className="modal-box">
+        <textarea
+          value={modalValue}
+          onChange={handleChange}
+          className="textarea"
+        ></textarea>
+        <div className="modal-action flex justify-between w-full">
+          <form method="dialog" className="w-full flex justify-between">
+            <div className="flex justify-between w-full">
+              <Button description={modalValue} oldDescription={description} />
+              <button type="button" className="btn" onClick={handleClose}>
+                Close
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </dialog>
+  );
+
   return (
     <div>
-      {/* Open the modal using document.getElementById('ID').showModal() method */}
-      <button
-        className="btn"
-        onClick={() => document.getElementById("my_modal_1").showModal()}
-      >
+      <button className="btn" onClick={handleOpen}>
         Edit
       </button>
-      <dialog id="my_modal_1" className="modal">
-        <div className="modal-box">
-          {/* <p className="py-4">
-            Press ESC key or click the button below to close
-          </p> */}
-          <textarea
-            value={modalValue}
-            onChange={handleChange}
-            className="textarea"
-          >
-            {/* {description} */}
-          </textarea>
-          <div className="modal-action flex justify-between w-full">
-            <form method="dialog" className="w-full flex justify-between">
-              {/* if there is a button in form, it will close the modal */}
-              <div className="flex justify-between w-full">
-                <Button description={modalValue} oldDescription={description} />
-                <button className="btn">Close</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </dialog>
+      {isOpen &&
+        typeof document !== "undefined" &&
+        ReactDOM.createPortal(modalContent, document.body)}
     </div>
   );
 };

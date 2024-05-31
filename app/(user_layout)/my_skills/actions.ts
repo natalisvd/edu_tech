@@ -22,16 +22,3 @@ export const getUserSkills = async (userId?: string) => {
   console.log('skill_to_user', skill_to_user)
   return skill_to_user
 }
-
-export const getSkillsList = async () => {
-  const { data: skills, error } = await supabase
-  .from('skill')
-  .select(`*`)
-
-  if (error) {
-    console.log('getSkillsList [error]', error)
-    throw error
-  }
-  console.log('skills', skills)
-  return skills
-}

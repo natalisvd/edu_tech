@@ -1,8 +1,9 @@
 import { createClient } from '@/utils/supabase/server'
-import { getSkillsList, getUserSkills } from './actions'
+import { getUserSkills } from './actions'
 import { redirect } from 'next/navigation'
 import { SkillsToUser } from './types'
 import { AddSkillModal } from './AddSkillModal'
+import { getSkillsList } from '@/utils/data/skills'
 
 export default async function Account() {
   const supabase = createClient()

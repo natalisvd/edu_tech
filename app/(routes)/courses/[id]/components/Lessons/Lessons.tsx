@@ -1,6 +1,7 @@
 "use client";
 
 import { FC } from "react";
+import ButtonLesson from "./Button-lesson";
 
 interface LessonsProps {
   id: number;
@@ -24,7 +25,7 @@ const Lessons: FC<LessonsProps> = ({ id, name, description, img }) => {
           <p>{name}</p>
           <p>{description}</p>
           <div className="card-actions justify-end">
-            <button className="btn btn-primary">Listen</button>
+            <ButtonLesson />
           </div>
         </div>
       </div>

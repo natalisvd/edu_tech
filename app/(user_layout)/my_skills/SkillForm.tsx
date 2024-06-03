@@ -10,16 +10,20 @@ const defaultValues = {
   level: 'none'
 }
 
-export const SkillForm = ({ initialValues, skillsList, toggleModal }: SkillFormProps) => {
+export const SkillForm = ({ initialValues, skillsList, toggleModal, onSubmit }: SkillFormProps) => {
   const { register, watch, handleSubmit, formState: { errors }, reset } = useForm<SkillFormValues>({
     defaultValues: initialValues ?? defaultValues
   })
 
-  const onSubmit = async (data: SkillFormValues) => {
-    console.log(data)
+  const addSkill = async (data: SkillFormValues) => {
     // ToDo: add submit action here
-    toggleModal()
-    reset()
+    try {
+      await onSubmit(data)
+      toggleModal()
+      reset()
+    } catch (error) {
+      console.log(error)
+    }
   }
   const handleClose = async () => {
     toggleModal()
@@ -30,7 +34,7 @@ export const SkillForm = ({ initialValues, skillsList, toggleModal }: SkillFormP
   console.log('values', values)
 
   return (
-    <form method="dialog" onSubmit={handleSubmit(onSubmit)}>
+    <form method="dialog" onSubmit={handleSubmit(addSkill)}>
       <div className="flex flex-col gap-5">
         <div className='form-control w-full max-w-sm'>
           <SelectSkill

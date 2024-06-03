@@ -17,20 +17,21 @@ export default async function Account() {
   }
 
   const userSkills: SkillsToUser = await getUserSkills(user.id)
-  const skillsList = await getSkillsList()
-  // console.log('userSkills', userSkills)
+  const filterUserSkills = userSkills.map(skill => skill?.skill_id).filter((item): item is number => !!item)
+  const skillsList = await getSkillsList(filterUserSkills)
+  // console.log('filterUserSkills', filterUserSkills)
 
   return (
     <div className='container p-3'>
       <h1 className='text-3xl font-semibold leading-loose mb-8'>My Skills</h1>
       <div className='grid grid-flow-row gap-5'>
         <h2 className='label label-text text-lg'>My current skills list:</h2>
-        <CurrentSkills skills={userSkills} />
-        <label className='label'>
+        <CurrentSkills skills={userSkills}/>
+        <div className='label'>
           Add new skill:
           {/* ToDo: utilize it for edit skill too */}
-          <AddSkillModal skillsList={skillsList} />
-        </label>
+          <AddSkillModal skillsList={skillsList} userId={user.id} />
+        </div>
       </div>
     </div>
   )

@@ -16,11 +16,19 @@ export interface SkillFormProps {
   initialValues?: SkillFormValues
   skillsList: Skills,
   toggleModal: () => void
+  onSubmit: (data: SkillFormValues) => Promise<void>
 }
 
 export type SkillFormValues = { 
-  skill: number | undefined
+  skill: number
   level: string
+}
+
+export type UpdateSkillProps = {
+  userId: string
+  skill: number
+  level: string
+  approved?: boolean
 }
 
 export type SkillsToUser = SkillToUser[] | []

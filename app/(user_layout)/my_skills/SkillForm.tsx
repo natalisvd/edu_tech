@@ -61,7 +61,7 @@ export const SkillForm = ({ initialValues, skillsList, toggleModal, onSubmit }: 
       </div>
       <div className='modal-action'>
         <button type="submit" className="btn btn-primary">Confirm</button>
-        <button className="btn btn-outline" onClick={handleClose}>Close</button>
+        <button type="button" className="btn btn-outline" onClick={handleClose}>Close</button>
       </div>
     </form>
   )

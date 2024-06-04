@@ -1,9 +1,12 @@
 export interface SkillToUser {
-  id?: string
+  id: string
   created_at?: string
-  skill_id?: number
+  skill_id: number
   user_id?: string
-  lvl?: string
+  lvl: string
+}
+export interface UserSkill extends SkillToUser {
+  skill: Skill
 }
 
 export interface Skill {
@@ -32,5 +35,6 @@ export type UpdateSkillProps = {
 }
 
 export type SkillsToUser = SkillToUser[] | []
+export type UserSkills = UserSkill[] | []
 
 export type Skills = Skill[] | []

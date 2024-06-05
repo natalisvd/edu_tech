@@ -6,7 +6,7 @@ const ButtonLesson = () => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/lessons/${1}`);
+    router.push(`/courses/${1}/lesson/${1}`);
   };
 
   return (

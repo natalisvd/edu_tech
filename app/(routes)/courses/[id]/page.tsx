@@ -50,6 +50,7 @@ const Page = async ({ params: { id } }) => {
               {" "}
               {lessons?.map((lesson) => (
                 <Lessons
+                  lessonId={id}
                   id={lesson.id}
                   name={lesson.name}
                   description={lesson.description}

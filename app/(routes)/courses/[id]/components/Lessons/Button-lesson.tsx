@@ -1,12 +1,18 @@
 // ButtonLesson.tsx
 
 import { useRouter } from "next/navigation";
+import { FC } from "react";
 
-const ButtonLesson = () => {
+interface Props {
+  id: string;
+  lessonId: string;
+}
+
+const ButtonLesson: FC<Props> = ({ id, lessonId }) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/courses/${1}/lesson/${1}`);
+    router.push(`/courses/${lessonId}/lesson/${id}`);
   };
 
   return (

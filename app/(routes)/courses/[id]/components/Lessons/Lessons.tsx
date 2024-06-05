@@ -8,9 +8,16 @@ interface LessonsProps {
   name: string;
   description: string;
   img: string;
+  lessonId: string;
 }
 
-const Lessons: FC<LessonsProps> = ({ id, name, description, img }) => {
+const Lessons: FC<LessonsProps> = ({
+  id,
+  lessonId,
+  name,
+  description,
+  img,
+}) => {
   return (
     <div className="mb-10">
       <div className="card lg:card-side bg-base-100 shadow-xl">
@@ -25,7 +32,7 @@ const Lessons: FC<LessonsProps> = ({ id, name, description, img }) => {
           <p>{name}</p>
           <p>{description}</p>
           <div className="card-actions justify-end">
-            <ButtonLesson />
+            <ButtonLesson id={id} lessonId={lessonId} />
           </div>
         </div>
       </div>

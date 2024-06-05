@@ -2,30 +2,9 @@
 
 import { createClient } from "@/utils/supabase/server"
 import { revalidatePath } from "next/cache"
-import { UpdateSkillProps, UserSkills } from "./types"
+import { UpdateSkillProps } from "./types"
 
 const supabase = createClient()
-
-export const getUserSkills = async (userId?: string) => {
-  const { data: skill_to_user, error } = await supabase
-  .from('skill_to_user')
-  .select(`
-    id,
-    skill_id,
-    lvl,
-    skill (
-      id, skill_name
-    )
-  `)
-  .eq('user_id', userId)
-
-  if (error) {
-    console.log('getUserSkills [error]', error)
-    throw error
-  }
-  console.log('skill_to_user', skill_to_user)
-  return skill_to_user as UserSkills
-}
 
 export const updateUserSkills = async ({ userId, skill, level, approved = false }: UpdateSkillProps) => {
   const { data: updatedSkill, error } = await supabase
@@ -65,4 +44,18 @@ export const updateUserSkillLevel = async ({ id, level }: { id: string, level: s
   revalidatePath('/my_skills', 'page')
   console.log('updatedSkill', updatedSkill)
   return updatedSkill
+}
+
+export const deleteSkillbyId = async ({ id }: { id: string }) => {
+  const { error } = await supabase
+    .from('skill_to_user')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.log('deleteSkillbyId [error]', error, id)
+    throw error
+  }
+
+  revalidatePath('/my_skills', 'page')
 }

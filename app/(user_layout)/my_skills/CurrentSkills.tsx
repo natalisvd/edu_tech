@@ -1,11 +1,12 @@
 "use client"
 
-import { useCallback, useRef, useState } from "react"
+import { PropsWithChildren, useCallback, useRef, useState } from "react"
 import { UserSkill, UserSkills } from "./types"
 import { EditIcon } from "@/app/components/Icons/EditIcon."
 import { SelectLevel } from "./selectLevel"
 import { useForm } from "react-hook-form"
-import { updateUserSkillLevel } from "./actions"
+import { deleteSkillbyId, updateUserSkillLevel } from "./actions"
+import { TrashIcon } from "@/app/components/Icons/TrashIcon"
 
 const defaultValues = { level: 'none' }
 
@@ -13,48 +14,68 @@ type FormValues = {
   level: string
 }
 
+const TableRow = ({ children }: PropsWithChildren) => (
+  <div className="grid max-sm:grid-rows-2 max-sm:grid-cols-[1fr,_auto] sm:grid-cols-[1fr,_1fr,_auto] items-center gap-1 px-3 py-2 border-b border-neutral last-of-type:border-b-0">
+    {children}
+  </div>
+)
+
 export const CurrentSkills = ({ skills }: { skills: UserSkills }) => {
   const [currentSkill, setCurrentSkill] = useState<UserSkill | null>(null)
 
   const modalRef = useRef<HTMLDialogElement>(null)
 
+  const { register, handleSubmit, formState: { errors }, reset, setError, setValue } = useForm<FormValues>({
+    defaultValues: { level: '' },
+    reValidateMode: 'onChange'
+  })
+
   const handleShow = useCallback((skill: UserSkill) => {
     setCurrentSkill(skill)
+    setValue('level', skill.lvl)
     modalRef.current?.showModal();
   }, [modalRef]);
 
   const handleClose = useCallback(() => {
     setCurrentSkill(null)
+    reset()
     modalRef.current?.close();
   }, [modalRef]);
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>({
-    values: {level: currentSkill?.lvl || ''}
-  })
   const onSubmit = async (data: FormValues) => {
     const { level } = data
-    console.log('id, level', currentSkill?.id, level)
-    const id = currentSkill?.id
-    if (!id) return;
-    const response = await updateUserSkillLevel({ id, level })
-    console.log(response)
-    reset()
-    handleClose()
+    try {
+      console.log('id, level', currentSkill?.id, level)
+      const id = currentSkill?.id
+      if (!id) {
+        throw new Error(`Error: id is ${id}`)
+      }
+      await updateUserSkillLevel({ id, level })
+      handleClose()
+    } catch (error) {
+      console.log('[error]', error)
+      return setError('root.serverError', { type: 'manual', message: 'Something went wrong'})
+    }
   }
+  console.log('errors', errors)
+  const handleDeleteSkill = async (id: string) => await deleteSkillbyId({ id })
 
   return (
     <>
-      <div className='grid grid-flow-row gap-3 max-w-md'>
+      <div className='grid grid-flow-row w-full my-5 border border-neutral'>
         {skills.map((skill) => (
-          <div key={skill.id} className="grid grid-cols-[1fr,_1fr,_auto] items-center gap-1">
-            <div className="text-sm sm:text-base">{skill.skill?.skill_name}</div>
-            <div className="text-sm sm:text-base">{skill.lvl}</div>
-            <div className="text-sm sm:text-base">
-              <button className='btn btn-ghost btn-square btn-sm' onClick={() => handleShow(skill)}>
+          <TableRow key={skill.id}>
+            <div className="font-semibold">{skill.skill?.skill_name}</div>
+            <div className="text-base font-light">{skill.lvl}</div>
+            <div className="max-sm:col-start-2 max-sm:row-start-1 max-sm:row-span-2 flex gap-5">
+              <button className='btn btn-square hover:btn-primary' onClick={() => handleShow(skill)}>
                 <EditIcon />
               </button>
+              <button className='btn btn-square hover:btn-error' onClick={() => handleDeleteSkill(skill.id)}>
+                <TrashIcon />
+              </button>
             </div>
-          </div>
+          </TableRow>
         ))}
         <dialog id="add-new-skill-modal" className="modal" ref={modalRef}>
           <div className="modal-box">
@@ -71,6 +92,7 @@ export const CurrentSkills = ({ skills }: { skills: UserSkills }) => {
                     )}
                   />
                   {errors.level?.message && <div className="label label-text-alt text-error">{errors.level.message}</div>}
+                  {errors.root?.serverError?.message && <div className="label label-text-alt text-error">{errors.root.serverError.message}</div>}
                 </div>
               </div>
               <div className='modal-action'>

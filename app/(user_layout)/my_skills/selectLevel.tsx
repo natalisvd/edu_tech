@@ -11,7 +11,7 @@ export const SelectLevel = forwardRef<Ref, SelectProps>(({ defaultValue, ...rest
   return (
     <select className='select select-bordered w-full' ref={ref} {...rest}>
       <option disabled value={defaultValue}>
-        Choose your skill level
+        Choose level
       </option>
       {LEVELS.map((level) => (
         <option key={level} value={level}>{level}</option>

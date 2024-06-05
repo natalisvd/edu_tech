@@ -11,7 +11,7 @@ export const SelectSkill = forwardRef<Ref, SelectSkillProps>(({ defaultValue, sk
   return (
     <select className='select select-bordered w-full' ref={ref} {...rest}>
       <option disabled value={defaultValue}>
-        Choose
+        Choose skill
       </option>
       {skillsList.map((skill) => (
         <option key={skill.id} value={skill.id}>{skill.skill_name}</option>

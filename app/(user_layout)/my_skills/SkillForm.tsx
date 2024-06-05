@@ -11,7 +11,7 @@ const defaultValues = {
 }
 
 export const SkillForm = ({ initialValues, skillsList, toggleModal, onSubmit }: SkillFormProps) => {
-  const { register, watch, handleSubmit, formState: { errors }, reset } = useForm<SkillFormValues>({
+  const { register, watch, handleSubmit, formState: { errors }, reset, setError } = useForm<SkillFormValues>({
     defaultValues: initialValues ?? defaultValues
   })
 
@@ -23,6 +23,7 @@ export const SkillForm = ({ initialValues, skillsList, toggleModal, onSubmit }: 
       reset()
     } catch (error) {
       console.log(error)
+      setError('root.serverError', { type: 'serverError', message: 'Something went wrong. Try again later.'})
     }
   }
   const handleClose = async () => {
@@ -58,6 +59,7 @@ export const SkillForm = ({ initialValues, skillsList, toggleModal, onSubmit }: 
           />
           {errors.level?.message && <div className="label label-text-alt text-error">{errors.level.message}</div>}
         </div>
+        {errors.root?.serverError?.message && <div className="label label-text-alt text-error">{errors.root.serverError.message}</div>}
       </div>
       <div className='modal-action'>
         <button type="submit" className="btn btn-primary">Confirm</button>

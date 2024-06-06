@@ -1,9 +1,9 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { UserSkills } from './types'
-import { AddSkillModal } from './AddSkillModal'
+import { AddSkillModal } from './components/AddSkillModal'
 import { getSkillsList } from '@/utils/data/skills'
-import { CurrentSkills } from './CurrentSkills'
+import { CurrentSkills } from './components/CurrentSkills'
 
 const supabase = createClient()
 

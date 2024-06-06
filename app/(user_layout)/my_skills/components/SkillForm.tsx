@@ -1,9 +1,9 @@
 "use client"
 
 import { useForm } from "react-hook-form"
-import { SkillFormProps, SkillFormValues } from "./types"
-import { SelectSkill } from "./selectNewSkill"
-import { SelectLevel } from "./selectLevel"
+import { SkillFormProps, SkillFormValues } from "../types"
+import { SelectSkill } from "./SelectNewSkill"
+import { SelectLevel } from "./SelectLevel"
 
 const defaultValues = {
   skill: 0,
@@ -11,7 +11,7 @@ const defaultValues = {
 }
 
 export const SkillForm = ({ initialValues, skillsList, toggleModal, onSubmit }: SkillFormProps) => {
-  const { register, watch, handleSubmit, formState: { errors }, reset, setError } = useForm<SkillFormValues>({
+  const { register, handleSubmit, formState: { errors }, reset, setError } = useForm<SkillFormValues>({
     defaultValues: initialValues ?? defaultValues
   })
 
@@ -29,9 +29,6 @@ export const SkillForm = ({ initialValues, skillsList, toggleModal, onSubmit }: 
     toggleModal()
     reset()
   }
-
-  const values = watch(['level', 'skill'])
-  console.log('values', values)
 
   return (
     <form method="dialog" onSubmit={handleSubmit(addSkill)}>

@@ -1,5 +1,5 @@
 import { forwardRef } from 'react'
-import { Skills } from './types'
+import { Skills } from '../types'
 
 interface SelectSkillProps {
   skillsList: Skills

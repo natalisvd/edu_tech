@@ -1,11 +1,11 @@
 "use client"
 
 import { PropsWithChildren, useCallback, useRef, useState } from "react"
-import { UserSkill, UserSkills } from "./types"
+import { UserSkill, UserSkills } from "../types"
 import { EditIcon } from "@/app/components/Icons/EditIcon."
-import { SelectLevel } from "./selectLevel"
+import { SelectLevel } from "./SelectLevel"
 import { useForm } from "react-hook-form"
-import { deleteSkillbyId, updateUserSkillLevel } from "./actions"
+import { deleteSkillbyId, updateUserSkillLevel } from "../actions"
 import { TrashIcon } from "@/app/components/Icons/TrashIcon"
 
 const defaultValues = { level: 'none' }
@@ -56,7 +56,7 @@ export const CurrentSkills = ({ skills }: { skills: UserSkills }) => {
       return setError('root.serverError', { type: 'manual', message: 'Something went wrong'})
     }
   }
-  console.log('errors', errors)
+
   const handleDeleteSkill = async (id: string) => await deleteSkillbyId({ id })
 
   return (
@@ -67,10 +67,10 @@ export const CurrentSkills = ({ skills }: { skills: UserSkills }) => {
             <div className="font-semibold">{skill.skill?.skill_name}</div>
             <div className="text-base font-light">{skill.lvl}</div>
             <div className="max-sm:col-start-2 max-sm:row-start-1 max-sm:row-span-2 flex gap-5">
-              <button className='btn btn-square hover:btn-primary' onClick={() => handleShow(skill)}>
+              <button type='button' className='btn btn-square hover:btn-primary' onClick={() => handleShow(skill)}>
                 <EditIcon />
               </button>
-              <button className='btn btn-square hover:btn-error' onClick={() => handleDeleteSkill(skill.id)}>
+              <button type='button' className='btn btn-square hover:btn-error' onClick={() => handleDeleteSkill(skill.id)}>
                 <TrashIcon />
               </button>
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import createNewLesson from "../action";
+import ModalWindow from "./ModalWindow/ModalWindow";
 
 export const CTAButton = () => {
   const handleClick = async () => {
@@ -15,8 +16,14 @@ export const CTAButton = () => {
   };
 
   return (
-    <button className="btn btn-primary" onClick={handleClick}>
-      Create new lesson
-    </button>
+    <>
+      {" "}
+      <ModalWindow>
+        {" "}
+        <button className="btn btn-primary" onClick={handleClick}>
+          Create new lesson
+        </button>
+      </ModalWindow>
+    </>
   );
 };

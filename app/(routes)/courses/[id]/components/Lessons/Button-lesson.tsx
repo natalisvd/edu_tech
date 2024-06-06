@@ -17,7 +17,7 @@ const ButtonLesson: FC<Props> = ({ id, lessonId }) => {
 
   return (
     <button className="btn btn-primary" onClick={handleClick}>
-      Listen
+      Open
     </button>
   );
 };

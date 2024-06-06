@@ -6,7 +6,7 @@ import { UpdateSkillProps } from "./types"
 
 const supabase = createClient()
 
-export const updateUserSkills = async ({ userId, skill, level, approved = false }: UpdateSkillProps) => {
+export const addNewUserSkill = async ({ userId, skill, level, approved = false }: UpdateSkillProps) => {
   const { data: updatedSkill, error } = await supabase
     .from('skill_to_user')
     .upsert({ 
@@ -18,12 +18,11 @@ export const updateUserSkills = async ({ userId, skill, level, approved = false 
     .select()
 
   if (error) {
-    console.log('updateUserSkills [error]', error)
+    console.log('addNewUserSkill [error]', error)
     throw error
   }
 
   revalidatePath('/my_skills', 'page')
-  console.log('updatedSkill', updatedSkill)
   return updatedSkill
 }
 
@@ -37,12 +36,11 @@ export const updateUserSkillLevel = async ({ id, level }: { id: string, level: s
     .select()
 
   if (error) {
-    console.log('updateUserSkills [error]', error)
+    console.log('updateUserSkillLevel [error]', error)
     throw error
   }
 
   revalidatePath('/my_skills', 'page')
-  console.log('updatedSkill', updatedSkill)
   return updatedSkill
 }
 

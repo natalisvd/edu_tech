@@ -3,7 +3,7 @@
 import { useCallback, useRef } from "react"
 import { SkillForm } from "./SkillForm";
 import { SkillFormValues, Skills } from "./types";
-import { updateUserSkills } from "./actions";
+import { addNewUserSkill } from "./actions";
 
 export const AddSkillModal = ({ skillsList, userId }: { skillsList: Skills, userId: string }) => {
   const modalRef = useRef<HTMLDialogElement>(null)
@@ -17,7 +17,7 @@ export const AddSkillModal = ({ skillsList, userId }: { skillsList: Skills, user
   }, [modalRef]);
 
   const onSubmit = async (data: SkillFormValues) => {
-    const response = await updateUserSkills({
+    const response = await addNewUserSkill({
       ...data,
       userId
     })

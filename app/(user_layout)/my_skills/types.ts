@@ -34,7 +34,6 @@ export type UpdateSkillProps = {
   approved?: boolean
 }
 
-export type SkillsToUser = SkillToUser[] | []
 export type UserSkills = UserSkill[] | []
 
 export type Skills = Skill[] | []

@@ -16,7 +16,6 @@ export const SkillForm = ({ initialValues, skillsList, toggleModal, onSubmit }: 
   })
 
   const addSkill = async (data: SkillFormValues) => {
-    // ToDo: add submit action here
     try {
       await onSubmit(data)
       toggleModal()

@@ -45,7 +45,6 @@ export const CurrentSkills = ({ skills }: { skills: UserSkills }) => {
   const onSubmit = async (data: FormValues) => {
     const { level } = data
     try {
-      console.log('id, level', currentSkill?.id, level)
       const id = currentSkill?.id
       if (!id) {
         throw new Error(`Error: id is ${id}`)
@@ -53,7 +52,7 @@ export const CurrentSkills = ({ skills }: { skills: UserSkills }) => {
       await updateUserSkillLevel({ id, level })
       handleClose()
     } catch (error) {
-      console.log('[error]', error)
+      console.log('updateUserSkillLevel [error]', error)
       return setError('root.serverError', { type: 'manual', message: 'Something went wrong'})
     }
   }

@@ -25,7 +25,6 @@ export const getUserSkills = async (userId?: string) => {
     console.log('getUserSkills [error]', error)
     throw error
   }
-  console.log('skill_to_user', skill_to_user)
   return skill_to_user as UserSkills
 }
 
@@ -43,7 +42,6 @@ export default async function MySkills() {
   const userSkills: UserSkills = await getUserSkills(user.id)
   const filterUserSkills = userSkills.map(skill => skill?.skill_id).filter((item): item is number => !!item)
   const skillsList = await getSkillsList(filterUserSkills)
-  // console.log('filterUserSkills', filterUserSkills)
 
   return (
     <div className='container p-3'>

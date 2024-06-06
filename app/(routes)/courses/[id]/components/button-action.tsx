@@ -9,7 +9,7 @@ export const CTAButton = () => {
     try {
       const result = await createNewLesson();
       console.log("result", result);
-      window.location.reload(); // Reload the page
+      window.location.reload();
     } catch (error) {
       console.log("CTAbutton [error]", error);
     }

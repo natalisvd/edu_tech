@@ -30,7 +30,6 @@ const Lessons: FC<LessonsProps> = ({
         <div className="card-body">
           <h2 className="card-title">Lesson {id}</h2>
           <p>{name}</p>
-          <p>{description}</p>
           <div className="card-actions justify-end">
             <ButtonLesson id={id} lessonId={lessonId} />
           </div>

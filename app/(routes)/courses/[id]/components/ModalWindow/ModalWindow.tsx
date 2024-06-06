@@ -34,8 +34,10 @@ const ModalWindow: FC<ModalProps> = ({ children }) => {
     const supabase = createClient();
     const { data, error } = await supabase
       .from("lessons")
-      .insert([{ description: "someValue", name: "otherValue" }])
+      .insert([{ description: modalValue, name: name }])
       .select();
+
+    window.location.reload();
   };
 
   useEffect(() => {

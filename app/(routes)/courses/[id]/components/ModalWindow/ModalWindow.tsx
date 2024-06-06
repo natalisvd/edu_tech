@@ -1,15 +1,14 @@
 "use client";
 import React, { FC, useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
-import Button from "../Button/button";
+import Button from "../Button/Button";
 
 interface ModalProps {
   description: any;
   id: any;
-  updateColumn?: any;
 }
 
-const Modal: FC<ModalProps> = ({ description, id, updateColumn }) => {
+const ModalWindow: FC<ModalProps> = ({ description, id }) => {
   const [modalValue, setModalValue] = useState(`${description}`);
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -45,11 +44,7 @@ const Modal: FC<ModalProps> = ({ description, id, updateColumn }) => {
         <div className="modal-action flex justify-between w-full">
           <form method="dialog" className="w-full flex justify-between">
             <div className="flex justify-between w-full">
-              <Button
-                description={modalValue}
-                oldDescription={description}
-                updateColumn={updateColumn}
-              />
+              <Button description={modalValue} oldDescription={description} />
               <button type="button" className="btn" onClick={handleClose}>
                 Close
               </button>
@@ -63,7 +58,7 @@ const Modal: FC<ModalProps> = ({ description, id, updateColumn }) => {
   return (
     <div>
       <button className="btn" onClick={handleOpen}>
-        Edits
+        Edit
       </button>
       {isOpen &&
         typeof document !== "undefined" &&
@@ -72,4 +67,4 @@ const Modal: FC<ModalProps> = ({ description, id, updateColumn }) => {
   );
 };
 
-export default Modal;
+export default ModalWindow;

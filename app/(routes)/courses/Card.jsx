@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const Card = ({ description, title, id }) => {
   return (
-    <div className="mr-5">
+    <div className="mr-5 mb-5">
       {" "}
       <div className="card w-96 bg-base-100 shadow-xl">
         <figure>

@@ -43,7 +43,7 @@ const Input: React.FC<Props> = ({ courses }) => {
           <CoursesModal />
         </div>
       </div>
-      <div className="flex mt-10 flex-wrap">
+      <div className="flex mt-10 flex-wrap justify-center">
         {filteredCourses?.map((course) => (
           // @ts-ignore
           <Card key={course.id} title={course.name} id={course.id} />

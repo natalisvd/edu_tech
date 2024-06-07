@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { LogoutButton } from "./components/LogoutButton/LogoutButton";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { LogoutButton } from "../components/LogoutButton/LogoutButton";
 
 export default async function Home() {
   const supabase = createClient();
@@ -21,9 +21,6 @@ export default async function Home() {
       }}
     >
       <div>
-        <LogoutButton />
-      </div>
-      <div>
         <div className="hero min-h-screen">
           <div className="hero-content text-center">
             <div className="max-w">
@@ -39,6 +36,8 @@ export default async function Home() {
         </div>
       </div>
       {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div className="container mx-auto py-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <Link href="/frontend">
           <div className="bg-base-100 border border-base-200 p-8 rounded shadow-md cursor-pointer transition-colors duration-300 hover:bg-base-200">
             <h2 className="text-xl font-bold mb-4">Frontend</h2>

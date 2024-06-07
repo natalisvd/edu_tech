@@ -55,20 +55,21 @@ const ModalWindow: FC<ModalProps> = ({ children }) => {
           type="text"
           value={name}
           onChange={handleNameChange}
-          className="input"
+          className="input w-full mb-5"
           placeholder="Enter name"
         />
         <textarea
           value={modalValue}
           onChange={handleChange}
-          className="textarea"
+          className="textarea w-full"
+          placeholder="Enter description"
         ></textarea>
         <div className="modal-action flex justify-between w-full">
           <form method="dialog" className="w-full flex justify-between">
             <div className="flex flex-col w-full">
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-primary mb-3"
                 onClick={handleSave}
               >
                 Save

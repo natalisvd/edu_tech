@@ -17,6 +17,12 @@ const Frontend = () => {
             <p>Click and take the react test</p>
           </div>
         </Link>
+        <Link href="/frontend/login">
+          <div className="bg-white p-8 rounded shadow-md cursor-pointer transition-colors duration-300 hover:bg-blue-200">
+            <h2 className="text-xl font-bold mb-4">Login</h2>
+            <p>Click and take the react test</p>
+          </div>
+        </Link>
       </div>
     </div>
   );

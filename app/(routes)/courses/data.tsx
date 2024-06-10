@@ -1,6 +1,6 @@
-"use client";
+"use server";
 
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/server";
 import React from "react";
 
 const Data = async () => {

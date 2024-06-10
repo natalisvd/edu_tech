@@ -17,11 +17,10 @@ export const AddSkillModal = ({ skillsList, userId }: { skillsList: Skills, user
   }, [modalRef]);
 
   const onSubmit = async (data: SkillFormValues) => {
-    const response = await addNewUserSkill({
+    await addNewUserSkill({
       ...data,
       userId
     })
-    console.log(response)
   }
 
   return (

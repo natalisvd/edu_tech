@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-const LessonPage = ({ params: { id } }) => {
+const LessonPage = ({ params: { id } }: { params: { id: string } }) => {
   console.log(id);
   const questions = [
     "What is a React component?",

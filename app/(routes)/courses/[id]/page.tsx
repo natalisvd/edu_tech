@@ -9,7 +9,7 @@ import Lessons from "./components/Lessons/Lessons";
 import handleClick from "./action";
 import { CTAButton } from "./components/button-action";
 
-const Page = async ({ params: { id } }) => {
+const Page = async ({ params: { id } }: { params: { id: string } }) => {
   const supabase = createClient();
   const heads = headers();
   const pathname = heads.get("x-pathname");
@@ -34,7 +34,7 @@ const Page = async ({ params: { id } }) => {
               width="600"
               height="400"
               src={course[0].video_url}
-              allowFullScreen
+              // allowFullScreen
             ></embed>
             <CourseDetails course={course} id={id} />
           </div>
@@ -50,6 +50,7 @@ const Page = async ({ params: { id } }) => {
               {" "}
               {lessons?.map((lesson) => (
                 <Lessons
+                  key={lesson.id}
                   lessonId={id}
                   id={lesson.id}
                   name={lesson.name}

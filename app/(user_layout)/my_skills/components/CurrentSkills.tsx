@@ -34,13 +34,13 @@ export const CurrentSkills = ({ skills }: { skills: UserSkills }) => {
     setCurrentSkill(skill)
     setValue('level', skill.lvl)
     modalRef.current?.showModal();
-  }, [modalRef]);
+  }, [modalRef, setValue]);
 
   const handleClose = useCallback(() => {
     setCurrentSkill(null)
     reset()
     modalRef.current?.close();
-  }, [modalRef]);
+  }, [modalRef, reset]);
 
   const onSubmit = async (data: FormValues) => {
     const { level } = data

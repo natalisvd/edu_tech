@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import { login } from "./actions";
@@ -8,9 +8,9 @@ import { Input } from "../../components/Input";
 import { FormCard } from "@/app/components/FormCard";
 import { useFormState } from "react-dom";
 
-const initialState = { message: ''}
+const initialState = { message: "" };
 export default function Login() {
-  const [state, formAction] = useFormState(login, initialState)
+  const [state, formAction] = useFormState(login, initialState);
 
   return (
     <FormCard>
@@ -44,9 +44,11 @@ export default function Login() {
             <span className="label-text">Remember me</span>
           </label>
         </div>
-        {!!state.message.length && <div className="alert alert-error text-xs p-2 rounded">
-          {state.message}
-        </div>}
+        {!!state.message.length && (
+          <div className="alert alert-error text-xs p-2 rounded">
+            {state.message}
+          </div>
+        )}
         <button
           formAction={formAction}
           className="btn btn-primary rounded-full w-full mt-5 text-base"
@@ -55,7 +57,7 @@ export default function Login() {
         </button>
         <div className="flex justify-center">
           <span className="text-sm">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href={"/signup"} className="text-primary font-semibold">
               Sign Up
             </Link>

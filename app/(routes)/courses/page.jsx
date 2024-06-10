@@ -1,5 +1,5 @@
 import React from "react";
-import Data from "./data";
+// import Data from "./data";
 import Card from "./Card";
 import Select from "../../components/Select/Select";
 import { createClient } from "@/utils/supabase/server";

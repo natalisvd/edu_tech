@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const Card = ({ description, title, id }) => {
@@ -5,10 +6,12 @@ const Card = ({ description, title, id }) => {
     <div className="mr-5 mb-5">
       {" "}
       <div className="card w-96 bg-base-100 shadow-xl">
-        <figure>
-          <img
+        <figure className='relative'>
+          <Image
             src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
             alt="Shoes"
+            width={928}
+            height={548}
           />
         </figure>
         <div className="card-body">

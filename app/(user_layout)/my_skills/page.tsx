@@ -5,31 +5,30 @@ import { AddSkillModal } from './components/AddSkillModal'
 import { getSkillsList } from '@/utils/data/skills'
 import { CurrentSkills } from './components/CurrentSkills'
 
-const supabase = createClient()
-
-export const getUserSkills = async (userId?: string) => {
-  const { data: skill_to_user, error } = await supabase
-  .from('skill_to_user')
-  .select(`
-    id,
-    skill_id,
-    lvl,
-    skill (
-      id, skill_name
-    )
-  `)
-  .eq('user_id', userId)
-  .order('created_at', { ascending: true })
-
-  if (error) {
-    console.log('getUserSkills [error]', error)
-    throw error
-  }
-  return skill_to_user as UserSkills
-}
 
 export default async function MySkills() {
   const supabase = createClient()
+
+  const getUserSkills = async (userId?: string) => {
+    const { data: skill_to_user, error } = await supabase
+      .from('skill_to_user')
+      .select(`
+        id,
+        skill_id,
+        lvl,
+        skill (
+          id, skill_name
+        )
+      `)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: true })
+
+    if (error) {
+      console.log('getUserSkills [error]', error)
+      throw error
+    }
+    return skill_to_user as UserSkills
+  }
 
   const {
     data: { user },

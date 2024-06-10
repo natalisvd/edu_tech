@@ -63,7 +63,7 @@ const Modal: FC<ModalProps> = ({ description, id, updateColumn }) => {
   return (
     <div>
       <button className="btn" onClick={handleOpen}>
-        Edits
+        Edit
       </button>
       {isOpen &&
         typeof document !== "undefined" &&

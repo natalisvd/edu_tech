@@ -1,8 +1,11 @@
 import React from "react";
 import Image from "next/image";
 
-const LessonPage = ({ params: { id } }: { params: { id: string } }) => {
-  console.log(id);
+const LessonPage = ({
+  params: { courseId, lessonId },
+}: {
+  params: { courseId: string; lessonId: string };
+}) => {
   const questions = [
     "What is a React component?",
     "What is the virtual DOM in React?",
@@ -18,7 +21,7 @@ const LessonPage = ({ params: { id } }: { params: { id: string } }) => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">Lesson {id}</h1>
+      <h1 className="text-2xl font-bold mb-4">Lesson {lessonId}</h1>
       <div className="mb-8">
         <Image
           src="/images/image1.jpg"

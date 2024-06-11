@@ -5,14 +5,16 @@ import Button from "../Button/Button";
 import { createClient } from "@/utils/supabase/client";
 
 interface ModalProps {
-  children: any;
+  id: any;
 }
 
-const ModalWindow: FC<ModalProps> = ({ children }) => {
+const ModalWindow: FC<ModalProps> = ({ id }) => {
   const [modalValue, setModalValue] = useState(``);
   const [name, setName] = useState(``);
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDialogElement>(null);
+
+  console.log(id);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setModalValue(event.target.value);
@@ -34,7 +36,7 @@ const ModalWindow: FC<ModalProps> = ({ children }) => {
     const supabase = createClient();
     const { data, error } = await supabase
       .from("lessons")
-      .insert([{ description: modalValue, name: name }])
+      .insert([{ description: modalValue, name: name, course_id: id }])
       .select();
 
     window.location.reload();
@@ -87,7 +89,7 @@ const ModalWindow: FC<ModalProps> = ({ children }) => {
   return (
     <div>
       <button className="btn btn-primary" onClick={handleOpen}>
-        Create new lesson
+        Create new lessons
       </button>
       {isOpen &&
         typeof document !== "undefined" &&

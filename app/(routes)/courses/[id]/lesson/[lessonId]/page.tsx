@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Button from "./button";
 
 const LessonPage = ({
   params: { courseId, lessonId },
@@ -18,6 +19,10 @@ const LessonPage = ({
     "How do you create a context in React?",
     "What is the useState hook?",
   ];
+
+  const handleButton = async () => {
+    console.log("Button clicked");
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
@@ -38,6 +43,9 @@ const LessonPage = ({
           </li>
         ))}
       </ul>
+      <div>
+        <Button />
+      </div>
     </div>
   );
 };

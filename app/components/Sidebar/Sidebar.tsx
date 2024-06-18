@@ -40,8 +40,6 @@ async function getRole() {
     return "Developer";
   }
 
-  console.log("role_to_user:", role_to_user);
-
   const role_name = role_to_user?.role?.role_name;
   if (role_name) {
     return role_name;

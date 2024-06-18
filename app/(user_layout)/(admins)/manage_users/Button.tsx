@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, useEffect, useState } from "react";
-import { detectRole, setRole } from "./action";
+import { detectRole, setRole, getTeam } from "./action";
 
 interface ButtonProps {
   id: string;

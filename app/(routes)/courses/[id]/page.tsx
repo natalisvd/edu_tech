@@ -43,7 +43,7 @@ const Page = async ({ params: { id } }: { params: { id: string } }) => {
           {" "}
           <div className="flex flex-col">
             <div className="flex justify-center mb-10">
-              <CTAButton />
+              <CTAButton id={id} />
               {/* <Button handleChange={handleClick} text={"Create new lesson"} /> */}
             </div>
             <div className="flex flex-col">

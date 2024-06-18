@@ -3,9 +3,13 @@
 import createNewLesson from "../action";
 import ModalWindow from "./ModalWindow/ModalWindow";
 
-export const CTAButton = () => {
+interface CTAButtonProps {
+  id: string;
+}
+
+export const CTAButton: React.FC<CTAButtonProps> = ({ id }) => {
   const handleClick = async () => {
-    console.log("click CTAbutton");
+    console.log("click CTAbutton", id);
     try {
       const result = await createNewLesson();
       console.log("result", result);
@@ -17,9 +21,7 @@ export const CTAButton = () => {
 
   return (
     <>
-      {" "}
-      <ModalWindow>
-        {" "}
+      <ModalWindow id={id}>
         <button className="btn btn-primary" onClick={handleClick}>
           Create new lesson
         </button>

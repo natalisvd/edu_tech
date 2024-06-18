@@ -1,11 +1,17 @@
 import { createClient } from "@/utils/supabase/server";
 import Button from "./button";
+import { detectRole, setRole, getTeam } from "./action";
 
 const Page = async () => {
   const supabase = createClient();
 
   let { data: profiles, error } = await supabase.from("profiles").select("*");
-  console.log(profiles);
+
+  if (error) {
+    console.error("Error fetching profiles:", error);
+    return <div>Error loading profiles</div>;
+  }
+
   return (
     <div>
       <div className="overflow-x-auto">
@@ -15,6 +21,7 @@ const Page = async () => {
               <th></th>
               <th>name</th>
               <th>admin</th>
+              <th>team</th>
             </tr>
           </thead>
           <tbody>
@@ -23,8 +30,13 @@ const Page = async () => {
                 <th></th>
                 <td>{user.first_name ? user.first_name : "some user"}</td>
                 <td>
-                  {user.role_id === "" ? "admin" : <Button id={user.id} />}
+                  {user.role_id === 1 ? (
+                    <span>admin</span>
+                  ) : (
+                    <Button id={user.id} />
+                  )}
                 </td>
+                <td>{getTeam(user.id)}</td>
               </tr>
             ))}
           </tbody>

@@ -15,17 +15,16 @@ const Button: FC<ButtonProps> = ({ id }) => {
     try {
       const result = await detectRole(id);
       setUserRole(result.role_id);
-      console.log(result);
     } catch (error) {
       console.error("Error in userHandler:", error);
     }
   };
 
   const setRoleHandler = async () => {
-    console.log("setRoleHandler");
     try {
-      await setRole(id);
-      setUserRole(1); // Assuming role_id 1 means admin role
+      // await setRole(id);
+      await getTeam;
+      setUserRole(null); // Assuming role_id 1 means admin role
     } catch (error) {
       console.error("Error in setRoleHandler:", error);
     }
@@ -42,8 +41,11 @@ const Button: FC<ButtonProps> = ({ id }) => {
   return (
     <div>
       {useRole !== 1 ? (
-        <button type="button" className="btn" onClick={setRoleHandler}>
-          Make admin
+        <button
+          onClick={setRoleHandler}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-200"
+        >
+          Assign Admin Role
         </button>
       ) : null}
     </div>

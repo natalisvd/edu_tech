@@ -42,6 +42,8 @@ const getTeam = async (id: string) => {
   let { data: teams, error } = await supabase
     .from("teams")
     .select("*")
+
+    // Filters
     .eq("user_id", id);
 
   if (error) {
@@ -49,7 +51,7 @@ const getTeam = async (id: string) => {
     return null;
   }
 
-  console.log("role_to_user data team:", teams);
+  console.log("role_to_user data teams:", teams);
   return teams;
 };
 

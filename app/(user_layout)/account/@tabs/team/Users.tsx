@@ -6,7 +6,7 @@ import React, { FC, useEffect, useState } from "react";
 
 interface UserProps {
   users: any;
-  teamNames: string;
+  teamNames: string[];
 }
 
 const Users: FC<UserProps> = ({ users, teamNames }) => {
@@ -48,29 +48,39 @@ const Users: FC<UserProps> = ({ users, teamNames }) => {
   };
 
   return (
-    <div>
-      <h1>Invite new users</h1>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold mb-6">Invite new users</h1>
       <input
         type="text"
         placeholder="Search users"
         value={searchTerm}
         onChange={handleSearch}
-        className="mb-5 p-2 border border-gray-300 rounded"
+        className="mb-5 p-2 w-full border border-gray-300 rounded"
       />
-      {filteredUsers.map((user) => (
-        <div key={user.id} className="flex">
-          <div>{user.first_name}</div>
-          <div>
-            {user?.teams?.length > 0 ? (
-              user.teams.map((team: any) => team.team_name).join(", ")
-            ) : (
-              <button onClick={() => setUserFunction(user.id)}>
-                Invite user
-              </button>
-            )}
+      <div className="grid grid-cols-1 gap-4">
+        {filteredUsers.map((user) => (
+          <div
+            key={user.id}
+            className="flex justify-between items-center p-4 bg-white shadow rounded"
+          >
+            <div className="text-lg font-medium">{user.first_name}</div>
+            <div className="flex items-center space-x-4">
+              {user?.teams?.length > 0 ? (
+                <div className="text-sm text-gray-600">
+                  {user.teams.map((team: any) => team.team_name).join(", ")}
+                </div>
+              ) : (
+                <button
+                  onClick={() => setUserFunction(user.id)}
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                >
+                  Invite user
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

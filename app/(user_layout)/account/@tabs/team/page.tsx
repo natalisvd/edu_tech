@@ -15,19 +15,19 @@ export default async function Page() {
 
   const users = await getUsers();
   console.log("users", users);
+
+  const teamNames = teams?.map((team) => team.team_name) || [];
+
   return (
     <div className="flex flex-col">
-      {" "}
       <div className="mb-5">
-        {" "}
         Your team
-        {teams?.map((team) => {
-          return <div>{team.team_name}</div>;
-        })}
+        {teamNames.map((teamName, index) => (
+          <div key={index}>{teamName}</div>
+        ))}
       </div>
       <div>
-        {" "}
-        <Users users={users} />
+        <Users users={users} teamNames={teamNames} />
       </div>
     </div>
   );

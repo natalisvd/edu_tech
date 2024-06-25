@@ -6,9 +6,10 @@ import React, { FC, useEffect, useState } from "react";
 
 interface UserProps {
   users: any;
+  teamNames: string;
 }
 
-const Users: FC<UserProps> = ({ users }) => {
+const Users: FC<UserProps> = ({ users, teamNames }) => {
   const [usersM, setUsersM] = useState<{ first_name: string }[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -38,9 +39,8 @@ const Users: FC<UserProps> = ({ users }) => {
   );
 
   const setUserFunction = async (userId: any) => {
-    console.log("user id", userId);
     try {
-      const result = await setUser({ id: userId });
+      const result = await setUser({ id: userId, teamNames });
       console.log("User set successfully", result);
     } catch (error) {
       console.error("Failed to set user", error);

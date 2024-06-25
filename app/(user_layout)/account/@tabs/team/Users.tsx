@@ -1,6 +1,7 @@
 "use client";
 
 import { getTeam } from "@/app/(user_layout)/(admins)/manage_users/action";
+import { setUser } from "@/app/(user_layout)/(admins)/manage_users/action"; // Імпортуйте функцію setUser
 import React, { FC, useEffect, useState } from "react";
 
 interface UserProps {
@@ -15,7 +16,7 @@ const Users: FC<UserProps> = ({ users }) => {
     console.log(users);
     setUsersM(users);
 
-    const getUsersWithteam = async () => {
+    const getUsersWithTeam = async () => {
       const profilesWithTeams = await Promise.all(
         users.map(async (profile) => {
           const teams = await getTeam(profile.id);
@@ -25,7 +26,7 @@ const Users: FC<UserProps> = ({ users }) => {
       setUsersM(profilesWithTeams);
       console.log(profilesWithTeams);
     };
-    getUsersWithteam();
+    getUsersWithTeam();
   }, [users]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +37,15 @@ const Users: FC<UserProps> = ({ users }) => {
     user?.first_name?.toLowerCase()?.includes(searchTerm.toLowerCase())
   );
 
-  console.log(filteredUsers);
+  const setUserFunction = async (userId: any) => {
+    console.log("user id", userId);
+    try {
+      const result = await setUser({ id: userId });
+      console.log("User set successfully", result);
+    } catch (error) {
+      console.error("Failed to set user", error);
+    }
+  };
 
   return (
     <div>
@@ -52,11 +61,12 @@ const Users: FC<UserProps> = ({ users }) => {
         <div key={user.id} className="flex">
           <div>{user.first_name}</div>
           <div>
-            {" "}
             {user?.teams?.length > 0 ? (
               user.teams.map((team: any) => team.team_name).join(", ")
             ) : (
-              <button>Invite user</button>
+              <button onClick={() => setUserFunction(user.id)}>
+                Invite user
+              </button>
             )}
           </div>
         </div>

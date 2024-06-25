@@ -6,3 +6,11 @@ export const getUsers = async () => {
 
   return profiles;
 };
+
+export const setUser = async () => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("teams")
+    .insert([{ some_column: "someValue", other_column: "otherValue" }])
+    .select();
+};

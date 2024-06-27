@@ -1,165 +1,186 @@
-'use client'
+"use client";
 
-import { useCallback, useEffect, useState, createContext } from 'react'
-import { createClient } from '@/utils/supabase/client'
-import { type User } from '@supabase/supabase-js'
-import { useRouter } from 'next/navigation'
-import { useForm, FormProvider } from 'react-hook-form'
-import { AccountFormValues as FormValues, AlertProps } from './types'
-import { Avatar } from './avatar'
-import { getProfileData, updateProfileData } from './actions'
-import { XMarkIcon } from '@/app/components/Icons/XMarkIcon'
+import { useCallback, useEffect, useState, createContext } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { type User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import { useForm, FormProvider } from "react-hook-form";
+import { AccountFormValues as FormValues, AlertProps } from "./types";
+import { Avatar } from "./avatar";
+import { getProfileData, updateProfileData } from "./actions";
+import { XMarkIcon } from "@/app/components/Icons/XMarkIcon";
 
-function Alert ({ message, severity, onHide }: AlertProps & { onHide: () => void }) {
+function Alert({
+  message,
+  severity,
+  onHide,
+}: AlertProps & { onHide: () => void }) {
   const severityColors = {
     error: "alert-error",
-    success: 'alert-success',
-    info: 'alert-info',
-    warning: 'alert-warning'
-  }
-  const alertColor: string = severityColors[severity as keyof typeof severityColors] ?? severityColors.success
+    success: "alert-success",
+    info: "alert-info",
+    warning: "alert-warning",
+  };
+  const alertColor: string =
+    severityColors[severity as keyof typeof severityColors] ??
+    severityColors.success;
 
   return (
-    <div className={`alert flex flex-row justify-between items-start gap-5`.concat(' ', alertColor)}>
+    <div
+      className={`alert flex flex-row justify-between items-start gap-5`.concat(
+        " ",
+        alertColor
+      )}
+    >
       <div>{message}</div>
-      <button className='btn btn-ghost btn-square btn-xs' onClick={onHide}><XMarkIcon /></button>
+      <button className="btn btn-ghost btn-square btn-xs" onClick={onHide}>
+        <XMarkIcon />
+      </button>
     </div>
-  )
+  );
 }
 
 const initialValues = {
-  firstname: '',
-  lastname: '',
-  username: '',
-  avatar_url: '',
-  avatar_file: undefined
-}
-type AvatarFileProps = { avatar_file?: FileList }
+  firstname: "",
+  lastname: "",
+  username: "",
+  avatar_url: "",
+  avatar_file: undefined,
+};
+type AvatarFileProps = { avatar_file?: FileList };
 
 export const AvatarContext = createContext<{
   file: File | null;
   resetFile: () => void;
-}>({ file: null, resetFile: () => {}})
+}>({ file: null, resetFile: () => {} });
 
 export default function AccountForm({ user }: { user: User | null }) {
-  const router = useRouter()
+  const router = useRouter();
 
-  const supabase = createClient()
-  const [loading, setLoading] = useState(true)
-  const [values, setValues] = useState<FormValues & AvatarFileProps>()
-  const [alert, setAlert] = useState<AlertProps | null>(null)
-  const [bufferImage, setBufferImage] = useState<File | null>(null)
+  const supabase = createClient();
+  const [loading, setLoading] = useState(true);
+  const [values, setValues] = useState<FormValues & AvatarFileProps>();
+  const [alert, setAlert] = useState<AlertProps | null>(null);
+  const [bufferImage, setBufferImage] = useState<File | null>(null);
 
   const methods = useForm<FormValues & AvatarFileProps>({
     defaultValues: initialValues,
-    values
-  })
+    values,
+  });
 
-  const { register, handleSubmit, watch, formState: { errors, isValid }, resetField, setValue } = methods
-  
-  const watchedField = watch('avatar_file')
-  const resetFile = () => resetField('avatar_file')
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isValid },
+    resetField,
+    setValue,
+  } = methods;
+
+  const watchedField = watch("avatar_file");
+  const resetFile = () => resetField("avatar_file");
 
   const handleShowImage = useCallback(() => {
     if (watchedField?.length) {
-      const image = watchedField[0]
+      const image = watchedField[0];
       return setBufferImage(image);
     }
-    return setBufferImage(null)
+    return setBufferImage(null);
+  }, [watchedField]);
 
-  }, [watchedField])
-
-  useEffect (() => {
-    handleShowImage()
-  }, [handleShowImage])
+  useEffect(() => {
+    handleShowImage();
+  }, [handleShowImage]);
 
   const getProfile = useCallback(async () => {
     try {
-      setLoading(true)
-      const data = await getProfileData(user?.id)
+      setLoading(true);
+      const data = await getProfileData(user?.id);
       if (data) {
         return setValues({
           ...initialValues,
-          firstname: data.first_name ?? '',
-          lastname: data.last_name ?? '',
-          username: data.username ?? '',
-          avatar_url: data.avatar_url ?? '',
-        })
+          firstname: data.first_name ?? "",
+          lastname: data.last_name ?? "",
+          username: data.username ?? "",
+          avatar_url: data.avatar_url ?? "",
+        });
       }
     } catch (error) {
-      setAlert({ message: 'Error loading user data!', severity: 'error' })
+      setAlert({ message: "Error loading user data!", severity: "error" });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [user])
+  }, [user]);
 
   useEffect(() => {
-    getProfile()
-  }, [user, getProfile])
+    getProfile();
+  }, [user, getProfile]);
 
   async function updateProfile({
     username,
     firstname,
     lastname,
     avatar_url,
-  }: FormValues ) {
+  }: FormValues) {
     try {
-      setLoading(true)
-      if (!user?.id) return
-      const userId = user.id
-      const filePath = await uploadAvatar(bufferImage, userId)
+      setLoading(true);
+      if (!user?.id) return;
+      const userId = user.id;
+      const filePath = await uploadAvatar(bufferImage, userId);
       await updateProfileData(userId, {
         username,
         firstname,
         lastname,
         avatar_url: filePath ?? avatar_url,
-      })
-      setAlert({ message: 'Profile updated!' })
+      });
+      setAlert({ message: "Profile updated!" });
     } catch (error) {
-      setAlert({ message: 'Error updating the data!', severity: 'error' })
+      setAlert({ message: "Error updating the data!", severity: "error" });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
-  const url = watch('avatar_url')
+  const url = watch("avatar_url");
 
   const uploadAvatar = async (file: File | null, userId: string) => {
     try {
       if (!file) return null;
-      const fileExt = file.name.split('.').pop()
-      const filePath = `${userId}-${Math.random()}.${fileExt}`
+      const fileExt = file.name.split(".").pop();
+      const filePath = `${userId}-${Math.random()}.${fileExt}`;
 
-      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file)
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file);
 
       if (uploadError) {
-        throw uploadError
+        throw uploadError;
       }
-      setValue('avatar_url', filePath)
-      setAlert({ message: 'Avatar updated!', severity: 'success' })
-      return filePath
+      setValue("avatar_url", filePath);
+      setAlert({ message: "Avatar updated!", severity: "success" });
+      return filePath;
     } catch (error) {
-      console.log('uploadAvatar [error]', error)
-      setAlert({ message: 'Error uploading avatar!', severity: 'error' })
+      console.log("uploadAvatar [error]", error);
+      setAlert({ message: "Error uploading avatar!", severity: "error" });
     }
-  }
+  };
 
   return (
     <FormProvider {...methods}>
-      <div className='grid md:grid-cols-[auto,_1fr] gap-5 mb-10 w-full justify-items-center md:justify-items-stretch'>
+      <div className="grid md:grid-cols-[auto,_1fr] gap-5 mb-10 w-full justify-items-center md:justify-items-stretch">
         <AvatarContext.Provider value={{ file: bufferImage, resetFile }}>
-          <Avatar
-            url={url}
-            userName={values?.username || 'User'}
-            />
+          <Avatar url={url} userName={values?.username || "User"} />
         </AvatarContext.Provider>
-        <div className='md:max-w-xl w-full'>
-          <form className='grid grid-flow-row gap-y-5' onSubmit={handleSubmit(updateProfile)}>
-            <div className='form-control'>
-              <label htmlFor='email' className='label label-text'>
+        <div className="md:max-w-xl w-full">
+          <form
+            className="grid grid-flow-row gap-y-5"
+            onSubmit={handleSubmit(updateProfile)}
+          >
+            <div className="form-control">
+              <label htmlFor="email" className="label label-text">
                 Email
               </label>
               <input
-                className='input input-bordered'
+                className="input input-bordered"
                 id="email"
                 type="text"
                 value={user?.email}
@@ -167,50 +188,78 @@ export default function AccountForm({ user }: { user: User | null }) {
                 disabled
               />
             </div>
-            <div className='form-control'>
-              <label htmlFor="firstname" className='label label-text'>First Name</label>
+            <div className="form-control">
+              <label htmlFor="firstname" className="label label-text">
+                First Name
+              </label>
               <input
-                {...register('firstname')}
-                className='input input-bordered'
+                {...register("firstname")}
+                className="input input-bordered"
                 id="firstname"
                 type="text"
               />
             </div>
-            <div className='form-control'>
-              <label htmlFor="lastname" className='label label-text'>Last Name</label>
+            <div className="form-control">
+              <label htmlFor="lastname" className="label label-text">
+                Last Name
+              </label>
               <input
-                {...register('lastname')}
-                className='input input-bordered'
+                {...register("lastname")}
+                className="input input-bordered"
                 id="lastname"
                 type="text"
               />
             </div>
-            <div className='form-control'>
-              <label htmlFor="username" className='label label-text'>Username</label>
+            <div className="form-control">
+              <label htmlFor="username" className="label label-text">
+                Username
+              </label>
               <input
-                {...register('username', { required: 'Username is required', minLength: { value: 3, message: "Username must be at least 3 characters" }})}
-                className='input input-bordered'
+                {...register("username", {
+                  required: "Username is required",
+                  minLength: {
+                    value: 3,
+                    message: "Username must be at least 3 characters",
+                  },
+                })}
+                className="input input-bordered"
                 id="username"
                 type="text"
               />
-              {errors?.username && <p className='label label-text-alt text-error'>{errors?.username?.message}</p>}
+              {errors?.username && (
+                <p className="label label-text-alt text-error">
+                  {errors?.username?.message}
+                </p>
+              )}
             </div>
 
-            {alert?.message && <Alert message={alert.message} severity={alert?.severity} onHide={() => setAlert(null)} />}
+            {alert?.message && (
+              <Alert
+                message={alert.message}
+                severity={alert?.severity}
+                onHide={() => setAlert(null)}
+              />
+            )}
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
-              <button type='button' className='btn btn-primary btn-block btn-outline order-last md:order-none' onClick={() => router.push('/')}>go to Main Page</button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <button
+                type="button"
+                className="btn btn-primary btn-block btn-outline order-last md:order-none"
+                onClick={() => router.push("/")}
+              >
+                go to Main Page
+              </button>
               <button
                 className="btn btn-primary btn-block"
-                type='submit'
+                type="submit"
                 disabled={loading || !isValid}
-                >
-                {loading ? 'Loading ...' : 'Update'}
+              >
+                {loading ? "Loading ..." : "Update"}
               </button>
             </div>
           </form>
         </div>
       </div>
     </FormProvider>
-  )
+  );
 }

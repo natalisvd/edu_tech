@@ -12,14 +12,14 @@ const Page = async () => {
     return <div>Error loading profiles</div>;
   }
 
-  // Fetch team information for each profile
+  // Fetch team information for each profile start
   const profilesWithTeams = await Promise.all(
     profiles.map(async (profile) => {
       const teams = await getTeam(profile.id);
       return { ...profile, teams };
     })
   );
-
+  // start
   return (
     <div className="container mx-auto p-4">
       <div className="overflow-x-auto">

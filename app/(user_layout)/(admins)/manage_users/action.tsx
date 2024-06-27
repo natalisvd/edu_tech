@@ -57,15 +57,13 @@ const getTeam = async (id: string) => {
 
 const setUser = async ({ id, teamNames }: { id: any; teamNames: string }) => {
   const supabase = createClient();
+
   const { data, error } = await supabase
     .from("teams")
-    .insert([
-      {
-        team_name: teamNames[0],
-        user_id: id,
-      },
-    ])
+    .update({ user_id: "cd60e98c-38d2-4d67-a818-7b62caf4d784" })
+    .eq("some_column", "someValue")
     .select();
+
   console.log(data);
   return data;
 };

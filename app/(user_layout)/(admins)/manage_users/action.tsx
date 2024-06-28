@@ -51,7 +51,6 @@ const getTeam = async (id: string) => {
     return null;
   }
 
-  console.log("role_to_user data teams:", teams);
   return teams;
 };
 
@@ -67,5 +66,20 @@ const setUser = async ({ id, teamNames }: { id: any; teamNames: string }) => {
   console.log(data);
   return data;
 };
+
+export async function createTeam(teamName: string) {
+  console.log("teamName", teamName);
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("teams")
+    .insert([{ team_name: teamName }]);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  console.log(data);
+  return data;
+}
 
 export { detectRole, setRole, getTeam, setUser };

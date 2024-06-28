@@ -1,6 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { getUsers, isAdmin } from "./action";
 import Users from "./users";
+import CreateTeam from "./CreateTeam";
+import { createTeam } from "./action";
 
 export default async function Page() {
   const supabase = createClient();
@@ -63,6 +65,7 @@ export default async function Page() {
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-4">Your Team</h2>
+
         <div className="space-y-2">
           {teamNames.map((teamName, index) => (
             <div
@@ -85,6 +88,7 @@ export default async function Page() {
             </div>
           ))}
         </div>
+        <CreateTeam teamName={"kdkdkkd"} />
       </div>
       <div>
         <Users users={users} teamNames={teamNames} />

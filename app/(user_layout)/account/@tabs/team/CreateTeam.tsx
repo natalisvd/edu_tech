@@ -5,12 +5,13 @@ import { createTeam } from "@/app/(user_layout)/(admins)/manage_users/action";
 
 interface CreateTeamProps {
   teamName?: string;
+  id: string;
 }
 
-const CreateTeam: FC<CreateTeamProps> = ({ teamName }) => {
+const CreateTeam: FC<CreateTeamProps> = ({ teamName, id }) => {
   const handleCreateTeam = useCallback(async () => {
     try {
-      await createTeam(teamName);
+      await createTeam(teamName, id);
       console.log("Team created successfully.");
     } catch (error) {
       console.error("Failed to create team:", error);
@@ -19,7 +20,6 @@ const CreateTeam: FC<CreateTeamProps> = ({ teamName }) => {
 
   return (
     <div>
-      <h2>Create Team</h2>
       <button onClick={handleCreateTeam}>Create Team</button>
     </div>
   );

@@ -88,7 +88,7 @@ export default async function Page() {
             </div>
           ))}
         </div>
-        <CreateTeam teamName={"kdkdkkd"} />
+        <CreateTeam teamName={"kdkdkkd"} id={user.id} />
       </div>
       <div>
         <Users users={users} teamNames={teamNames} />

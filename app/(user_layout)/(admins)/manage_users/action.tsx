@@ -67,13 +67,13 @@ const setUser = async ({ id, teamNames }: { id: any; teamNames: string }) => {
   return data;
 };
 
-export async function createTeam(teamName: string) {
+export async function createTeam(teamName: string, id: string) {
   console.log("teamName", teamName);
   const supabase = createClient();
 
   const { data, error } = await supabase
     .from("teams")
-    .insert([{ team_name: teamName }]);
+    .insert([{ team_name: teamName, user_id: id }]);
 
   if (error) {
     throw new Error(error.message);

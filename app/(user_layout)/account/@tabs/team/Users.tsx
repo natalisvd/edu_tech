@@ -37,7 +37,7 @@ const Users: FC<UserProps> = ({ users, teamNames }) => {
   const filteredUsers = usersM?.filter((user) =>
     user?.first_name?.toLowerCase()?.includes(searchTerm.toLowerCase())
   );
-
+  // start
   const setUserFunction = async (userId: any) => {
     try {
       const result = await setUser({ id: userId, teamNames });

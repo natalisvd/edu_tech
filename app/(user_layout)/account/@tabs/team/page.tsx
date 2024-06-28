@@ -8,15 +8,6 @@ export default async function Page() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const getTeam = async ({ id }: { id: any }) => {
-    let { data: teamlist, error } = await supabase
-      .from("teamlist")
-      .select("*")
-      .eq("id", id);
-
-    console.log("teamlist", teamlist);
-  };
-
   let { data: teams, error } = await supabase
     .from("teams")
     .select("*")
@@ -31,16 +22,35 @@ export default async function Page() {
     .from("teamleaders")
     .select("*")
     .eq("leader_id", user.id);
-  console.log("teamleaders", teamleaders);
-  console.log("userid", user.id);
-  if (teamleaders) {
-    teamleaders?.map((leads) => {
-      return getTeam(leads.team_id);
-    });
-  }
+
   if (teamleadersError) {
     console.error("Error fetching team leaders:", teamleadersError);
     return <div>Error fetching team leaders.</div>;
+  }
+
+  const getTeam = async (id) => {
+    let { data: teamlist, error } = await supabase
+      .from("teamlist")
+      .select("*")
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error fetching team list:", error);
+      return [];
+    }
+
+    return teamlist;
+  };
+
+  let teamlists = {};
+
+  if (teamleaders) {
+    const teamPromises = teamleaders.map(async (lead) => {
+      const teamList = await getTeam(lead.team_id);
+      teamlists[lead.team_id] = teamList;
+    });
+
+    await Promise.all(teamPromises);
   }
 
   const users = await getUsers();
@@ -53,7 +63,6 @@ export default async function Page() {
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-4">Your Team</h2>
-        <div></div>
         <div className="space-y-2">
           {teamNames.map((teamName, index) => (
             <div
@@ -61,6 +70,18 @@ export default async function Page() {
               className="p-2 bg-white shadow rounded text-gray-800"
             >
               {teamName}
+              {teamlists[teamName] && (
+                <div className="pl-4">
+                  {teamlists[teamName].map((member, memberIndex) => (
+                    <div
+                      key={memberIndex}
+                      className="p-1 bg-gray-200 rounded mt-1"
+                    >
+                      {member.name}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>

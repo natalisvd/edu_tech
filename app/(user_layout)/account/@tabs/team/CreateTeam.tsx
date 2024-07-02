@@ -2,6 +2,7 @@
 
 import { FC, useCallback } from "react";
 import { createTeam } from "@/app/(user_layout)/(admins)/manage_users/action";
+import Modal from "./components/Modal";
 
 interface CreateTeamProps {
   teamName?: string;
@@ -9,18 +10,9 @@ interface CreateTeamProps {
 }
 
 const CreateTeam: FC<CreateTeamProps> = ({ teamName, id }) => {
-  const handleCreateTeam = useCallback(async () => {
-    try {
-      await createTeam(teamName, id);
-      console.log("Team created successfully.");
-    } catch (error) {
-      console.error("Failed to create team:", error);
-    }
-  }, [teamName]);
-
   return (
     <div>
-      <button onClick={handleCreateTeam}>Create Team</button>
+      {teamName?.length > 2 ? teamName : <Modal teamName={teamName} id={id} />}
     </div>
   );
 };

@@ -89,7 +89,7 @@ export default async function Page() {
             </div>
           ))}
         </div>
-        <CreateTeam id={user.id} />
+        {teamNames.length < 1 && <CreateTeam id={user.id} />}
       </div>
       <div>
         <Users users={users} teamNames={teamNames} />

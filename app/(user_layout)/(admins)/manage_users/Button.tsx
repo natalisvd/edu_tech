@@ -22,8 +22,7 @@ const Button: FC<ButtonProps> = ({ id }) => {
 
   const setRoleHandler = async () => {
     try {
-      // await setRole(id);
-      await getTeam;
+      await setRole(id);
       setUserRole(null); // Assuming role_id 1 means admin role
     } catch (error) {
       console.error("Error in setRoleHandler:", error);

@@ -61,6 +61,8 @@ export default async function Page() {
   const teamLeaderNames =
     teamleaders?.map((leader) => leader.leader_name) || [];
 
+  console.log(user, "user");
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="mb-8">

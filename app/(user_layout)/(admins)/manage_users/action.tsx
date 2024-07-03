@@ -83,4 +83,12 @@ export async function createTeam(teamName: string, id: string) {
   return data;
 }
 
-export { detectRole, setRole, getTeam, setUser };
+const setLeadRole = async (id: string, teamId: number) => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("teamleaders")
+    .insert([{ leader_id: id, team_id: teamId }])
+    .select();
+};
+
+export { detectRole, setRole, getTeam, setUser, setLeadRole };

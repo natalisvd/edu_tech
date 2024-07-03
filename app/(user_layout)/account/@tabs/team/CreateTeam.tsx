@@ -1,18 +1,18 @@
 "use client";
 
-import { FC, useCallback } from "react";
+import { FC, useCallback, useEffect } from "react";
 import { createTeam } from "@/app/(user_layout)/(admins)/manage_users/action";
 import Modal from "./components/Modal";
 
 interface CreateTeamProps {
-  teamName?: string;
+  teamName?: any;
   id: string;
 }
 
 const CreateTeam: FC<CreateTeamProps> = ({ teamName, id }) => {
   return (
     <div>
-      {teamName?.length > 2 ? teamName : <Modal teamName={teamName} id={id} />}
+      <Modal teamName={teamName} id={id} />
     </div>
   );
 };

@@ -10,7 +10,7 @@ interface ModalProps {
 
 const Modal: FC<ModalProps> = ({ teamName, id }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [modalValue, setModalValue] = useState(`${teamName}`);
+  const [modalValue, setModalValue] = useState(teamName || "");
   const modalRef = useRef<HTMLDialogElement>(null);
 
   const handleOpen = () => {
@@ -35,12 +35,13 @@ const Modal: FC<ModalProps> = ({ teamName, id }) => {
 
   const handleCreateTeam = useCallback(async () => {
     try {
-      await createTeam(teamName, id);
+      await createTeam(modalValue, id);
       console.log("Team created successfully.");
+      handleClose(); // Close the modal after creating the team
     } catch (error) {
       console.error("Failed to create team:", error);
     }
-  }, [teamName]);
+  }, [modalValue, id]); // Ensure modalValue and id are included as dependencies
 
   const modalContent = (
     <dialog id="my_modal_1" className="modal" ref={modalRef}>
@@ -52,7 +53,9 @@ const Modal: FC<ModalProps> = ({ teamName, id }) => {
             className="textarea"
           ></textarea>
           <form method="dialog" className="w-full flex justify-between">
-            <button onClick={handleCreateTeam}>Create team</button>
+            <button type="button" onClick={handleCreateTeam}>
+              Create team
+            </button>
             <div className="flex justify-between w-full">
               <button type="button" className="btn" onClick={handleClose}>
                 Close

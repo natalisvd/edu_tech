@@ -73,6 +73,7 @@ export default async function Page() {
               className="p-2 bg-white shadow rounded text-gray-800"
             >
               {teamName}
+
               {teamlists[teamName] && (
                 <div className="pl-4">
                   {teamlists[teamName].map((member, memberIndex) => (
@@ -88,7 +89,7 @@ export default async function Page() {
             </div>
           ))}
         </div>
-        <CreateTeam teamName={"kdkdkkd"} id={user.id} />
+        <CreateTeam id={user.id} />
       </div>
       <div>
         <Users users={users} teamNames={teamNames} />

@@ -56,12 +56,12 @@ const getTeam = async (id: string) => {
 
 // start
 
-const setUser = async ({ id, teamNames }: { id: any; teamNames: string }) => {
+const setUser = async ({ id, teamId }: { id: any; teamId: any }) => {
   const supabase = createClient();
 
   const { data, error } = await supabase
     .from("teams")
-    .insert([{ user_id: id, team_name: teamNames[0] }])
+    .insert([{ user_id: id, team_id: teamId }])
     .select();
 
   console.log(data);

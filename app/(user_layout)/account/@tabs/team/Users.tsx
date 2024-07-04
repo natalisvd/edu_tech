@@ -1,7 +1,10 @@
 "use client";
 
 import { getTeam } from "@/app/(user_layout)/(admins)/manage_users/action";
-import { setUser } from "@/app/(user_layout)/(admins)/manage_users/action"; // Імпортуйте функцію setUser
+import {
+  setUser,
+  getTeamName,
+} from "@/app/(user_layout)/(admins)/manage_users/action"; // Імпортуйте функцію setUser
 import React, { FC, useEffect, useState } from "react";
 
 interface UserProps {
@@ -10,13 +13,13 @@ interface UserProps {
 }
 
 const Users: FC<UserProps> = ({ users, teamId }) => {
-  const [usersM, setUsersM] = useState<{ first_name: string }[]>([]);
+  const [usersM, setUsersM] = useState<{ first_name: string; teams: any[] }[]>(
+    []
+  );
   const [searchTerm, setSearchTerm] = useState("");
+  const [teamNames, setTeamNames] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    console.log(users);
-    setUsersM(users);
-
     const getUsersWithTeam = async () => {
       const profilesWithTeams = await Promise.all(
         users.map(async (profile) => {
@@ -24,9 +27,23 @@ const Users: FC<UserProps> = ({ users, teamId }) => {
           return { ...profile, teams };
         })
       );
+
       setUsersM(profilesWithTeams);
-      console.log(profilesWithTeams);
+
+      // Fetch team names
+      const names: { [key: string]: string } = {};
+      await Promise.all(
+        profilesWithTeams.flatMap((profile) =>
+          profile.teams.map(async (team) => {
+            const teamName = await getTeamName(team.team_id);
+            names[team.team_id] = teamName;
+          })
+        )
+      );
+
+      setTeamNames(names);
     };
+
     getUsersWithTeam();
   }, [users]);
 
@@ -37,7 +54,7 @@ const Users: FC<UserProps> = ({ users, teamId }) => {
   const filteredUsers = usersM?.filter((user) =>
     user?.first_name?.toLowerCase()?.includes(searchTerm.toLowerCase())
   );
-  // start
+
   const setUserFunction = async (userId: any) => {
     try {
       const result = await setUser({ id: userId, teamId });
@@ -67,7 +84,9 @@ const Users: FC<UserProps> = ({ users, teamId }) => {
             <div className="flex items-center space-x-4">
               {user?.teams?.length > 0 ? (
                 <div className="text-sm text-gray-600">
-                  {user.teams.map((team: any) => team.team_name).join(", ")}
+                  {user.teams
+                    .map((team: any) => teamNames[team.team_id] || "Loading...")
+                    .join(", ")}
                 </div>
               ) : (
                 <button

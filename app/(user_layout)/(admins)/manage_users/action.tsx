@@ -114,4 +114,16 @@ const setLeadRole = async (id: string, teamId: number) => {
     .select();
 };
 
-export { detectRole, setRole, getTeam, setUser, setLeadRole };
+const getTeamName = async (id: number) => {
+  const supabase = createClient();
+  let { data: teamlist, error: selectError } = await supabase
+    .from("teamlist")
+    .select("*")
+    .eq("id", id);
+
+  console.log("teamlist2", id);
+  console.log("teamlist2", teamlist[0].team_name);
+  return teamlist[0].team_name;
+};
+
+export { detectRole, setRole, getTeam, setUser, setLeadRole, getTeamName };

@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import Button from "./button";
-import { getTeam } from "./action";
+import { getTeam, getTeamName } from "./action";
 
 const Page = async () => {
   const supabase = createClient();
@@ -12,14 +12,25 @@ const Page = async () => {
     return <div>Error loading profiles</div>;
   }
 
-  // Fetch team information for each profile start
+  // Fetch team information for each profile
   const profilesWithTeams = await Promise.all(
     profiles.map(async (profile) => {
       const teams = await getTeam(profile.id);
       return { ...profile, teams };
     })
   );
-  // start
+
+  // Fetch team names
+  const teamNames = {};
+  await Promise.all(
+    profilesWithTeams.flatMap((profile) =>
+      profile.teams.map(async (team) => {
+        const teamName = await getTeamName(team.team_id);
+        teamNames[team.team_id] = teamName;
+      })
+    )
+  );
+
   return (
     <div className="container mx-auto p-4">
       <div className="overflow-x-auto">
@@ -48,7 +59,11 @@ const Page = async () => {
                 </td>
                 <td className="px-4 py-2 border">
                   {user.teams.length > 0
-                    ? user.teams.map((team: any) => team.team_name).join(", ")
+                    ? user.teams
+                        .map(
+                          (team: any) => teamNames[team.team_id] || "Loading..."
+                        )
+                        .join(", ")
                     : "No team"}
                 </td>
               </tr>

@@ -72,15 +72,38 @@ export async function createTeam(teamName: string, id: string) {
   console.log("teamName", teamName);
   const supabase = createClient();
 
+  // Додаємо нову команду
+  const { data: insertData, error: insertError } = await supabase
+    .from("teamlist")
+    .insert([{ team_name: teamName }])
+    .select();
+
+  if (insertError) {
+    throw new Error(insertError.message);
+  }
+
+  console.log("Inserted Data:", insertData);
+
+  // Виконуємо запит, щоб знайти додане поле за його назвою
+  let { data: teamlist, error: selectError } = await supabase
+    .from("teamlist")
+    .select("*")
+    .eq("team_name", teamName);
+
+  if (selectError) {
+    throw new Error(selectError.message);
+  }
+
+  // Витягуємо ID з доданого запису
+  const newTeamId = teamlist[0]?.id;
+
+  console.log("New Team ID:", newTeamId);
   const { data, error } = await supabase
     .from("teams")
-    .insert([{ team_name: teamName, user_id: id }]);
+    .insert([{ team_id: newTeamId, user_id: id }]);
+  console.log("ID:", data);
 
-  if (error) {
-    throw new Error(error.message);
-  }
-  console.log(data);
-  return data;
+  return { insertData, newTeamId };
 }
 
 const setLeadRole = async (id: string, teamId: number) => {

@@ -34,14 +34,14 @@ export default async function Page() {
     let { data: teamlist, error } = await supabase
       .from("teamlist")
       .select("*")
-      .eq("id", id);
+      .eq("id", teams[0].team_id);
 
     if (error) {
       console.error("Error fetching team list:", error);
       return [];
     }
-
-    return teamlist;
+    console.log("teams", teamlist[0].team_name);
+    return teamlist[0].team_name;
   };
 
   let teamlists = {};
@@ -61,8 +61,6 @@ export default async function Page() {
   const teamLeaderNames =
     teamleaders?.map((leader) => leader.leader_name) || [];
 
-  console.log(user, "user");
-
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="mb-8">
@@ -74,7 +72,7 @@ export default async function Page() {
               key={index}
               className="p-2 bg-white shadow rounded text-gray-800"
             >
-              {teamName}
+              {getTeam()}
 
               {teamlists[teamName] && (
                 <div className="pl-4">

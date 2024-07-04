@@ -73,26 +73,13 @@ export default async function Page() {
               className="p-2 bg-white shadow rounded text-gray-800"
             >
               {getTeam()}
-
-              {teamlists[teamName] && (
-                <div className="pl-4">
-                  {teamlists[teamName].map((member, memberIndex) => (
-                    <div
-                      key={memberIndex}
-                      className="p-1 bg-gray-200 rounded mt-1"
-                    >
-                      {member.name}psdjjglsd
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           ))}
         </div>
         {teamNames.length < 1 && <CreateTeam id={user.id} />}
       </div>
       <div>
-        <Users users={users} teamNames={teamNames} />
+        <Users users={users} teamId={teams[0].team_id} />
       </div>
     </div>
   );

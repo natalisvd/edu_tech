@@ -90,12 +90,12 @@ export async function createTeam(teamName: string, id: string) {
     .select("*")
     .eq("team_name", teamName);
 
-  if (selectError) {
+  if (selectError ) {
     throw new Error(selectError.message);
   }
 
   // Витягуємо ID з доданого запису
-  const newTeamId = teamlist[0]?.id;
+  const newTeamId = teamlist![0]?.id;
 
   console.log("New Team ID:", newTeamId);
   const { data, error } = await supabase
@@ -121,9 +121,13 @@ const getTeamName = async (id: number) => {
     .select("*")
     .eq("id", id);
 
+    if (selectError) {
+      throw new Error(selectError.message);
+    }
+  
   console.log("teamlist2", id);
-  console.log("teamlist2", teamlist[0].team_name);
-  return teamlist[0].team_name;
+  console.log("teamlist2", teamlist![0].team_name);
+  return teamlist![0].team_name  || '';
 };
 
 export { detectRole, setRole, getTeam, setUser, setLeadRole, getTeamName };

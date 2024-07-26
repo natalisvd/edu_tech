@@ -7,34 +7,42 @@ import {
 } from "@/app/(user_layout)/(admins)/manage_users/action"; // Імпортуйте функцію setUser
 import React, { FC, useEffect, useState } from "react";
 
+
+interface Team {
+  team_id: string;
+}
+interface User {
+  id: string;
+  first_name: string;
+  teams: Team[];
+}
+
 interface UserProps {
-  users: any;
+  users: User[];
   teamId: any;
 }
 
 const Users: FC<UserProps> = ({ users, teamId }) => {
-  const [usersM, setUsersM] = useState<{ first_name: string; teams: any[] }[]>(
-    []
-  );
+  const [usersM, setUsersM] = useState<User[]>();
   const [searchTerm, setSearchTerm] = useState("");
   const [teamNames, setTeamNames] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     const getUsersWithTeam = async () => {
       const profilesWithTeams = await Promise.all(
-        users.map(async (profile) => {
+        users.map(async (profile: User) => {
           const teams = await getTeam(profile.id);
-          return { ...profile, teams };
+          return { ...profile, teams: teams || [] };
         })
       );
 
-      setUsersM(profilesWithTeams);
+      setUsersM(profilesWithTeams.map((profile: User) => profile));
 
       // Fetch team names
       const names: { [key: string]: string } = {};
       await Promise.all(
         profilesWithTeams.flatMap((profile) =>
-          profile.teams.map(async (team) => {
+          profile?.teams?.map(async (team) => {
             const teamName = await getTeamName(team.team_id);
             names[team.team_id] = teamName;
           })
@@ -75,7 +83,7 @@ const Users: FC<UserProps> = ({ users, teamId }) => {
         className="mb-5 p-2 w-full border border-gray-300 rounded"
       />
       <div className="grid grid-cols-1 gap-4">
-        {filteredUsers.map((user) => (
+        {filteredUsers?.map((user) => (
           <div
             key={user.id}
             className="flex justify-between items-center p-4 bg-white shadow rounded"

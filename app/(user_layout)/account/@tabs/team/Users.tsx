@@ -68,7 +68,7 @@ const Users: FC<UserProps> = ({ users, teamId }) => {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Invite new users</h1>
+      <h1 className="tepxt-3xl font-bold mb-6">Invite new users</h1>
       <input
         type="text"
         placeholder="Search users"

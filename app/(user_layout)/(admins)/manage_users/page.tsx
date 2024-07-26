@@ -1,11 +1,15 @@
 import { createClient } from "@/utils/supabase/server";
 import { getTeam, getTeamName } from "./action";
 import Button from "./Button";
+import { IUser, IUserWithTeam } from "@/app/interfaces/interfaces";
 
 const Page = async () => {
   const supabase = createClient();
 
-  let { data: profiles, error } = await supabase.from("profiles").select("*");
+  let { data: profiles, error } = await supabase.from('profiles').select('*') as {
+    data: IUser[];
+    error: any;
+  };
 
   if (error && !profiles) {
     console.error("Error fetching profiles:", error);
@@ -13,15 +17,15 @@ const Page = async () => {
   }
 
   // Fetch team information for each profile
-  const profilesWithTeams = await Promise.all(
-    profiles.map(async (profile) => {
-      const teams = await getTeam(profile.id);
-      return { ...profile, teams };
-    })
+  const profilesWithTeams: IUserWithTeam[] = await Promise.all(
+    profiles.map(async (profile: IUser) => ({
+      ...profile,
+      teams: await getTeam(profile.id) || [],
+    }))
   );
 
   // Fetch team names
-  const teamNames = {};
+  const teamNames : Record<string, string> = {};;
   await Promise.all(
     profilesWithTeams.flatMap((profile) =>
       profile.teams.map(async (team) => {

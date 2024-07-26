@@ -114,7 +114,7 @@ const setLeadRole = async (id: string, teamId: number) => {
     .select();
 };
 
-const getTeamName = async (id: number) => {
+const getTeamName = async (id: string) => {
   const supabase = createClient();
   let { data: teamlist, error: selectError } = await supabase
     .from("teamlist")

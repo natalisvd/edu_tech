@@ -1,55 +1,61 @@
 import { createClient } from "@/utils/supabase/server";
-import { getUsers, isAdmin } from "./action";
+import { getUsers } from "./action";
 import Users from "./Users";
 import CreateTeam from "./CreateTeam";
-// import { createTeam } from "./action";
 
 export default async function Page() {
   const supabase = createClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  let { data: teams, error } = await supabase
+  if (!user) {
+    return <div>User not found.</div>;
+  }
+
+  let { data: teams, error: teamsError } = await supabase
     .from("teams")
     .select("*")
-    .eq("user_id", user!.id);
+    .eq("user_id", user.id);
 
-  if (error) {
-    console.error("Error fetching teams:", error);
+  if (teamsError || !teams) {
+    console.error("Error fetching teams:", teamsError);
     return <div>Error fetching teams.</div>;
   }
 
   let { data: teamleaders, error: teamleadersError } = await supabase
     .from("teamleaders")
     .select("*")
-    .eq("leader_id", user!.id);
+    .eq("leader_id", user.id);
 
-  if (teamleadersError) {
+  if (teamleadersError || !teamleaders) {
     console.error("Error fetching team leaders:", teamleadersError);
     return <div>Error fetching team leaders.</div>;
   }
 
-  const getTeam = async (id) => {
+  const getTeam = async (teamId: string): Promise<string | null> => {
     let { data: teamlist, error } = await supabase
       .from("teamlist")
       .select("*")
-      .eq("id", teams[0].team_id);
+      .eq("id", teamId);
 
-    if (error) {
+    if (error || !teamlist || teamlist.length === 0) {
       console.error("Error fetching team list:", error);
-      return [];
+      return null;
     }
-    console.log("teams", teamlist[0].team_name);
+
     return teamlist[0].team_name;
   };
 
-  let teamlists = {};
+  let teamlists: Record<string, string> = {};
 
-  if (teamleaders) {
+  if (teamleaders && teams) {
     const teamPromises = teamleaders.map(async (lead) => {
       const teamList = await getTeam(lead.team_id);
-      teamlists[lead.team_id] = teamList;
+      if (teamList) {
+        teamlists[lead.team_id] = teamList;
+      }
     });
 
     await Promise.all(teamPromises);
@@ -58,8 +64,7 @@ export default async function Page() {
   const users = await getUsers();
 
   const teamNames = teams?.map((team) => team.team_name) || [];
-  const teamLeaderNames =
-    teamleaders?.map((leader) => leader.leader_name) || [];
+  const teamLeaderNames = teamleaders?.map((leader) => leader.leader_name) || [];
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -72,14 +77,14 @@ export default async function Page() {
               key={index}
               className="p-2 bg-white shadow rounded text-gray-800"
             >
-              {getTeam()}
+              {teamlists[teams[index]?.team_id || ""] || "Team name not found"}
             </div>
           ))}
         </div>
-        {teamNames.length < 1 && <CreateTeam id={user!.id} />}
+        {teamNames.length < 1 && <CreateTeam id={user.id} />}
       </div>
       <div>
-        <Users users={users} teamId={teams[0].team_id} />
+        <Users users={users} teamId={teams[0]?.team_id || ''} />
       </div>
     </div>
   );

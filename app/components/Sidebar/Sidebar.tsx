@@ -40,12 +40,8 @@ async function getRole() {
     return "Developer";
   }
 
-  const role_name = role_to_user?.role?.role_name;
-  if (role_name) {
-    return role_name;
-  }
-
-  return "Developer";
+  const role_name = role_to_user?.role[0]?.role_name ?? "Developer";
+   return role_name;
 }
 
 export const Sidebar = async () => {

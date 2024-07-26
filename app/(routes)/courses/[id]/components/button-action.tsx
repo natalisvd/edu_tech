@@ -21,11 +21,7 @@ export const CTAButton: React.FC<CTAButtonProps> = ({ id }) => {
 
   return (
     <>
-      <ModalWindow id={id}>
-        <button className="btn btn-primary" onClick={handleClick}>
-          Create new lesson
-        </button>
-      </ModalWindow>
+      <ModalWindow id={id}/>
     </>
   );
 };

@@ -1,11 +1,11 @@
 "use client";
-import React, { FC, useState, useRef, useEffect, Children } from "react";
+import React, { FC, useState, useRef, useEffect, Children, ReactElement } from "react";
 import ReactDOM from "react-dom";
 import Button from "../Button/Button";
 import { createClient } from "@/utils/supabase/client";
 
 interface ModalProps {
-  id: any;
+  id: string;
 }
 
 const ModalWindow: FC<ModalProps> = ({ id }) => {

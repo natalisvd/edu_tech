@@ -1,13 +1,13 @@
 import { createClient } from "@/utils/supabase/server";
-import Button from "./button";
 import { getTeam, getTeamName } from "./action";
+import Button from "./Button";
 
 const Page = async () => {
   const supabase = createClient();
 
   let { data: profiles, error } = await supabase.from("profiles").select("*");
 
-  if (error) {
+  if (error && !profiles) {
     console.error("Error fetching profiles:", error);
     return <div>Error loading profiles</div>;
   }

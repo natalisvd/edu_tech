@@ -5,38 +5,32 @@ import {
   setUser,
   getTeamName,
 } from "@/app/(user_layout)/(admins)/manage_users/action"; // Імпортуйте функцію setUser
+import {  IUser, IUserWithTeam } from "@/app/interfaces/interfaces";
 import React, { FC, useEffect, useState } from "react";
 
 
-interface Team {
-  team_id: string;
-}
-interface User {
-  id: string;
-  first_name: string;
-  teams: Team[];
-}
+
 
 interface UserProps {
-  users: User[];
+  users: IUserWithTeam[];
   teamId: any;
 }
 
 const Users: FC<UserProps> = ({ users, teamId }) => {
-  const [usersM, setUsersM] = useState<User[]>();
+  const [usersM, setUsersM] = useState<IUserWithTeam[]>();
   const [searchTerm, setSearchTerm] = useState("");
   const [teamNames, setTeamNames] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     const getUsersWithTeam = async () => {
       const profilesWithTeams = await Promise.all(
-        users.map(async (profile: User) => {
+        users.map(async (profile: IUserWithTeam) => {
           const teams = await getTeam(profile.id);
           return { ...profile, teams: teams || [] };
         })
       );
 
-      setUsersM(profilesWithTeams.map((profile: User) => profile));
+      setUsersM(profilesWithTeams.map((profile: IUserWithTeam) => profile));
 
       // Fetch team names
       const names: { [key: string]: string } = {};

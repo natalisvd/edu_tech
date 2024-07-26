@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { getUsers } from "./action";
 import Users from "./Users";
 import CreateTeam from "./CreateTeam";
+import {  IUserWithTeam } from "@/app/interfaces/interfaces";
 
 export default async function Page() {
   const supabase = createClient();
@@ -61,7 +62,7 @@ export default async function Page() {
     await Promise.all(teamPromises);
   }
 
-  const users = await getUsers();
+  const users = await getUsers() as IUserWithTeam[];
 
   const teamNames = teams?.map((team) => team.team_name) || [];
   const teamLeaderNames = teamleaders?.map((leader) => leader.leader_name) || [];

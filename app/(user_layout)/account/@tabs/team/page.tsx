@@ -1,8 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { getUsers, isAdmin } from "./action";
-import Users from "./users";
+import Users from "./Users";
 import CreateTeam from "./CreateTeam";
-import { createTeam } from "./action";
+// import { createTeam } from "./action";
 
 export default async function Page() {
   const supabase = createClient();
@@ -13,7 +13,7 @@ export default async function Page() {
   let { data: teams, error } = await supabase
     .from("teams")
     .select("*")
-    .eq("user_id", user.id);
+    .eq("user_id", user!.id);
 
   if (error) {
     console.error("Error fetching teams:", error);
@@ -23,7 +23,7 @@ export default async function Page() {
   let { data: teamleaders, error: teamleadersError } = await supabase
     .from("teamleaders")
     .select("*")
-    .eq("leader_id", user.id);
+    .eq("leader_id", user!.id);
 
   if (teamleadersError) {
     console.error("Error fetching team leaders:", teamleadersError);
@@ -76,7 +76,7 @@ export default async function Page() {
             </div>
           ))}
         </div>
-        {teamNames.length < 1 && <CreateTeam id={user.id} />}
+        {teamNames.length < 1 && <CreateTeam id={user!.id} />}
       </div>
       <div>
         <Users users={users} teamId={teams[0].team_id} />

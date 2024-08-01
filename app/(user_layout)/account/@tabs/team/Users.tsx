@@ -1,19 +1,12 @@
 "use client";
 
-import { getTeam } from "@/app/(user_layout)/(admins)/manage_users/action";
-import {
-  setUser,
-  getTeamName,
-} from "@/app/(user_layout)/(admins)/manage_users/action"; // Імпортуйте функцію setUser
-import {  IUser, IUserWithTeam } from "@/app/interfaces/interfaces";
+import { getTeam, setUser, getTeamName, getUsersWithTeams } from "@/app/(user_layout)/(admins)/manage_users/action";
+import { IUser, IUserWithTeam } from "@/app/interfaces/interfaces";
 import React, { FC, useEffect, useState } from "react";
-
-
-
 
 interface UserProps {
   users: IUserWithTeam[];
-  teamId: any;
+  teamId: string;
 }
 
 const Users: FC<UserProps> = ({ users, teamId }) => {
@@ -22,23 +15,19 @@ const Users: FC<UserProps> = ({ users, teamId }) => {
   const [teamNames, setTeamNames] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    const getUsersWithTeam = async () => {
-      const profilesWithTeams = await Promise.all(
-        users.map(async (profile: IUserWithTeam) => {
-          const teams = await getTeam(profile.id);
-          return { ...profile, teams: teams || [] };
-        })
-      );
+    const userIds = users.map(user => user.id);
 
-      setUsersM(profilesWithTeams.map((profile: IUserWithTeam) => profile));
+    const getUsers = async () => {
+      const usersWithTeams = await getUsersWithTeams(userIds);
+
+      setUsersM(usersWithTeams);
 
       // Fetch team names
       const names: { [key: string]: string } = {};
       await Promise.all(
-        profilesWithTeams.flatMap((profile) =>
+        usersWithTeams.flatMap((profile) =>
           profile?.teams?.map(async (team) => {
-            const teamName = await getTeamName(team.team_id);
-            names[team.team_id] = teamName;
+            names[team.team_id] = team.team_name;
           })
         )
       );
@@ -46,7 +35,7 @@ const Users: FC<UserProps> = ({ users, teamId }) => {
       setTeamNames(names);
     };
 
-    getUsersWithTeam();
+    getUsers();
   }, [users]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,8 +1,13 @@
+//TODO need typezation
+// @ts-nocheck
 import { createClient } from "@/utils/supabase/server";
+import {
+  ITeamLeaderWithTeams,
+  IUserWithTeam,
+} from "@/app/interfaces/interfaces";
 import { getUsers } from "./action";
-import Users from "./Users";
 import CreateTeam from "./CreateTeam";
-import {  IUserWithTeam } from "@/app/interfaces/interfaces";
+import Users from "./Users";
 
 export default async function Page() {
   const supabase = createClient();
@@ -14,58 +19,24 @@ export default async function Page() {
   if (!user) {
     return <div>User not found.</div>;
   }
-
-  let { data: teams, error: teamsError } = await supabase
-    .from("teams")
-    .select("*")
-    .eq("user_id", user.id);
-
-  if (teamsError || !teams) {
-    console.error("Error fetching teams:", teamsError);
-    return <div>Error fetching teams.</div>;
-  }
-
-  let { data: teamleaders, error: teamleadersError } = await supabase
+  const { data: teamleadersWithTeams, error: teamleadersError } = await supabase
     .from("teamleaders")
     .select("*")
+    .select("teamlist(*)")
     .eq("leader_id", user.id);
 
-  if (teamleadersError || !teamleaders) {
+  if (teamleadersError || !teamleadersWithTeams) {
     console.error("Error fetching team leaders:", teamleadersError);
     return <div>Error fetching team leaders.</div>;
   }
 
-  const getTeam = async (teamId: string): Promise<string | null> => {
-    let { data: teamlist, error } = await supabase
-      .from("teamlist")
-      .select("*")
-      .eq("id", teamId);
+  const users = (await getUsers()) as IUserWithTeam[];
 
-    if (error || !teamlist || teamlist.length === 0) {
-      console.error("Error fetching team list:", error);
-      return null;
-    }
+  // Extract team names from teamleadersWithTeams
+  const teamNames = teamleadersWithTeams.map(
+    (leader) => leader.teams.team_name
+  );
 
-    return teamlist[0].team_name;
-  };
-
-  let teamlists: Record<string, string> = {};
-
-  if (teamleaders && teams) {
-    const teamPromises = teamleaders.map(async (lead) => {
-      const teamList = await getTeam(lead.team_id);
-      if (teamList) {
-        teamlists[lead.team_id] = teamList;
-      }
-    });
-
-    await Promise.all(teamPromises);
-  }
-
-  const users = await getUsers() as IUserWithTeam[];
-
-  const teamNames = teams?.map((team) => team.team_name) || [];
-  const teamLeaderNames = teamleaders?.map((leader) => leader.leader_name) || [];
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -78,14 +49,17 @@ export default async function Page() {
               key={index}
               className="p-2 bg-white shadow rounded text-gray-800"
             >
-              {teamlists[teams[index]?.team_id || ""] || "Team name not found"}
+              {teamName}
             </div>
           ))}
         </div>
         {teamNames.length < 1 && <CreateTeam id={user.id} />}
       </div>
       <div>
-        <Users users={users} teamId={teams[0]?.team_id || ''} />
+        <Users
+          users={users}
+          teamId={teamleadersWithTeams[0]?.teams?.team_id || ""}
+        />
       </div>
     </div>
   );

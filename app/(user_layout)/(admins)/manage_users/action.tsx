@@ -90,7 +90,7 @@ export async function createTeam(teamName: string, id: string) {
     .select("*")
     .eq("team_name", teamName);
 
-  if (selectError ) {
+  if (selectError) {
     throw new Error(selectError.message);
   }
 
@@ -121,13 +121,62 @@ const getTeamName = async (id: string) => {
     .select("*")
     .eq("id", id);
 
-    if (selectError) {
-      throw new Error(selectError.message);
-    }
-  
+  if (selectError) {
+    throw new Error(selectError.message);
+  }
+
   console.log("teamlist2", id);
   console.log("teamlist2", teamlist![0].team_name);
-  return teamlist![0].team_name  || '';
+  return teamlist![0].team_name || "";
 };
 
-export { detectRole, setRole, getTeam, setUser, setLeadRole, getTeamName };
+const getUsersWithTeams = async (userIds: string[]) => {
+  const supabase = createClient();
+
+  const { data: usersWithTeams, error } = await supabase
+    .from("profiles")
+    .select(
+      ` id,
+      username,
+      first_name,
+      last_name,
+      avatar_url,
+      team_id,
+      teams:teams!teams_user_id_fkey(
+        id,
+        team_id,
+        user_id,
+        teamlist:teamlist!teams_team_id_fkey(
+          team_name
+        )
+      )
+    `
+    )
+    .in("id", userIds);
+
+  if (error) {
+    console.error("Error fetching users with teams:", error);
+    return [];
+  }
+
+  return usersWithTeams.map((user) => ({
+    ...user,
+    teams: user.teams.map((team) => ({
+      id: team.id,
+      team_id: team.team_id,
+      user_id: team.user_id,
+      //@ts-ignore  TODO
+      team_name: team.teamlist.team_name
+    })),
+  }));
+};
+
+export {
+  detectRole,
+  setRole,
+  getTeam,
+  setUser,
+  setLeadRole,
+  getTeamName,
+  getUsersWithTeams,
+};

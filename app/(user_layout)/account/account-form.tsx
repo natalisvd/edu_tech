@@ -128,7 +128,7 @@ export default function AccountForm({ user }: { user: User | null }) {
       setLoading(true);
       if (!user?.id) return;
       const userId = user.id;
-      const filePath = await uploadAvatar(bufferImage, userId);
+      const filePath = await uploadAvatar(bufferImage, userId, avatar_url);
       await updateProfileData(userId, {
         username,
         firstname,
@@ -142,22 +142,40 @@ export default function AccountForm({ user }: { user: User | null }) {
       setLoading(false);
     }
   }
-  const url = watch("avatar_url");
-  
 
-  const uploadAvatar = async (file: File | null, userId: string) => {
+  const url = watch("avatar_url");
+
+  const deleteOldAvatar = async (filePath: string) => {
+    try {
+      const { error, data } = await supabase.storage
+        .from("avatars")
+        .remove([filePath]);
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  const uploadAvatar = async (
+    file: File | null,
+    userId: string,
+    oldAvatarUrl: string | null
+  ) => {
     try {
       if (!file) return null;
-  
-      const resizedFile = await resizeImage(file);
-  
+
+      if (oldAvatarUrl) {
+        await deleteOldAvatar(oldAvatarUrl);
+      }
+
+      const resizedFile = await resizeImage(file, 300, 300);
       const fileExt = resizedFile.name.split(".").pop();
       const filePath = `${userId}-${Math.random()}.${fileExt}`;
-  
+
       const { error: uploadError } = await supabase.storage
         .from("avatars")
         .upload(filePath, resizedFile);
-  
+
       if (uploadError) {
         throw uploadError;
       }

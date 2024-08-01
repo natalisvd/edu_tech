@@ -9,6 +9,7 @@ import { AccountFormValues as FormValues, AlertProps } from "./types";
 import { Avatar } from "./avatar";
 import { getProfileData, updateProfileData } from "./actions";
 import { XMarkIcon } from "@/app/components/Icons/XMarkIcon";
+import { resizeImage } from "@/app/helpers/image.helper";
 
 function Alert({
   message,
@@ -83,9 +84,10 @@ export default function AccountForm({ user }: { user: User | null }) {
   const handleShowImage = useCallback(() => {
     if (watchedField?.length) {
       const image = watchedField[0];
-      return setBufferImage(image);
+      resizeImage(image).then((resizedImage) => setBufferImage(resizedImage));
+    } else {
+      setBufferImage(null);
     }
-    return setBufferImage(null);
   }, [watchedField]);
 
   useEffect(() => {
@@ -141,17 +143,21 @@ export default function AccountForm({ user }: { user: User | null }) {
     }
   }
   const url = watch("avatar_url");
+  
 
   const uploadAvatar = async (file: File | null, userId: string) => {
     try {
       if (!file) return null;
-      const fileExt = file.name.split(".").pop();
+  
+      const resizedFile = await resizeImage(file);
+  
+      const fileExt = resizedFile.name.split(".").pop();
       const filePath = `${userId}-${Math.random()}.${fileExt}`;
-
+  
       const { error: uploadError } = await supabase.storage
         .from("avatars")
-        .upload(filePath, file);
-
+        .upload(filePath, resizedFile);
+  
       if (uploadError) {
         throw uploadError;
       }

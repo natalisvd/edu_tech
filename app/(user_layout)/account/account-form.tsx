@@ -8,11 +8,8 @@ import { useForm, FormProvider } from "react-hook-form";
 import { AccountFormValues as FormValues, AlertProps } from "./types";
 import { Avatar } from "./avatar";
 import { getProfileData, updateProfileData } from "./actions";
-import { XMarkIcon } from "@/app/components/Icons/XMarkIcon";
 import { resizeImage } from "@/app/helpers/image.helper";
 import { Alert } from "@/app/(routes)/courses/components/Alert/Alert";
-
-
 
 const initialValues = {
   firstname: "",
@@ -36,6 +33,7 @@ export default function AccountForm({ user }: { user: User | null }) {
   const [values, setValues] = useState<FormValues & AvatarFileProps>();
   const [alert, setAlert] = useState<AlertProps | null>(null);
   const [bufferImage, setBufferImage] = useState<File | null>(null);
+  const [oldAvatarUrl, setOldAvatarUrl] = useState("");
 
   const methods = useForm<FormValues & AvatarFileProps>({
     defaultValues: initialValues,
@@ -72,6 +70,7 @@ export default function AccountForm({ user }: { user: User | null }) {
       setLoading(true);
       const data = await getProfileData(user?.id);
       if (data) {
+        setOldAvatarUrl(data.avatar_url);
         return setValues({
           ...initialValues,
           firstname: data.first_name ?? "",
@@ -86,6 +85,10 @@ export default function AccountForm({ user }: { user: User | null }) {
       setLoading(false);
     }
   }, [user]);
+
+  // useEffect(()=>{
+  //   console.log('==========', values?.avatar_url);
+  // },[values?.avatar_url])
 
   useEffect(() => {
     getProfile();
@@ -102,6 +105,7 @@ export default function AccountForm({ user }: { user: User | null }) {
       if (!user?.id) return;
       const userId = user.id;
       const filePath = await uploadAvatar(bufferImage, userId, avatar_url);
+      if (!avatar_url && !filePath) deleteOldAvatar(oldAvatarUrl);
       await updateProfileData(userId, {
         username,
         firstname,

@@ -56,7 +56,7 @@ const Users: FC<UserProps> = ({ users, teamId }) => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-6 min-h-screen">
       <h1 className="tepxt-3xl font-bold mb-6">Invite new users</h1>
       <input
         type="text"
@@ -69,7 +69,7 @@ const Users: FC<UserProps> = ({ users, teamId }) => {
         {filteredUsers?.map((user) => (
           <div
             key={user.id}
-            className="flex justify-between items-center p-4 bg-white shadow rounded"
+            className="flex justify-between items-center p-4  shadow rounded"
           >
             <div className="text-lg font-medium">{user.first_name}</div>
             <div className="flex items-center space-x-4">
@@ -82,7 +82,8 @@ const Users: FC<UserProps> = ({ users, teamId }) => {
               ) : (
                 <button
                   onClick={() => setUserFunction(user.id)}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                  className="btn"
+                  // className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
                 >
                   Invite user
                 </button>

@@ -23,7 +23,7 @@ export const TabList = React.forwardRef<HTMLDivElement, Ariakit.TabListProps>(
       <Ariakit.TabList
         ref={ref}
         {...props}
-        className={clsx("tab-list flex space-x-4 border-b", props.className)}
+        className={clsx("tab-list flex space-x-4 border-b w-[710px]", props.className)}
       />
     );
   }

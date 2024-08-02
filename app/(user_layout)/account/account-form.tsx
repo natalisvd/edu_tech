@@ -85,11 +85,7 @@ export default function AccountForm({ user }: { user: User | null }) {
       setLoading(false);
     }
   }, [user]);
-
-  // useEffect(()=>{
-  //   console.log('==========', values?.avatar_url);
-  // },[values?.avatar_url])
-
+  
   useEffect(() => {
     getProfile();
   }, [user, getProfile]);

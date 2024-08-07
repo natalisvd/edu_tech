@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import StoreProvider from "./StoreProvider";
 
-const poppins = Poppins({ subsets: ["latin"], weight: ["100", "300", "400", "500", "600", "700"] });
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Edu Tech",
@@ -16,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className}>{children}</body>
+      <body className={poppins.className}>
+        <StoreProvider>{children}</StoreProvider>
+      </body>
     </html>
   );
 }

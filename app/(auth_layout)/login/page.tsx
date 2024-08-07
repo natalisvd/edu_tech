@@ -7,16 +7,20 @@ import { UserIcon } from "../../components/Icons/UserIcon";
 import { PasswordLockIcon } from "../../components/Icons/PasswordLockIcon";
 import { Input } from "../../components/Input";
 import { FormCard } from "@/app/components/FormCard";
+import { useAppDispatch } from "@/app/store/hooks";
+import { fetchLogin } from "@/app/store/slices/userSlice";
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
   password: Yup.string().required("Required"),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], "Passwords must match")
+    .oneOf([Yup.ref("password")], "Passwords must match")
     .required("Required"),
 });
 
 export default function Login() {
+  const dispatch = useAppDispatch();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -24,10 +28,11 @@ export default function Login() {
       confirmPassword: "",
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       // Replace this with your login handler
       console.log("Form values:", values);
-      // call login function or API request here
+      const res = await dispatch(fetchLogin(values));
+      debugger;
     },
   });
 
@@ -45,7 +50,9 @@ export default function Login() {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.email}
-          className={formik.touched.email && formik.errors.email ? "input-error" : ""}
+          className={
+            formik.touched.email && formik.errors.email ? "input-error" : ""
+          }
         />
         {formik.touched.email && formik.errors.email ? (
           <div className="alert alert-error text-xs p-2 rounded">
@@ -63,7 +70,11 @@ export default function Login() {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.password}
-          className={formik.touched.password && formik.errors.password ? "input-error" : ""}
+          className={
+            formik.touched.password && formik.errors.password
+              ? "input-error"
+              : ""
+          }
         />
         {formik.touched.password && formik.errors.password ? (
           <div className="alert alert-error text-xs p-2 rounded">
@@ -81,7 +92,11 @@ export default function Login() {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.confirmPassword}
-          className={formik.touched.confirmPassword && formik.errors.confirmPassword ? "input-error" : ""}
+          className={
+            formik.touched.confirmPassword && formik.errors.confirmPassword
+              ? "input-error"
+              : ""
+          }
         />
         {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
           <div className="alert alert-error text-xs p-2 rounded">

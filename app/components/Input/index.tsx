@@ -10,7 +10,7 @@ const baseStyle =
 
 export const Input = forwardRef<HTMLInputElement, TextInputProps>(
   ({ icon, iconPlacement = "start", ...inputProps }, forwardedRef) => {
-    const addPadding = iconPlacement === "start" ? "ps-7" : "pe-7";
+    const addPadding = iconPlacement === "start" ? "ps-10" : "pe-10"; // Changed to ps-10 for 10px padding on the left
     const cn = icon ? baseStyle.concat(" ", addPadding) : baseStyle;
 
     return (

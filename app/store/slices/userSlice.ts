@@ -87,6 +87,6 @@ const currentUserSlice = createSlice({
 
 export const { logout } = currentUserSlice.actions;
 
-export const selectCurrentUser = (state: RootState) => state.currentUser.user;
+export const selectCurrentUser = (state: RootState) => state.currentUser;
 
 export default currentUserSlice.reducer;

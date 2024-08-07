@@ -13,9 +13,6 @@ import { fetchLogin } from "@/app/store/slices/userSlice";
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
   password: Yup.string().required("Required"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password")], "Passwords must match")
-    .required("Required"),
 });
 
 export default function Login() {
@@ -25,14 +22,11 @@ export default function Login() {
     initialValues: {
       email: "",
       password: "",
-      confirmPassword: "",
     },
     validationSchema,
     onSubmit: async (values) => {
-      // Replace this with your login handler
       console.log("Form values:", values);
-      const res = await dispatch(fetchLogin(values));
-      debugger;
+      // const res = await dispatch(fetchLogin(values));// TODO
     },
   });
 
@@ -79,28 +73,6 @@ export default function Login() {
         {formik.touched.password && formik.errors.password ? (
           <div className="alert alert-error text-xs p-2 rounded">
             {formik.errors.password}
-          </div>
-        ) : null}
-
-        <Input
-          id="confirmPassword"
-          name="confirmPassword"
-          type="password"
-          required
-          placeholder="Confirm Password"
-          icon={<PasswordLockIcon className="input-icon w-5 h-5" />}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.confirmPassword}
-          className={
-            formik.touched.confirmPassword && formik.errors.confirmPassword
-              ? "input-error"
-              : ""
-          }
-        />
-        {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
-          <div className="alert alert-error text-xs p-2 rounded">
-            {formik.errors.confirmPassword}
           </div>
         ) : null}
 

@@ -3,6 +3,8 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+
 import { UserIcon } from "../../components/Icons/UserIcon";
 import { PasswordLockIcon } from "../../components/Icons/PasswordLockIcon";
 import { Input } from "../../components/Input";
@@ -26,7 +28,13 @@ export default function Login() {
     validationSchema,
     onSubmit: async (values) => {
       console.log("Form values:", values);
-      // const res = await dispatch(fetchLogin(values));// TODO
+      try {
+        const result = await dispatch(fetchLogin(values));
+        console.log("Login successful:", result);
+        redirect("/");
+      } catch (error) {
+        console.error("Login error:", error);
+      }
     },
   });
 

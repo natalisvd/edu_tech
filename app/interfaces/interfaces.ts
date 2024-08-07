@@ -31,3 +31,9 @@ export interface IUserWithTeam extends IUser {
 export interface ITeamLeaderWithTeams extends ITeamLeader {
   teams: ITeam[];
 }
+
+
+export interface IAuth {
+  email: string;
+  password?: string;
+}

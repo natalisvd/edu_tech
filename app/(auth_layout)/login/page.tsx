@@ -1,20 +1,39 @@
 "use client";
 
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import Link from "next/link";
-import { login } from "./actions";
 import { UserIcon } from "../../components/Icons/UserIcon";
 import { PasswordLockIcon } from "../../components/Icons/PasswordLockIcon";
 import { Input } from "../../components/Input";
 import { FormCard } from "@/app/components/FormCard";
-import { useFormState } from "react-dom";
 
-const initialState = { message: "" };
+const validationSchema = Yup.object({
+  email: Yup.string().email("Invalid email address").required("Required"),
+  password: Yup.string().required("Required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], "Passwords must match")
+    .required("Required"),
+});
+
 export default function Login() {
-  const [state, formAction] = useFormState(login, initialState);
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      // Replace this with your login handler
+      console.log("Form values:", values);
+      // call login function or API request here
+    },
+  });
 
   return (
     <FormCard>
-      <form className="grid grid-flow-row gap-8" action={formAction}>
+      <form className="grid grid-flow-row gap-8" onSubmit={formik.handleSubmit}>
         <h2 className="text-3xl font-semibold text-center mb-2">Login</h2>
         <Input
           id="email"
@@ -23,7 +42,17 @@ export default function Login() {
           required
           placeholder="Email"
           icon={<UserIcon className="input-icon w-5 h-5" />}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.email}
+          className={formik.touched.email && formik.errors.email ? "input-error" : ""}
         />
+        {formik.touched.email && formik.errors.email ? (
+          <div className="alert alert-error text-xs p-2 rounded">
+            {formik.errors.email}
+          </div>
+        ) : null}
+
         <Input
           id="password"
           name="password"
@@ -31,26 +60,37 @@ export default function Login() {
           required
           placeholder="Password"
           icon={<PasswordLockIcon className="input-icon w-5 h-5" />}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.password}
+          className={formik.touched.password && formik.errors.password ? "input-error" : ""}
         />
-        {/* ToDo: add "remember me" functionality or remove this part of form */}
-        <div className="form-control w-max">
-          <label className="label cursor-pointer gap-3">
-            <input
-              name="remember"
-              type="checkbox"
-              defaultChecked
-              className="checkbox checkbox-sm rounded-sm"
-            />
-            <span className="label-text">Remember me</span>
-          </label>
-        </div>
-        {!!state.message.length && (
+        {formik.touched.password && formik.errors.password ? (
           <div className="alert alert-error text-xs p-2 rounded">
-            {state.message}
+            {formik.errors.password}
           </div>
-        )}
+        ) : null}
+
+        <Input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          required
+          placeholder="Confirm Password"
+          icon={<PasswordLockIcon className="input-icon w-5 h-5" />}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.confirmPassword}
+          className={formik.touched.confirmPassword && formik.errors.confirmPassword ? "input-error" : ""}
+        />
+        {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+          <div className="alert alert-error text-xs p-2 rounded">
+            {formik.errors.confirmPassword}
+          </div>
+        ) : null}
+
         <button
-          formAction={formAction}
+          type="submit"
           className="btn btn-primary rounded-full w-full mt-5 text-base"
         >
           Sign In

@@ -16,7 +16,10 @@ async function getRole() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  //TODO
+  if (!user) {
+    return 
+  }
 
   const {
     data: role_to_user,

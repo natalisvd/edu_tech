@@ -3,7 +3,7 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { UserIcon } from "@/app/components/Icons/UserIcon";
 import { PasswordLockIcon } from "@/app/components/Icons/PasswordLockIcon";
@@ -22,6 +22,7 @@ const validationSchema = Yup.object({
 
 const SignUp = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
@@ -32,9 +33,8 @@ const SignUp = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const result = await dispatch(fetchRegistration(values));
-        console.log("Registration successful:", result);
-        redirect("/");
+        await dispatch(fetchRegistration(values));
+        router.push("/");
       } catch (error) {
         console.error("Registration error:", error);
       }

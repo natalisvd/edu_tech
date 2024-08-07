@@ -3,7 +3,7 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { UserIcon } from "../../components/Icons/UserIcon";
 import { PasswordLockIcon } from "../../components/Icons/PasswordLockIcon";
@@ -19,6 +19,7 @@ const validationSchema = Yup.object({
 
 export default function Login() {
   const dispatch = useAppDispatch();
+  const router = useRouter()
 
   const formik = useFormik({
     initialValues: {
@@ -27,11 +28,9 @@ export default function Login() {
     },
     validationSchema,
     onSubmit: async (values) => {
-      console.log("Form values:", values);
       try {
-        const result = await dispatch(fetchLogin(values));
-        console.log("Login successful:", result);
-        redirect("/");
+        await dispatch(fetchLogin(values));
+        router.push("/");
       } catch (error) {
         console.error("Login error:", error);
       }

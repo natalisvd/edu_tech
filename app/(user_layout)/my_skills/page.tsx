@@ -33,9 +33,11 @@ export default async function MySkills() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-
+ 
+  //TODO
   if (!user) {
-    redirect("/login");
+    return
+    //redirect("/login");
   }
 
   const userSkills: UserSkills = await getUserSkills(user.id)

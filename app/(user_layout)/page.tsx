@@ -1,17 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import { LogoutButton } from "../components/LogoutButton/LogoutButton";
+import { useAppSelector } from "../store/hooks";
+import { selectCurrentUser } from "../store/slices/userSlice";
 
 export default async function Home() {
-  const supabase = createClient();
+  const currentUser = useAppSelector(selectCurrentUser);
+  const router = useRouter();
 
-  const { data, error } = await supabase.auth.getUser();
-
-  //TODO
-  if (error || !data?.user) {
-    return
-    // redirect("/login");
+  if (!currentUser.user && !currentUser.loading) {
+    router.push("/login");
   }
 
   return (

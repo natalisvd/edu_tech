@@ -13,6 +13,7 @@ export interface IUser {
   avatar_url?: string;
   role_id?: number;
   team_id?: string;
+  email?: string;
 }
 
 export interface ITeamLeader {
@@ -31,7 +32,6 @@ export interface IUserWithTeam extends IUser {
 export interface ITeamLeaderWithTeams extends ITeamLeader {
   teams: ITeam[];
 }
-
 
 export interface IAuth {
   email: string;

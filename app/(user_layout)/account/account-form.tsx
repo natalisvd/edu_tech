@@ -1,8 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState, createContext } from "react";
-import { createClient } from "@/utils/supabase/client";
-import { type User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useForm, FormProvider } from "react-hook-form";
 import { AccountFormValues as FormValues, AlertProps } from "./types";
@@ -10,11 +8,13 @@ import { Avatar } from "./avatar";
 import { getProfileData, updateProfileData } from "./actions";
 import { resizeImage } from "@/app/helpers/image.helper";
 import { Alert } from "@/app/(routes)/courses/components/Alert/Alert";
+import { IUser } from "@/app/interfaces/interfaces";
+import { fetchUpdate } from "@/app/store/slices/userSlice";
+import { useAppDispatch } from "@/app/store/hooks";
 
 const initialValues = {
-  firstname: "",
-  lastname: "",
-  username: "",
+  firstName: "",
+  lastName: "",
   avatar_url: "",
   avatar_file: undefined,
 };
@@ -25,10 +25,10 @@ export const AvatarContext = createContext<{
   resetFile: () => void;
 }>({ file: null, resetFile: () => {} });
 
-export default function AccountForm({ user }: { user: User | null }) {
+export default function AccountForm({ user }: { user: IUser | null }) {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
-  const supabase = createClient();
   const [loading, setLoading] = useState(true);
   const [values, setValues] = useState<FormValues & AvatarFileProps>();
   const [alert, setAlert] = useState<AlertProps | null>(null);
@@ -65,49 +65,63 @@ export default function AccountForm({ user }: { user: User | null }) {
     handleShowImage();
   }, [handleShowImage]);
 
-  const getProfile = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await getProfileData(user?.id);
-      if (data) {
-        setOldAvatarUrl(data.avatar_url);
-        return setValues({
-          ...initialValues,
-          firstname: data.first_name ?? "",
-          lastname: data.last_name ?? "",
-          username: data.username ?? "",
-          avatar_url: data.avatar_url ?? "",
-        });
-      }
-    } catch (error) {
-      setAlert({ message: "Error loading user data!", severity: "error" });
-    } finally {
-      setLoading(false);
-    }
-  }, [user]);
-  
-  useEffect(() => {
-    getProfile();
-  }, [user, getProfile]);
+  // const getProfile = useCallback(async () => {
+  //   try {
+  //     setLoading(true);
+  //     const data = await getProfileData(user?.id);
+  //     if (data) {
+  //       setOldAvatarUrl(data.avatar_url);
+  //       return setValues({
+  //         ...initialValues,
+  //         firstname: data.first_name ?? "",
+  //         lastname: data.last_name ?? "",
+  //         username: data.username ?? "",
+  //         avatar_url: data.avatar_url ?? "",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     setAlert({ message: "Error loading user data!", severity: "error" });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [user]);
+
+  // useEffect(() => {
+  //   getProfile();
+  // }, [user, getProfile]);
 
   async function updateProfile({
-    username,
-    firstname,
-    lastname,
-    avatar_url,
+    firstName,
+    lastName,
+    // avatar_file,
   }: FormValues) {
     try {
       setLoading(true);
-      if (!user?.id) return;
-      const userId = user.id;
-      const filePath = await uploadAvatar(bufferImage, userId, avatar_url);
-      if (!avatar_url && !filePath) deleteOldAvatar(oldAvatarUrl);
-      await updateProfileData(userId, {
-        username,
-        firstname,
-        lastname,
-        avatar_url: filePath ?? avatar_url,
-      });
+
+      const formData = new FormData();
+      formData.append("firstName", firstName || "");
+      formData.append("lastName", lastName || "");
+      debugger
+      if(bufferImage){
+        const resized = await resizeImage(bufferImage, 300, 300);
+        debugger
+        formData.append("avatar", resized);
+      }
+      debugger
+     await dispatch(fetchUpdate(formData))
+      // console.log({ avatar_file });
+
+      // }
+      // if (!user?.id) return;
+      // const userId = user.id;
+      // const filePath = await uploadAvatar(bufferImage, userId, avatar_url);
+      // if (!avatar_url && !filePath) deleteOldAvatar(oldAvatarUrl);
+      // await updateProfileData(userId, {
+      //   username,
+      //   firstname,
+      //   lastname,
+      //   avatar_url: filePath ?? avatar_url,
+      // });
       setAlert({ message: "Profile updated!" });
     } catch (error) {
       setAlert({ message: "Error updating the data!", severity: "error" });
@@ -118,54 +132,54 @@ export default function AccountForm({ user }: { user: User | null }) {
 
   const url = watch("avatar_url");
 
-  const deleteOldAvatar = async (filePath: string) => {
-    try {
-      const { error, data } = await supabase.storage
-        .from("avatars")
-        .remove([filePath]);
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  };
+  // const deleteOldAvatar = async (filePath: string) => {
+  //   // try {
+  //   //   const { error, data } = await supabase.storage
+  //   //     .from("avatars")
+  //   //     .remove([filePath]);
+  //   // } catch (error) {
+  //   //   console.error(error);
+  //   //   return false;
+  //   // }
+  // };
 
-  const uploadAvatar = async (
-    file: File | null,
-    userId: string,
-    oldAvatarUrl: string | null
-  ) => {
-    try {
-      if (!file) return null;
+  // const uploadAvatar = async (
+  //   file: File | null,
+  //   userId: string,
+  //   oldAvatarUrl: string | null
+  // ) => {
+  //   try {
+  //     if (!file) return null;
 
-      if (oldAvatarUrl) {
-        await deleteOldAvatar(oldAvatarUrl);
-      }
+  //     if (oldAvatarUrl) {
+  //       await deleteOldAvatar(oldAvatarUrl);
+  //     }
 
-      const resizedFile = await resizeImage(file, 300, 300);
-      const fileExt = resizedFile.name.split(".").pop();
-      const filePath = `${userId}-${Math.random()}.${fileExt}`;
+  //     const resizedFile = await resizeImage(file, 300, 300);
+  //     const fileExt = resizedFile.name.split(".").pop();
+  //     const filePath = `${userId}-${Math.random()}.${fileExt}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from("avatars")
-        .upload(filePath, resizedFile);
+  //     // const { error: uploadError } = await supabase.storage
+  //     //   .from("avatars")
+  //     //   .upload(filePath, resizedFile);
 
-      if (uploadError) {
-        throw uploadError;
-      }
-      setValue("avatar_url", filePath);
-      setAlert({ message: "Avatar updated!", severity: "success" });
-      return filePath;
-    } catch (error) {
-      console.log("uploadAvatar [error]", error);
-      setAlert({ message: "Error uploading avatar!", severity: "error" });
-    }
-  };
+  //     // if (uploadError) {
+  //     //   throw uploadError;
+  //     // }
+  //     setValue("avatar_url", filePath);
+  //     setAlert({ message: "Avatar updated!", severity: "success" });
+  //     return filePath;
+  //   } catch (error) {
+  //     console.log("uploadAvatar [error]", error);
+  //     setAlert({ message: "Error uploading avatar!", severity: "error" });
+  //   }
+  // };
 
   return (
     <FormProvider {...methods}>
       <div className="grid md:grid-cols-[auto,_1fr] gap-5 mb-10 w-full justify-items-center md:justify-items-stretch">
         <AvatarContext.Provider value={{ file: bufferImage, resetFile }}>
-          <Avatar url={url} userName={values?.username || "User"} />
+          <Avatar url={url} />
         </AvatarContext.Provider>
         <div className="md:max-w-xl w-full">
           <form
@@ -190,7 +204,7 @@ export default function AccountForm({ user }: { user: User | null }) {
                 First Name
               </label>
               <input
-                {...register("firstname")}
+                // {...register("firstname")}
                 className="input input-bordered"
                 id="firstname"
                 type="text"
@@ -201,33 +215,11 @@ export default function AccountForm({ user }: { user: User | null }) {
                 Last Name
               </label>
               <input
-                {...register("lastname")}
+                // {...register("lastname")}
                 className="input input-bordered"
                 id="lastname"
                 type="text"
               />
-            </div>
-            <div className="form-control">
-              <label htmlFor="username" className="label label-text">
-                Username
-              </label>
-              <input
-                {...register("username", {
-                  required: "Username is required",
-                  minLength: {
-                    value: 3,
-                    message: "Username must be at least 3 characters",
-                  },
-                })}
-                className="input input-bordered"
-                id="username"
-                type="text"
-              />
-              {errors?.username && (
-                <p className="label label-text-alt text-error">
-                  {errors?.username?.message}
-                </p>
-              )}
             </div>
 
             {alert?.message && (
@@ -249,9 +241,10 @@ export default function AccountForm({ user }: { user: User | null }) {
               <button
                 className="btn btn-primary btn-block"
                 type="submit"
-                disabled={loading || !isValid}
+                // disabled={loading || !isValid}
               >
-                {loading ? "Loading ..." : "Update"}
+                {/* {loading ? "Loading ..." : "Update"} */}
+                Update
               </button>
             </div>
           </form>

@@ -13,3 +13,8 @@ export const register = (body: IAuth) =>
   });
 
 export const currentUser = () => post("/user/currentUser");
+export const updateUser = (formData: any) =>
+  patch("/user/currentUser", formData);
+
+// /* users requests */
+export const getAllUsers = () => get("/user");

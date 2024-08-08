@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { IAuth, IUser } from "@/app/interfaces/interfaces";
-import { currentUser, login, register } from "@/app/api";
+import { currentUser, login, register, updateUser } from "@/app/api";
 import { sliceHelper } from "./sliceHelper";
 
 interface CurrentUserState {
@@ -48,6 +48,14 @@ export const fetchRegistration = createAsyncThunk(
   }
 );
 
+export const fetchUpdate = createAsyncThunk("update", async (formData: any) => {
+  try {
+    return await updateUser(formData);
+  } catch (error) {
+    throw error;
+  }
+});
+
 
 const currentUserSlice = createSlice({
   name: "currentUser",
@@ -77,6 +85,13 @@ const currentUserSlice = createSlice({
     );
     sliceHelper(builder, fetchRegistration).addCase(
       fetchRegistration.fulfilled,
+      (state: any, action: any) => {
+        state.loading = false;
+        state.user = action.payload as IUser;
+      }
+    );
+    sliceHelper(builder, fetchUpdate).addCase(
+      fetchUpdate.fulfilled,
       (state: any, action: any) => {
         state.loading = false;
         state.user = action.payload as IUser;

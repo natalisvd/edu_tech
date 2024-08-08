@@ -32,31 +32,31 @@ const DeleteButton = ({ onClick }: { onClick(event: React.MouseEvent<HTMLButtonE
   </button>
 )
 
-export const Avatar = ({ url, userName }: AvatarProps) => {
+export const Avatar = ({ url }: AvatarProps) => {
   const [avatarUrl, setAvatarUrl] = useState<AvatarUrl>(url)
   const { register, setValue } = useFormContext()
   const { file, resetFile } = useContext(AvatarContext)
 
-  const supabase = createClient()
+  // const supabase = createClient()
   
-  useEffect(() => {
-    async function downloadImage(path: string) {
-      try {
-        const { data, error } = await supabase.storage.from("avatars").download(path);
-        if (error) {
-          throw error;
-        }
+  // useEffect(() => {
+  //   async function downloadImage(path: string) {
+  //     try {
+  //       const { data, error } = await supabase.storage.from("avatars").download(path);
+  //       if (error) {
+  //         throw error;
+  //       }
 
-        const url = URL.createObjectURL(data);
-        setAvatarUrl(url);
-      } catch (error) {
-        console.log("Error downloading image: ", error);
-      }
-    }
+  //       const url = URL.createObjectURL(data);
+  //       setAvatarUrl(url);
+  //     } catch (error) {
+  //       console.log("Error downloading image: ", error);
+  //     }
+  //   }
 
-    if (url) downloadImage(url);
-    if (url === null) setAvatarUrl('');
-  }, [url, supabase]);
+  //   if (url) downloadImage(url);
+  //   if (url === null) setAvatarUrl('');
+  // }, [url, supabase]);
 
   const removeAvatarUrl = () => setValue('avatar_url', null)
 
@@ -67,7 +67,7 @@ export const Avatar = ({ url, userName }: AvatarProps) => {
           {avatarUrl && !file && (
             <>
               <ImageOverlay />
-              <Image src={avatarUrl} alt={`${userName}_avatar`} width={228} height={228} priority />
+              <Image src={avatarUrl} alt={`avatar`} width={228} height={228} priority />
               <ButtonGroup>
                 <EditButton onClick={resetFile} />
                 <DeleteButton onClick={removeAvatarUrl} />
@@ -77,7 +77,7 @@ export const Avatar = ({ url, userName }: AvatarProps) => {
           {file && (
             <>
               <ImageOverlay />
-              <Image src={URL.createObjectURL(file)} alt={`${userName}_avatar`} width={228} height={228} />
+              <Image src={URL.createObjectURL(file)} alt={`avatar`} width={228} height={228} />
               <ButtonGroup>
                 <EditButton />
                 <DeleteButton onClick={resetFile} />

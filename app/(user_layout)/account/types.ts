@@ -2,7 +2,6 @@ export type AccountFormValues = {
   firstName: string | null
   lastName: string | null
   avatar_url: string | null
-  avatar_file: any
 }
 
 export type AlertProps = {

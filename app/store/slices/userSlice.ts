@@ -1,3 +1,4 @@
+"use client"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { IAuth, IUser } from "@/app/interfaces/interfaces";
@@ -55,7 +56,6 @@ export const fetchUpdate = createAsyncThunk("update", async (formData: any) => {
     throw error;
   }
 });
-
 
 const currentUserSlice = createSlice({
   name: "currentUser",

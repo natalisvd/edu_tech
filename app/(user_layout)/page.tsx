@@ -3,17 +3,24 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { createClient } from "@/utils/supabase/server";
-import { useAppSelector } from "../store/hooks";
-import { selectCurrentUser } from "../store/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { fetchCurrentUser, selectCurrentUser } from "../store/slices/userSlice";
+import { useEffect } from "react";
 
-export default async function Home() {
+export default function Home() {
+  const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
   const router = useRouter();
 
-  if (!currentUser.user && !currentUser.loading) {
-    router.push("/login");
-  }
+  useEffect(()=>{
+    dispatch(fetchCurrentUser())
+  },[])
+
+  useEffect(() => {
+    if (!currentUser.user && currentUser.loading) {
+      router.push("/login");
+    }
+  }, [currentUser.user, currentUser.loading]);
 
   return (
     <div

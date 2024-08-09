@@ -7,12 +7,11 @@ export interface ITeam {
 
 export interface IUser {
   id: string;
-  username: string;
-  first_name: string;
-  last_name: string;
-  avatar_url?: string;
-  role_id?: number;
-  team_id?: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: string;
+  roleId?: number;
+  teamId?: string;
   email?: string;
 }
 

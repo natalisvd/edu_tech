@@ -9,8 +9,8 @@ import { getProfileData, updateProfileData } from "./actions";
 import { resizeImage } from "@/app/helpers/image.helper";
 import { Alert } from "@/app/(routes)/courses/components/Alert/Alert";
 import { IUser } from "@/app/interfaces/interfaces";
-import { fetchUpdate } from "@/app/store/slices/userSlice";
-import { useAppDispatch } from "@/app/store/hooks";
+import { fetchUpdate, selectCurrentUser } from "@/app/store/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 
 const initialValues = {
   firstName: "",
@@ -25,21 +25,30 @@ export const AvatarContext = createContext<{
   resetFile: () => void;
 }>({ file: null, resetFile: () => {} });
 
-export default function AccountForm({ user }: { user: IUser | null }) {
+export default function AccountForm() {
   const router = useRouter();
+  const { user } = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
-
   const [loading, setLoading] = useState(true);
   const [values, setValues] = useState<FormValues & AvatarFileProps>();
   const [alert, setAlert] = useState<AlertProps | null>(null);
   const [bufferImage, setBufferImage] = useState<File | null>(null);
-  const [oldAvatarUrl, setOldAvatarUrl] = useState("");
 
   const methods = useForm<FormValues & AvatarFileProps>({
     defaultValues: initialValues,
-    values,
+    ...values,
   });
+  useEffect(() => {
+    if (!user) return;
+    setValues({
+      ...initialValues,
+      firstName: user?.firstName ?? "",
+      lastName: user?.lastName ?? "",
+      avatar_url: user?.avatarUrl ?? "",
+    });
+  }, [user?.id]);
 
+  console.log("==============", values);
   const {
     register,
     handleSubmit,
@@ -90,38 +99,19 @@ export default function AccountForm({ user }: { user: IUser | null }) {
   //   getProfile();
   // }, [user, getProfile]);
 
-  async function updateProfile({
-    firstName,
-    lastName,
-    // avatar_file,
-  }: FormValues) {
+  async function updateProfileHandle({ firstName, lastName }: FormValues) {
     try {
       setLoading(true);
 
       const formData = new FormData();
       formData.append("firstName", firstName || "");
       formData.append("lastName", lastName || "");
-      debugger
-      if(bufferImage){
+      debugger;
+      if (bufferImage) {
         const resized = await resizeImage(bufferImage, 300, 300);
-        debugger
         formData.append("avatar", resized);
       }
-      debugger
-     await dispatch(fetchUpdate(formData))
-      // console.log({ avatar_file });
-
-      // }
-      // if (!user?.id) return;
-      // const userId = user.id;
-      // const filePath = await uploadAvatar(bufferImage, userId, avatar_url);
-      // if (!avatar_url && !filePath) deleteOldAvatar(oldAvatarUrl);
-      // await updateProfileData(userId, {
-      //   username,
-      //   firstname,
-      //   lastname,
-      //   avatar_url: filePath ?? avatar_url,
-      // });
+      dispatch(fetchUpdate(formData));
       setAlert({ message: "Profile updated!" });
     } catch (error) {
       setAlert({ message: "Error updating the data!", severity: "error" });
@@ -184,7 +174,7 @@ export default function AccountForm({ user }: { user: IUser | null }) {
         <div className="md:max-w-xl w-full">
           <form
             className="grid grid-flow-row gap-y-5"
-            onSubmit={handleSubmit(updateProfile)}
+            onSubmit={handleSubmit(updateProfileHandle)}
           >
             <div className="form-control">
               <label htmlFor="email" className="label label-text">
@@ -200,25 +190,27 @@ export default function AccountForm({ user }: { user: IUser | null }) {
               />
             </div>
             <div className="form-control">
-              <label htmlFor="firstname" className="label label-text">
+              <label htmlFor="firstName" className="label label-text">
                 First Name
               </label>
               <input
-                // {...register("firstname")}
+                {...register("firstName")}
                 className="input input-bordered"
-                id="firstname"
+                id="firstName"
                 type="text"
+                value={values?.firstName || ''}
               />
             </div>
             <div className="form-control">
-              <label htmlFor="lastname" className="label label-text">
+              <label htmlFor="lastName" className="label label-text">
                 Last Name
               </label>
               <input
-                // {...register("lastname")}
+                {...register("lastName")}
                 className="input input-bordered"
-                id="lastname"
+                id="lastName"
                 type="text"
+                value={values?.lastName || ''}
               />
             </div>
 
@@ -241,9 +233,9 @@ export default function AccountForm({ user }: { user: IUser | null }) {
               <button
                 className="btn btn-primary btn-block"
                 type="submit"
-                // disabled={loading || !isValid}
+                disabled={loading || !isValid}
               >
-                {/* {loading ? "Loading ..." : "Update"} */}
+                {loading ? "Loading ..." : "Update"}
                 Update
               </button>
             </div>

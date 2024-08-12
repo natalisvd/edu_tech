@@ -38,6 +38,7 @@ export default function AccountForm() {
     defaultValues: initialValues,
     ...values,
   });
+
   useEffect(() => {
     if (!user) return;
     setValues({
@@ -46,9 +47,15 @@ export default function AccountForm() {
       lastName: user?.lastName ?? "",
       avatar_url: user?.avatarUrl ?? "",
     });
+
+    methods.reset({
+      ...initialValues,
+      firstName: user?.firstName ?? "",
+      lastName: user?.lastName ?? "",
+      avatar_url: user?.avatarUrl ?? "",
+    });
   }, [user?.id]);
 
-  console.log("==============", values);
   const {
     register,
     handleSubmit,
@@ -74,7 +81,6 @@ export default function AccountForm() {
     handleShowImage();
   }, [handleShowImage]);
 
-  // const getProfile = useCallback(async () => {
   //   try {
   //     setLoading(true);
   //     const data = await getProfileData(user?.id);
@@ -121,49 +127,6 @@ export default function AccountForm() {
 
   const url = watch("avatar_url");
 
-  // const deleteOldAvatar = async (filePath: string) => {
-  //   // try {
-  //   //   const { error, data } = await supabase.storage
-  //   //     .from("avatars")
-  //   //     .remove([filePath]);
-  //   // } catch (error) {
-  //   //   console.error(error);
-  //   //   return false;
-  //   // }
-  // };
-
-  // const uploadAvatar = async (
-  //   file: File | null,
-  //   userId: string,
-  //   oldAvatarUrl: string | null
-  // ) => {
-  //   try {
-  //     if (!file) return null;
-
-  //     if (oldAvatarUrl) {
-  //       await deleteOldAvatar(oldAvatarUrl);
-  //     }
-
-  //     const resizedFile = await resizeImage(file, 300, 300);
-  //     const fileExt = resizedFile.name.split(".").pop();
-  //     const filePath = `${userId}-${Math.random()}.${fileExt}`;
-
-  //     // const { error: uploadError } = await supabase.storage
-  //     //   .from("avatars")
-  //     //   .upload(filePath, resizedFile);
-
-  //     // if (uploadError) {
-  //     //   throw uploadError;
-  //     // }
-  //     setValue("avatar_url", filePath);
-  //     setAlert({ message: "Avatar updated!", severity: "success" });
-  //     return filePath;
-  //   } catch (error) {
-  //     console.log("uploadAvatar [error]", error);
-  //     setAlert({ message: "Error uploading avatar!", severity: "error" });
-  //   }
-  // };
-  console.log({ user });
   return (
     <FormProvider {...methods}>
       <div className="grid md:grid-cols-[auto,_1fr] gap-5 mb-10 w-full justify-items-center md:justify-items-stretch">

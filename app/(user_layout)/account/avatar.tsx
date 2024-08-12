@@ -65,7 +65,6 @@ export const Avatar = ({ url }: AvatarProps) => {
       setAvatarUrl(getAvatarUrl(url));
     }
   }, [url]);
-  console.log({ avatarUrl });
 
   const removeAvatarUrl = () => {
     setValue("avatar_url", null);

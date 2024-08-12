@@ -106,7 +106,6 @@ export default function AccountForm() {
       const formData = new FormData();
       formData.append("firstName", firstName || "");
       formData.append("lastName", lastName || "");
-      debugger;
       if (bufferImage) {
         const resized = await resizeImage(bufferImage, 300, 300);
         formData.append("avatar", resized);
@@ -198,7 +197,6 @@ export default function AccountForm() {
                 className="input input-bordered"
                 id="firstName"
                 type="text"
-                value={values?.firstName || ''}
               />
             </div>
             <div className="form-control">
@@ -210,7 +208,6 @@ export default function AccountForm() {
                 className="input input-bordered"
                 id="lastName"
                 type="text"
-                value={values?.lastName || ''}
               />
             </div>
 
@@ -233,9 +230,9 @@ export default function AccountForm() {
               <button
                 className="btn btn-primary btn-block"
                 type="submit"
-                disabled={loading || !isValid}
+                // disabled={loading || !isValid}
               >
-                {loading ? "Loading ..." : "Update"}
+                {/* {loading ? "Loading ..." : "Update"} */}
                 Update
               </button>
             </div>

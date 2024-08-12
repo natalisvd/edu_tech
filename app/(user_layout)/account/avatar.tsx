@@ -54,7 +54,6 @@ export const Avatar = ({ url }: AvatarProps) => {
   const [avatarUrl, setAvatarUrl] = useState<AvatarUrl>(url);
   const { register, setValue } = useFormContext();
   const { file, resetFile } = useContext(AvatarContext);
-  debugger;
   // const supabase = createClient()
 
   // useEffect(() => {

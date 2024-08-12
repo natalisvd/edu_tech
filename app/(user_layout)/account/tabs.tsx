@@ -1,4 +1,5 @@
 "use client";
+import { useUser } from "@/app/hooks/auth.hook";
 import * as Ariakit from "@ariakit/react";
 import clsx from "clsx";
 import Link from "next/link.js";
@@ -8,6 +9,8 @@ import * as React from "react";
 export function Tabs(props: Ariakit.TabProviderProps) {
   const router = useRouter();
   const selectedId = usePathname();
+  useUser();
+
   return (
     <Ariakit.TabProvider
       selectedId={selectedId}

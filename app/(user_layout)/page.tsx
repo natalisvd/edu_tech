@@ -1,27 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { fetchCurrentUser, selectCurrentUser } from "../store/slices/userSlice";
-import { useEffect } from "react";
+import { useUser } from "../hooks/auth.hook";
 
 export default function Home() {
-  const dispatch = useAppDispatch();
-  const currentUser = useAppSelector(selectCurrentUser);
-  const router = useRouter();
-
-  useEffect(()=>{
-    dispatch(fetchCurrentUser())
-  },[])
-
-  useEffect(() => {
-    if (!currentUser.user && currentUser.loading) {
-      router.push("/login");
-    }
-  }, [currentUser.user, currentUser.loading]);
-
+  useUser();
   return (
     <div
       className="container mx-auto py-8"

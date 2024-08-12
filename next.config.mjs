@@ -16,6 +16,12 @@ const nextConfig = {
         port: "",
         pathname: "/storage/v1/object/sign/avatars/**", // -- storage path for avatars
       },
+      {
+        protocol: "http",
+        hostname: "localhost", // -- local server
+        port: "5000",
+        pathname: "/avatars/**", 
+      },
     ],
   },
 };

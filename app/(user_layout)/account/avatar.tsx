@@ -50,34 +50,27 @@ const DeleteButton = ({
   </button>
 );
 
+const getAvatarUrl = (filename: string | null) => {
+  if (!filename) return null;
+  const baseUrl = process.env.NEXT_PUBLIC_AVATAR_URL;
+  return `${baseUrl}/${filename}`;
+};
+
 export const Avatar = ({ url }: AvatarProps) => {
   const [avatarUrl, setAvatarUrl] = useState<AvatarUrl>(url);
   const { register, setValue } = useFormContext();
   const { file, resetFile } = useContext(AvatarContext);
-  console.log({ url });
-  console.log({ file });
-  // const supabase = createClient()
+  useEffect(() => {
+    if (url) {
+      setAvatarUrl(getAvatarUrl(url));
+    }
+  }, [url]);
+  console.log({ avatarUrl });
 
-  // useEffect(() => {
-  //   async function downloadImage(path: string) {
-  //     try {
-  //       const { data, error } = await supabase.storage.from("avatars").download(path);
-  //       if (error) {
-  //         throw error;
-  //       }
-
-  //       const url = URL.createObjectURL(data);
-  //       setAvatarUrl(url);
-  //     } catch (error) {
-  //       console.log("Error downloading image: ", error);
-  //     }
-  //   }
-
-  //   if (url) downloadImage(url);
-  //   if (url === null) setAvatarUrl('');
-  // }, [url, supabase]);
-
-  const removeAvatarUrl = () => setValue("avatar_url", null);
+  const removeAvatarUrl = () => {
+    setValue("avatar_url", null);
+    setAvatarUrl("");
+  };
 
   return (
     <div className="pt-2">
@@ -88,7 +81,7 @@ export const Avatar = ({ url }: AvatarProps) => {
               <ImageOverlay />
               <Image
                 src={avatarUrl}
-                alt={`avatar`}
+                alt="avatar"
                 width={228}
                 height={228}
                 priority
@@ -104,7 +97,7 @@ export const Avatar = ({ url }: AvatarProps) => {
               <ImageOverlay />
               <Image
                 src={URL.createObjectURL(file)}
-                alt={`avatar`}
+                alt="avatar"
                 width={228}
                 height={228}
               />

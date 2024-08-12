@@ -168,7 +168,7 @@ export default function AccountForm() {
     <FormProvider {...methods}>
       <div className="grid md:grid-cols-[auto,_1fr] gap-5 mb-10 w-full justify-items-center md:justify-items-stretch">
         <AvatarContext.Provider value={{ file: bufferImage, resetFile }}>
-          <Avatar url={url} />
+          <Avatar url={values?.avatar_url} />
         </AvatarContext.Provider>
         <div className="md:max-w-xl w-full">
           <form

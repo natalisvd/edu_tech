@@ -2,7 +2,7 @@
 
 import { PropsWithChildren, useCallback, useRef, useState } from "react"
 import { UserSkill, UserSkills } from "../types"
-import { EditIcon } from "@/app/components/Icons/EditIcon."
+import { EditIcon } from "@/app/components/Icons/EditIcon"
 import { SelectLevel } from "./SelectLevel"
 import { useForm } from "react-hook-form"
 import { deleteSkillbyId, updateUserSkillLevel } from "../actions"

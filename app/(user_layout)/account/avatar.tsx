@@ -10,7 +10,7 @@ import {
 } from "react";
 import { AvatarContext } from "./account-form";
 import { TrashIcon } from "@/app/components/Icons/TrashIcon";
-import { EditIcon } from "@/app/components/Icons/EditIcon.";
+import { EditIcon } from "@/app/components/Icons/EditIcon";
 import { createClient } from "@/utils/supabase/client";
 import { AvatarProps, AvatarUrl } from "./types";
 
@@ -54,6 +54,8 @@ export const Avatar = ({ url }: AvatarProps) => {
   const [avatarUrl, setAvatarUrl] = useState<AvatarUrl>(url);
   const { register, setValue } = useFormContext();
   const { file, resetFile } = useContext(AvatarContext);
+  console.log({ url });
+  console.log({ file });
   // const supabase = createClient()
 
   // useEffect(() => {

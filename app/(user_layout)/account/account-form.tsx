@@ -163,7 +163,7 @@ export default function AccountForm() {
   //     setAlert({ message: "Error uploading avatar!", severity: "error" });
   //   }
   // };
-
+  console.log({ user });
   return (
     <FormProvider {...methods}>
       <div className="grid md:grid-cols-[auto,_1fr] gap-5 mb-10 w-full justify-items-center md:justify-items-stretch">

@@ -1,4 +1,5 @@
 "use client";
+
 import { selectCurrentUser, fetchCurrentUser } from "../store/slices/userSlice";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -10,15 +11,27 @@ export function useUser() {
   const router = useRouter();
 
   useEffect(() => {
+    getCurrentUser();
+  }, [user, dispatch, router]);
+
+  const getCurrentUser = async () => {
     if (!user) {
       const token = localStorage.getItem("token");
       if (token) {
-        dispatch(fetchCurrentUser());
+        try {
+          await dispatch(fetchCurrentUser()).unwrap();
+        } catch (error: any) {
+          if (error.message === "Unauthorized") {
+            router.push("/login");
+          } else {
+            console.error("Error fetching user:", error);
+          }
+        }
       } else {
         router.push("/login");
       }
     }
-  }, [user, dispatch, router]);
+  };
 
   return user;
 }

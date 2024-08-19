@@ -17,7 +17,8 @@ export const currentUser = () => post("/user/currentUser");
 export const updateUser = (formData: any) =>
   patch("/user/currentUser", formData);
 export const getAllUsers = () => get("/user");
-export const getAllTeamLeaders = () => get("/user/teamleaders");
+export const getAllTeamLeaders = ({ withTeam }: { withTeam: boolean }) =>
+  get(`/user/teamleaders/${withTeam}`);
 
 // /* teams requests */
 export const getAllTeams = () => get("/team");

@@ -2,7 +2,7 @@
 
 import { FC, useCallback, useEffect } from "react";
 import { createTeam } from "@/app/(user_layout)/(admins)/manage_users/action";
-import Modal from "./components/Modal";
+import Modal from "./components/ModalOld";
 
 interface CreateTeamProps {
   teamName?: any;

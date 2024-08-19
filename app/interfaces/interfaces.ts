@@ -1,10 +1,3 @@
-//TODO
-export interface ITeam {
-  id: string;
-  team_id: string;
-  user_id: string;
-}
-
 export interface IUser {
   id: string;
   firstName: string;

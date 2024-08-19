@@ -1,4 +1,4 @@
-import { IAuth } from "../interfaces/interfaces";
+import { IAuth, ITeam } from "../interfaces/interfaces";
 import { get, post, patch, httpDelete } from "./axios";
 
 export const login = (body: IAuth) =>
@@ -12,9 +12,13 @@ export const register = (body: IAuth) =>
     return res;
   });
 
+// /* users requests */
 export const currentUser = () => post("/user/currentUser");
 export const updateUser = (formData: any) =>
   patch("/user/currentUser", formData);
-
-// /* users requests */
 export const getAllUsers = () => get("/user");
+export const getAllTeamLeaders = () => get("/user/teamleaders");
+
+// /* teams requests */
+export const getAllTeams = () => get("/team");
+export const createTeam = (body: ITeam) => post("/team", body);

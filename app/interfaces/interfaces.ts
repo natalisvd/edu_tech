@@ -36,3 +36,9 @@ export interface IAuth {
   email: string;
   password?: string;
 }
+
+export interface ITeam {
+  teamName: string;
+  teamLeaderId: string;
+  participantIds?: string[];
+}

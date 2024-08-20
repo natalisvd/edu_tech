@@ -7,7 +7,6 @@ import { CreateTeamModal } from "./components/CreateTeamModal";
 export default function Page() {
   const [teamLeaders, setTeamLeaders] = useState<IUser[]>([]);
   const [teams, setTeams] = useState<ITeam[]>([]);
-  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     init();
@@ -27,10 +26,17 @@ export default function Page() {
     }
   };
 
+  const updateTeamleadersList = (teamLeaderId: string) => {
+    const newList = teamLeaders.filter(
+      (teamLeader) => teamLeader.id !== teamLeaderId
+    );
+    setTeamLeaders(newList);
+  };
+
   return (
     <div className="p-4">
       {teamLeaders.length > 0 ? (
-        <CreateTeamModal teamLeaders={teamLeaders} />
+        <CreateTeamModal teamLeaders={teamLeaders} updateTeamleadersList={updateTeamleadersList}/>
       ) : (
         <p>No available team leaders</p>
       )}

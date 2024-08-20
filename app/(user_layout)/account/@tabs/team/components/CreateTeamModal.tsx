@@ -5,16 +5,22 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { IUser } from "@/app/interfaces/interfaces";
 import { Alert } from "@/app/(routes)/courses/components/Alert/Alert";
+import { createTeamApi } from "@/app/api";
 
 type CreateTeamModalProps = {
   teamLeaders: IUser[];
+  updateTeamleadersList: (id: string) => void;
 };
 
 export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({
   teamLeaders,
+  updateTeamleadersList,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [alert, setAlert] = useState<{ message: string; severity?: string } | null>(null);
+  const [alert, setAlert] = useState<{
+    message: string;
+    severity?: string;
+  } | null>(null);
 
   const defaultTeamLeaderId = teamLeaders.length > 0 ? teamLeaders[0].id : "";
 
@@ -30,10 +36,15 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log("New Team Created:", values);
-      //TODO
-      setIsOpen(false);
-      setAlert({ message: "Team created successfully!" });
+      try {
+        createTeamApi(values);
+        updateTeamleadersList(values.teamLeaderId);
+        setIsOpen(false);
+        setAlert({ message: "Team created successfully!" });
+      } catch (error) {
+        setAlert({ message: `Team created error` });
+        console.log(error);
+      }
     },
   });
 
@@ -46,10 +57,7 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({
 
   return (
     <>
-      <button
-        className="btn btn-primary"
-        onClick={() => setIsOpen(true)}
-      >
+      <button className="btn btn-primary" onClick={() => setIsOpen(true)}>
         Create Team
       </button>
 
@@ -128,10 +136,7 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                >
+                <button type="submit" className="btn btn-primary">
                   Create
                 </button>
               </div>

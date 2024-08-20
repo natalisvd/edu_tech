@@ -22,4 +22,4 @@ export const getAllTeamLeaders = ({ withTeam }: { withTeam: boolean }) =>
 
 // /* teams requests */
 export const getAllTeams = () => get("/team");
-export const createTeamApi = (body: ITeam) => post("/team", body);
+export const createTeamApi = (body: any) => post("/team", body);

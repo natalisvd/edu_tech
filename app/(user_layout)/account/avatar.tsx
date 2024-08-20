@@ -13,6 +13,7 @@ import { TrashIcon } from "@/app/components/Icons/TrashIcon";
 import { EditIcon } from "@/app/components/Icons/EditIcon";
 import { createClient } from "@/utils/supabase/client";
 import { AvatarProps, AvatarUrl } from "./types";
+import { getAvatarUrl } from "@/app/helpers/image.helper";
 
 const INPUT_ID = "avatar-input";
 
@@ -50,11 +51,7 @@ const DeleteButton = ({
   </button>
 );
 
-const getAvatarUrl = (filename: string | null) => {
-  if (!filename) return null;
-  const baseUrl = process.env.NEXT_PUBLIC_AVATAR_URL;
-  return `${baseUrl}/${filename}`;
-};
+
 
 export const Avatar = ({ url }: AvatarProps) => {
   const [avatarUrl, setAvatarUrl] = useState<AvatarUrl>(url);

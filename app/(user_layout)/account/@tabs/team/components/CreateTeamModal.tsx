@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { IUser } from "@/app/interfaces/interfaces";
+import { ITeam, IUser } from "@/app/interfaces/interfaces";
 import { Alert } from "@/app/(routes)/courses/components/Alert/Alert";
 import { createTeamApi } from "@/app/api";
 
 type CreateTeamModalProps = {
   teamLeaders: IUser[];
-  updateTeamleadersList: (id: string) => void;
+  updateTeamleadersList: (id: string, newTeam: ITeam) => void;
 };
 
 export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({
@@ -35,10 +35,10 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({
       teamLeaderId: defaultTeamLeaderId,
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       try {
-        createTeamApi(values);
-        updateTeamleadersList(values.teamLeaderId);
+       const newTeam = await createTeamApi(values) as ITeam;
+        updateTeamleadersList(values.teamLeaderId , newTeam);
         setIsOpen(false);
         setAlert({ message: "Team created successfully!" });
       } catch (error) {

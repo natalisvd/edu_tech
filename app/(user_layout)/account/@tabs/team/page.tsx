@@ -22,19 +22,18 @@ export default function Page() {
 
       const respTeams = (await getAllTeams()) as ITeam[];
       setTeams(respTeams);
-      console.log(respTeams);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const updateTeamleadersList = (teamLeaderId: string) => {
+  const updateTeamleadersList = (teamLeaderId: string, newTeam: ITeam) => {
     const newList = teamLeaders.filter(
       (teamLeader) => teamLeader.id !== teamLeaderId
     );
     setTeamLeaders(newList);
+    setTeams([...teams, newTeam]);
   };
-
   return (
     <div className="p-4">
       {teamLeaders.length > 0 ? (
@@ -46,7 +45,7 @@ export default function Page() {
         <p>No available team leaders</p>
       )}
 
-      {teams.length > 0 ? <TeamsList teams={teams} /> : <p>No teams yet</p>}
+      {teams.length > 0 ? <TeamsList teams={teams} /> : <p className="mt-5">No teams yet</p>}
     </div>
   );
 }

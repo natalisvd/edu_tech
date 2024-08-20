@@ -31,7 +31,8 @@ export interface IAuth {
 }
 
 export interface ITeam {
+  id: string;
   teamName: string;
-  teamLeaderId: string;
-  participantIds?: string[];
+  teamLeader: IUser;
+  participants: IUser[]; 
 }

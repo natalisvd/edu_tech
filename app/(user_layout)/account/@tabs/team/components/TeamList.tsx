@@ -1,11 +1,10 @@
 import { getAvatarUrl } from "@/app/helpers/image.helper";
 import { useUser } from "@/app/hooks/auth.hook";
 import { ITeam } from "@/app/interfaces/interfaces";
-import { useAppSelector } from "@/app/store/hooks";
-import { selectCurrentUser } from "@/app/store/slices/userSlice";
 import Image from "next/image";
 import React from "react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import AddParticipantsModal from "./AddParticipantsModal";
 
 interface TeamCardProps {
   team: ITeam;
@@ -16,15 +15,18 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const user = useUser();
   const isYourTeam = user ? teamLeaderId === user.id : false;
 
+  // Заглушка функции addParticipants
+  const handleAddParticipants = () => {
+    //TODO
+    console.log("Add participants function called!");
+  };
+
   return (
     <div className="bg-gray-100 border border-gray-300 shadow-md rounded-lg p-4 mb-4 flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-900">{team.teamName}</h2>
         {isYourTeam && (
           <div className="flex gap-2">
-            <button className="text-green-500 hover:text-green-700">
-              <FaPlus size={16} />
-            </button>
             <button className="text-blue-500 hover:text-blue-700">
               <FaEdit size={16} />
             </button>
@@ -50,9 +52,10 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
         </div>
       </div>
 
-      <p className="text-sm text-gray-700">
-        Participants: {team.participants.length}
-      </p>
+      <div className="flex justify-between items-center">
+        <p className="text-sm text-gray-700">Participants: {team.participants.length}</p>
+        <AddParticipantsModal addParticipants={handleAddParticipants} />
+      </div>
     </div>
   );
 };

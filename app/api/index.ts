@@ -1,3 +1,4 @@
+import { boolean } from "yup";
 import { IAuth, ITeam } from "../interfaces/interfaces";
 import { get, post, patch, httpDelete } from "./axios";
 
@@ -19,6 +20,9 @@ export const updateUser = (formData: any) =>
 export const getAllUsers = () => get("/user");
 export const getAllTeamLeaders = ({ withTeam }: { withTeam: boolean }) =>
   get(`/user/teamleaders/${withTeam}`);
+export const getAllWorkers = ({ withTeam }: { withTeam: boolean }) =>
+  get(`/user/workers/${withTeam}`);
+
 
 // /* teams requests */
 export const getAllTeams = () => get("/team");

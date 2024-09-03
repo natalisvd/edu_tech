@@ -4,7 +4,8 @@ import { ITeam } from "@/app/interfaces/interfaces";
 import Image from "next/image";
 import React from "react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
-import AddParticipantsModal from "./AddParticipantsModal";
+import AddParticipantsModal from "./UpdateParticipantsModal";
+import UpdateParticipantsModal from "./UpdateParticipantsModal";
 
 interface TeamCardProps {
   team: ITeam;
@@ -16,7 +17,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const isYourTeam = user ? teamLeaderId === user.id : false;
 
   // Заглушка функции addParticipants
-  const handleAddParticipants = () => {
+  const handleUpdateParticipants = () => {
     //TODO
     console.log("Add participants function called!");
   };
@@ -53,8 +54,13 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
       </div>
 
       <div className="flex justify-between items-center">
-        <p className="text-sm text-gray-700">Participants: {team.participants.length}</p>
-        <AddParticipantsModal addParticipants={handleAddParticipants} />
+        <p className="text-sm text-gray-700">
+          Participants: {team.participants.length}
+        </p>
+        <UpdateParticipantsModal
+          updateParticipants={handleUpdateParticipants}
+          teamId={team.id+''}
+        />
       </div>
     </div>
   );

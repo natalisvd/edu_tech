@@ -25,14 +25,9 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-900">{team.teamName}</h2>
         {isYourTeam && (
-          <div className="flex gap-2">
-            <button className="text-blue-500 hover:text-blue-700">
-              <FaEdit size={16} />
-            </button>
-            <button className="text-red-500 hover:text-red-700">
-              <FaTrash size={16} />
-            </button>
-          </div>
+          <button className="text-blue-500 hover:text-blue-700">
+            <FaEdit size={16} />
+          </button>
         )}
       </div>
       <div className="flex items-center gap-4">
@@ -44,7 +39,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
           priority
         />
         <div>
-          <h3 className="text-lg font-semibold text-gray-800">
+          <h3 className="text-lg font-semibold text-gray-900">
             {team.teamLeader.firstName} {team.teamLeader.lastName}
           </h3>
           <p className="text-sm text-gray-600">{team.teamLeader.email}</p>
@@ -52,13 +47,32 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
       </div>
 
       <div className="flex justify-between items-center">
-        <p className="text-sm text-gray-700">
-          Participants: {participants.length}
-        </p>
-        <UpdateParticipantsModal
-          updateParticipants={handleUpdateParticipants}
-          teamId={team.id + ""}
-        />
+        <div className="flex items-center gap-4">
+          <p className="text-sm text-gray-700">Participants</p>
+          <div className="flex flex-wrap gap-2">
+            {participants.map((participant) => (
+              <div
+                key={participant.id}
+                className="relative"
+                title={`${participant.firstName} ${participant.lastName}`}
+              >
+                <Image
+                  src={getAvatarUrl(participant.avatarUrl)}
+                  alt="participant avatar"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8 rounded-full"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        {isYourTeam && (
+          <UpdateParticipantsModal
+            updateParticipants={handleUpdateParticipants}
+            teamId={team.id + ""}
+          />
+        )}
       </div>
     </div>
   );

@@ -25,8 +25,8 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-900">{team.teamName}</h2>
         {isYourTeam && (
-          <button className="text-blue-500 hover:text-blue-700">
-            <FaEdit size={16} />
+          <button className="text-red-500 hover:text-red-700">
+            <FaTrash size={16} />
           </button>
         )}
       </div>

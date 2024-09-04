@@ -1,10 +1,9 @@
 import { getAvatarUrl } from "@/app/helpers/image.helper";
 import { useUser } from "@/app/hooks/auth.hook";
-import { ITeam } from "@/app/interfaces/interfaces";
+import { ITeam, IUser } from "@/app/interfaces/interfaces";
 import Image from "next/image";
-import React from "react";
-import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
-import AddParticipantsModal from "./UpdateParticipantsModal";
+import React, { useState } from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import UpdateParticipantsModal from "./UpdateParticipantsModal";
 
 interface TeamCardProps {
@@ -15,11 +14,10 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const { teamLeaderId } = team;
   const user = useUser();
   const isYourTeam = user ? teamLeaderId === user.id : false;
+  const [participants, setParticipants] = useState(team.participants);
 
-  // Заглушка функции addParticipants
-  const handleUpdateParticipants = () => {
-    //TODO
-    console.log("Add participants function called!");
+  const handleUpdateParticipants = (selectedWorkersList: IUser[]) => {
+    setParticipants(selectedWorkersList);
   };
 
   return (
@@ -55,11 +53,11 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
 
       <div className="flex justify-between items-center">
         <p className="text-sm text-gray-700">
-          Participants: {team.participants.length}
+          Participants: {participants.length}
         </p>
         <UpdateParticipantsModal
           updateParticipants={handleUpdateParticipants}
-          teamId={team.id+''}
+          teamId={team.id + ""}
         />
       </div>
     </div>

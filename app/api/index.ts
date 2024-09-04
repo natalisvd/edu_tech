@@ -1,5 +1,5 @@
 import { boolean } from "yup";
-import { IAuth, ITeam } from "../interfaces/interfaces";
+import { IAuth, ITeam, IUser } from "../interfaces/interfaces";
 import { get, post, patch, httpDelete } from "./axios";
 
 export const login = (body: IAuth) =>
@@ -20,9 +20,9 @@ export const updateUser = (formData: any) =>
 export const getAllUsers = () => get("/user");
 export const getAllTeamLeaders = ({ withTeam }: { withTeam: boolean }) =>
   get(`/user/teamleaders/${withTeam}`);
-export const getAllWorkers = ({ withTeam }: { withTeam: boolean }) =>
-  get(`/user/workers/${withTeam}`);
-
+export const getAllWorkers = () => get(`/user/workers`);
+export const updateUserMultiple = (body: IUser[]) =>
+  patch("/user/updateUserMultiple", body);
 
 // /* teams requests */
 export const getAllTeams = () => get("/team");

@@ -1,5 +1,5 @@
 "use client";
-import { getAllWorkers } from "@/app/api";
+import { getAllWorkers, updateUserMultiple } from "@/app/api";
 import { IUser } from "@/app/interfaces/interfaces";
 import React, { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
@@ -30,18 +30,21 @@ const UpdateParticipantsModal: React.FC<UpdateParticipantsModalProps> = ({
 
   const init = async () => {
     try {
-      const respWorkers = (await getAllWorkers({
-        withTeam: false,
-      })) as IUser[];
-
-      // Sort workers: first those with a team, then those without
-      const sortedWorkers = respWorkers.sort((a, b) =>
+      const respWorkers = (await getAllWorkers()) as IUser[];
+  
+      // Remove members of other teams
+      const filteredWorkers = respWorkers.filter(
+        (worker) => worker.teamId === teamId || worker.teamId === null
+      );
+  
+      //Selected to top
+      const sortedWorkers = filteredWorkers.sort((a, b) => 
         a.teamId === teamId ? -1 : 1
       );
+  
       setWorkers(sortedWorkers);
       setFilteredWorkers(sortedWorkers);
-
-      // Pre-select workers that are already in the team
+  
       const preSelectedWorkers = new Set(
         sortedWorkers
           .filter((worker) => worker.teamId === teamId)
@@ -64,19 +67,29 @@ const UpdateParticipantsModal: React.FC<UpdateParticipantsModalProps> = ({
   const handleCheckboxChange = (workerId: string) => {
     setSelectedWorkers((prevSelectedWorkers) => {
       const updatedSelectedWorkers = new Set(prevSelectedWorkers);
-      if (updatedSelectedWorkers.has(workerId)) {
-        updatedSelectedWorkers.delete(workerId);
-      } else {
-        updatedSelectedWorkers.add(workerId);
-      }
+      const updatedWorkers = workers.map((worker) => {
+        if (worker.id === workerId) {
+          if (updatedSelectedWorkers.has(workerId)) {
+            updatedSelectedWorkers.delete(workerId);
+            return { ...worker, teamId: null };
+          } else {
+            updatedSelectedWorkers.add(workerId);
+            return { ...worker, teamId: teamId };
+          }
+        }
+        return worker;
+      });
+
+      setWorkers(updatedWorkers);
       return updatedSelectedWorkers;
     });
   };
 
-  const handleUpdateParticipants = () => {
+  const handleUpdateParticipants = async () => {
     const selectedWorkersList = workers
       .filter((worker) => selectedWorkers.has(worker.id))
       .map((worker) => ({ ...worker, teamId }));
+    await updateUserMultiple(workers);
     updateParticipants(selectedWorkersList);
     closeModal();
   };
@@ -108,11 +121,9 @@ const UpdateParticipantsModal: React.FC<UpdateParticipantsModalProps> = ({
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white rounded-lg p-6 w-96 min-h-[60vh] max-h-[80vh] overflow-hidden flex flex-col">
+          <div className="bg-white rounded-lg p-6 w-[50%] min-h-[60vh] max-h-[80vh] overflow-hidden flex flex-col">
             {" "}
-            {/* Set min height and max height */}
             <h2 className="text-lg font-bold mb-4">Update Participants</h2>
-            {/* Search bar */}
             <input
               type="text"
               value={searchQuery}

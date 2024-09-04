@@ -4,7 +4,7 @@ export interface IUser {
   lastName: string;
   avatarUrl?: string;
   roleId?: number;
-  teamId?: string;
+  teamId?: string | null;
   email?: string;
 }
 

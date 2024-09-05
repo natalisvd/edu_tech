@@ -1,8 +1,11 @@
-'use client'
+"use client";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { createCourseApi } from "@/app/api";
+import { ICourse } from "@/app/interfaces/interfaces";
+import { useUser } from "@/app/hooks/auth.hook";
 
 const validationSchema = Yup.object({
   courseName: Yup.string().required("Course name is required"),
@@ -21,6 +24,8 @@ interface FormValues {
 }
 
 export default function CreateCourse() {
+  const user = useUser();
+  if (!user) return;
   const router = useRouter();
   const [tags, setTags] = useState<string[]>([]);
   const [materials, setMaterials] = useState<string[]>([]);
@@ -35,35 +40,64 @@ export default function CreateCourse() {
       materialsInput: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Form values:", values);
+    onSubmit: async (values) => {
+      const newCourse: ICourse = {
+        name: values.courseName,
+        tags: values.tags,
+        description: values.description,
+        materials: values.materials,
+        authorId: user.id,
+      };
+      try {
+        await createCourseApi(newCourse);
+        router.push("/");
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
   const handleAddTag = () => {
     if (formik.values.tagsInput) {
       setTags((prevTags) => [...prevTags, formik.values.tagsInput]);
-      formik.setFieldValue("tags", [...formik.values.tags, formik.values.tagsInput]);
+      formik.setFieldValue("tags", [
+        ...formik.values.tags,
+        formik.values.tagsInput,
+      ]);
       formik.setFieldValue("tagsInput", "");
     }
   };
 
   const handleAddMaterial = () => {
     if (formik.values.materialsInput) {
-      setMaterials((prevMaterials) => [...prevMaterials, formik.values.materialsInput]);
-      formik.setFieldValue("materials", [...formik.values.materials, formik.values.materialsInput]);
+      setMaterials((prevMaterials) => [
+        ...prevMaterials,
+        formik.values.materialsInput,
+      ]);
+      formik.setFieldValue("materials", [
+        ...formik.values.materials,
+        formik.values.materialsInput,
+      ]);
       formik.setFieldValue("materialsInput", "");
     }
   };
 
   const handleRemoveTag = (tag: string) => {
-    setTags((prevTags) => prevTags.filter(t => t !== tag));
-    formik.setFieldValue("tags", tags.filter(t => t !== tag));
+    setTags((prevTags) => prevTags.filter((t) => t !== tag));
+    formik.setFieldValue(
+      "tags",
+      tags.filter((t) => t !== tag)
+    );
   };
 
   const handleRemoveMaterial = (material: string) => {
-    setMaterials((prevMaterials) => prevMaterials.filter(m => m !== material));
-    formik.setFieldValue("materials", materials.filter(m => m !== material));
+    setMaterials((prevMaterials) =>
+      prevMaterials.filter((m) => m !== material)
+    );
+    formik.setFieldValue(
+      "materials",
+      materials.filter((m) => m !== material)
+    );
   };
 
   return (
@@ -71,7 +105,12 @@ export default function CreateCourse() {
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Create a Course</h1>
       <form onSubmit={formik.handleSubmit} className="space-y-6">
         <div className="form-control">
-          <label htmlFor="courseName" className="block text-gray-700 font-medium mb-2">Course Name</label>
+          <label
+            htmlFor="courseName"
+            className="block text-gray-700 font-medium mb-2"
+          >
+            Course Name
+          </label>
           <input
             id="courseName"
             name="courseName"
@@ -80,16 +119,25 @@ export default function CreateCourse() {
             onBlur={formik.handleBlur}
             value={formik.values.courseName}
             className={`w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 ${
-              formik.touched.courseName && formik.errors.courseName ? 'border-red-500' : ''
+              formik.touched.courseName && formik.errors.courseName
+                ? "border-red-500"
+                : ""
             }`}
           />
           {formik.touched.courseName && formik.errors.courseName ? (
-            <div className="text-red-500 text-sm mt-1">{formik.errors.courseName}</div>
+            <div className="text-red-500 text-sm mt-1">
+              {formik.errors.courseName}
+            </div>
           ) : null}
         </div>
 
         <div className="form-control">
-          <label htmlFor="tagsInput" className="block text-gray-700 font-medium mb-2">Tags</label>
+          <label
+            htmlFor="tagsInput"
+            className="block text-gray-700 font-medium mb-2"
+          >
+            Tags
+          </label>
           <div className="flex items-center gap-2 mb-4">
             <input
               id="tagsInput"
@@ -110,7 +158,10 @@ export default function CreateCourse() {
           </div>
           <div className="flex flex-wrap gap-2">
             {tags.map((tag, index) => (
-              <div key={index} className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full border border-gray-300 flex items-center gap-2">
+              <div
+                key={index}
+                className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full border border-gray-300 flex items-center gap-2"
+              >
                 <span>{tag}</span>
                 <button
                   type="button"
@@ -123,12 +174,19 @@ export default function CreateCourse() {
             ))}
           </div>
           {formik.touched.tags && formik.errors.tags ? (
-            <div className="text-red-500 text-sm mt-1">{formik.errors.tags}</div>
+            <div className="text-red-500 text-sm mt-1">
+              {formik.errors.tags}
+            </div>
           ) : null}
         </div>
 
         <div className="form-control">
-          <label htmlFor="description" className="block text-gray-700 font-medium mb-2">Description</label>
+          <label
+            htmlFor="description"
+            className="block text-gray-700 font-medium mb-2"
+          >
+            Description
+          </label>
           <textarea
             id="description"
             name="description"
@@ -139,12 +197,19 @@ export default function CreateCourse() {
             rows={3}
           />
           {formik.touched.description && formik.errors.description ? (
-            <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
+            <div className="text-red-500 text-sm mt-1">
+              {formik.errors.description}
+            </div>
           ) : null}
         </div>
 
         <div className="form-control">
-          <label htmlFor="materialsInput" className="block text-gray-700 font-medium mb-2">Materials</label>
+          <label
+            htmlFor="materialsInput"
+            className="block text-gray-700 font-medium mb-2"
+          >
+            Materials
+          </label>
           <div className="flex items-center gap-2 mb-4">
             <input
               id="materialsInput"
@@ -165,8 +230,18 @@ export default function CreateCourse() {
           </div>
           <div className="flex flex-wrap gap-2">
             {materials.map((material, index) => (
-              <div key={index} className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full border border-gray-300 flex items-center gap-2">
-                <a href={material} target="_blank" rel="noopener noreferrer" className="truncate">{material}</a>
+              <div
+                key={index}
+                className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full border border-gray-300 flex items-center gap-2"
+              >
+                <a
+                  href={material}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="truncate"
+                >
+                  {material}
+                </a>
                 <button
                   type="button"
                   onClick={() => handleRemoveMaterial(material)}
@@ -178,7 +253,9 @@ export default function CreateCourse() {
             ))}
           </div>
           {formik.touched.materials && formik.errors.materials ? (
-            <div className="text-red-500 text-sm mt-1">{formik.errors.materials}</div>
+            <div className="text-red-500 text-sm mt-1">
+              {formik.errors.materials}
+            </div>
           ) : null}
         </div>
 

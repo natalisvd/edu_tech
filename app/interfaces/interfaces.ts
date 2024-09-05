@@ -46,3 +46,12 @@ export interface ITeam {
   teamLeader: IUser ;
   participants: IUser[]; 
 }
+
+export interface ICourse {
+  id?: string;
+  name: string;
+  description: string;
+  tags: string[];
+  materials: string[];
+  authorId: string;
+}

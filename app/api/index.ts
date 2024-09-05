@@ -1,5 +1,5 @@
 import { boolean } from "yup";
-import { IAuth, ITeam, IUser } from "../interfaces/interfaces";
+import { IAuth, ICourse, ITeam, IUser } from "../interfaces/interfaces";
 import { get, post, patch, httpDelete } from "./axios";
 
 export const login = (body: IAuth) =>
@@ -26,4 +26,7 @@ export const updateUserMultiple = (body: IUser[]) =>
 
 // /* teams requests */
 export const getAllTeams = () => get("/team");
-export const createTeamApi = (body: any) => post("/team", body);
+export const createTeamApi = (body: ITeam) => post("/team", body);
+
+// /* courses requests */
+export const createCourseApi = ( body: ICourse) => post('/courses', body)

@@ -31,20 +31,20 @@ const UpdateParticipantsModal: React.FC<UpdateParticipantsModalProps> = ({
   const init = async () => {
     try {
       const respWorkers = (await getAllWorkers()) as IUser[];
-  
+
       // Remove members of other teams
       const filteredWorkers = respWorkers.filter(
         (worker) => worker.teamId === teamId || worker.teamId === null
       );
-  
+
       //Selected to top
-      const sortedWorkers = filteredWorkers.sort((a, b) => 
+      const sortedWorkers = filteredWorkers.sort((a, b) =>
         a.teamId === teamId ? -1 : 1
       );
-  
+
       setWorkers(sortedWorkers);
       setFilteredWorkers(sortedWorkers);
-  
+
       const preSelectedWorkers = new Set(
         sortedWorkers
           .filter((worker) => worker.teamId === teamId)
@@ -141,9 +141,9 @@ const UpdateParticipantsModal: React.FC<UpdateParticipantsModalProps> = ({
                     <Image
                       src={getAvatarUrl(worker.avatarUrl)}
                       alt="avatar"
-                      width={32}
-                      height={32}
-                      className="rounded-full"
+                      width={60}
+                      height={60}
+                      className="w-[60px] h-[60px] rounded-full object-cover"
                     />
                     <span className="text-gray-800 text-center">
                       {worker.firstName} {worker.lastName}

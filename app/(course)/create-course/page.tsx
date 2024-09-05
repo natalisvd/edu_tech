@@ -1,169 +1,194 @@
-'use client';
+'use client'
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-import { useState } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
+const validationSchema = Yup.object({
+  courseName: Yup.string().required("Course name is required"),
+  tags: Yup.array().min(1, "At least one tag is required"),
+  description: Yup.string().required("Description is required"),
+  materials: Yup.array().of(Yup.string().url("Must be a valid URL")),
+});
 
-type FormValues = {
-  title: string;
-  description: string;
+interface FormValues {
+  courseName: string;
   tags: string[];
+  description: string;
   materials: string[];
-};
+  tagsInput: string;
+  materialsInput: string;
+}
 
 export default function CreateCourse() {
-  const methods = useForm<FormValues>({
-    defaultValues: {
-      title: '',
-      description: '',
+  const router = useRouter();
+  const [tags, setTags] = useState<string[]>([]);
+  const [materials, setMaterials] = useState<string[]>([]);
+
+  const formik = useFormik<FormValues>({
+    initialValues: {
+      courseName: "",
       tags: [],
+      description: "",
       materials: [],
+      tagsInput: "",
+      materialsInput: "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      console.log("Form values:", values);
     },
   });
 
-  const { register, handleSubmit, watch, setValue, getValues } = methods;
-
-  const [newTag, setNewTag] = useState('');
-  const [newMaterial, setNewMaterial] = useState('');
-
   const handleAddTag = () => {
-    const tags = getValues('tags');
-    if (newTag && !tags.includes(newTag)) {
-      setValue('tags', [...tags, newTag]);
-      setNewTag('');
+    if (formik.values.tagsInput) {
+      setTags((prevTags) => [...prevTags, formik.values.tagsInput]);
+      formik.setFieldValue("tags", [...formik.values.tags, formik.values.tagsInput]);
+      formik.setFieldValue("tagsInput", "");
+    }
+  };
+
+  const handleAddMaterial = () => {
+    if (formik.values.materialsInput) {
+      setMaterials((prevMaterials) => [...prevMaterials, formik.values.materialsInput]);
+      formik.setFieldValue("materials", [...formik.values.materials, formik.values.materialsInput]);
+      formik.setFieldValue("materialsInput", "");
     }
   };
 
   const handleRemoveTag = (tag: string) => {
-    const tags = getValues('tags').filter((t) => t !== tag);
-    setValue('tags', tags);
-  };
-
-  const handleAddMaterial = () => {
-    if (newMaterial) {
-      const materials = getValues('materials');
-      setValue('materials', [...materials, newMaterial]);
-      setNewMaterial('');
-    }
+    setTags((prevTags) => prevTags.filter(t => t !== tag));
+    formik.setFieldValue("tags", tags.filter(t => t !== tag));
   };
 
   const handleRemoveMaterial = (material: string) => {
-    const materials = getValues('materials').filter((m) => m !== material);
-    setValue('materials', materials);
-  };
-
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    // Handle form submission
+    setMaterials((prevMaterials) => prevMaterials.filter(m => m !== material));
+    formik.setFieldValue("materials", materials.filter(m => m !== material));
   };
 
   return (
-    <FormProvider {...methods}>
-      <div className="p-8 bg-[#F9F9F9] shadow-lg rounded-lg max-w-2xl mx-auto mt-8">
-        <h1 className="text-3xl font-bold text-[#1C274C] mb-8">Create a New Course</h1>
+    <div className="p-6 max-w-2xl mx-auto bg-white shadow-lg rounded-lg">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Create a Course</h1>
+      <form onSubmit={formik.handleSubmit} className="space-y-6">
+        <div className="form-control">
+          <label htmlFor="courseName" className="block text-gray-700 font-medium mb-2">Course Name</label>
+          <input
+            id="courseName"
+            name="courseName"
+            type="text"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.courseName}
+            className={`w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 ${
+              formik.touched.courseName && formik.errors.courseName ? 'border-red-500' : ''
+            }`}
+          />
+          {formik.touched.courseName && formik.errors.courseName ? (
+            <div className="text-red-500 text-sm mt-1">{formik.errors.courseName}</div>
+          ) : null}
+        </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-          {/* Course Title */}
-          <div className="form-control">
-            <label htmlFor="title" className="block text-[#1C274C] font-semibold mb-2 text-lg">Course Title</label>
+        <div className="form-control">
+          <label htmlFor="tagsInput" className="block text-gray-700 font-medium mb-2">Tags</label>
+          <div className="flex items-center gap-2 mb-4">
             <input
-              id="title"
-              {...register('title', { required: 'Title is required' })}
-              className="w-full border border-[#D1D5DB] p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1C274C]"
-              placeholder="Enter course title"
+              id="tagsInput"
+              name="tagsInput"
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.tagsInput}
+              className="flex-grow p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             />
+            <button
+              type="button"
+              onClick={handleAddTag}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+            >
+              Add Tag
+            </button>
           </div>
-
-          {/* Tags */}
-          <div className="form-control">
-            <label className="block text-[#1C274C] font-semibold mb-2 text-lg">Tags</label>
-            <div className="flex flex-wrap gap-3 mb-4">
-              {watch('tags').map((tag: string) => (
-                <div key={tag} className="flex items-center bg-[#E0E7FF] px-4 py-2 rounded-full text-[#1C274C] text-sm">
-                  {tag}
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveTag(tag)}
-                    className="ml-2 text-red-500 text-lg"
-                  >
-                    &times;
-                  </button>
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center">
-              <input
-                type="text"
-                value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
-                className="border border-[#D1D5DB] p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-[#1C274C]"
-                placeholder="Add new tag"
-              />
-              <button
-                type="button"
-                onClick={handleAddTag}
-                className="ml-4 bg-[#1C274C] text-white px-4 py-2 rounded-md hover:bg-[#334466]"
-              >
-                Add Tag
-              </button>
-            </div>
+          <div className="flex flex-wrap gap-2">
+            {tags.map((tag, index) => (
+              <div key={index} className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full border border-gray-300 flex items-center gap-2">
+                <span>{tag}</span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveTag(tag)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
           </div>
+          {formik.touched.tags && formik.errors.tags ? (
+            <div className="text-red-500 text-sm mt-1">{formik.errors.tags}</div>
+          ) : null}
+        </div>
 
-          {/* Description */}
-          <div className="form-control">
-            <label htmlFor="description" className="block text-[#1C274C] font-semibold mb-2 text-lg">Description</label>
-            <textarea
-              id="description"
-              {...register('description')}
-              className="w-full border border-[#D1D5DB] p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1C274C]"
-              placeholder="Enter course description"
-              rows={6}
+        <div className="form-control">
+          <label htmlFor="description" className="block text-gray-700 font-medium mb-2">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.description}
+            className={`w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500`}
+            rows={3}
+          />
+          {formik.touched.description && formik.errors.description ? (
+            <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
+          ) : null}
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="materialsInput" className="block text-gray-700 font-medium mb-2">Materials</label>
+          <div className="flex items-center gap-2 mb-4">
+            <input
+              id="materialsInput"
+              name="materialsInput"
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.materialsInput}
+              className="flex-grow p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             />
+            <button
+              type="button"
+              onClick={handleAddMaterial}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+            >
+              Add Material
+            </button>
           </div>
-
-          {/* Study Materials */}
-          <div className="form-control">
-            <label className="block text-[#1C274C] font-semibold mb-2 text-lg">Study Materials</label>
-            <div className="space-y-2 mb-4">
-              {watch('materials').map((material: string) => (
-                <div key={material} className="flex justify-between items-center bg-[#E0E7FF] p-3 rounded-md">
-                  <span className="text-[#1C274C] text-sm">{material}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveMaterial(material)}
-                    className="text-red-500 text-lg"
-                  >
-                    &times;
-                  </button>
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center">
-              <input
-                type="text"
-                value={newMaterial}
-                onChange={(e) => setNewMaterial(e.target.value)}
-                className="border border-[#D1D5DB] p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-[#1C274C]"
-                placeholder="Add study material link"
-              />
-              <button
-                type="button"
-                onClick={handleAddMaterial}
-                className="ml-4 bg-[#1C274C] text-white px-4 py-2 rounded-md hover:bg-[#334466]"
-              >
-                Add Material
-              </button>
-            </div>
+          <div className="flex flex-wrap gap-2">
+            {materials.map((material, index) => (
+              <div key={index} className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full border border-gray-300 flex items-center gap-2">
+                <a href={material} target="_blank" rel="noopener noreferrer" className="truncate">{material}</a>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveMaterial(material)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
           </div>
+          {formik.touched.materials && formik.errors.materials ? (
+            <div className="text-red-500 text-sm mt-1">{formik.errors.materials}</div>
+          ) : null}
+        </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-[#1C274C] text-white px-6 py-3 rounded-md hover:bg-[#334466]"
-          >
-            Create Course
-          </button>
-        </form>
-      </div>
-    </FormProvider>
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600"
+        >
+          Create Course
+        </button>
+      </form>
+    </div>
   );
 }

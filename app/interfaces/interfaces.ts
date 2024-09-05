@@ -1,3 +1,11 @@
+export enum Role {
+  ADMIN = 'ADMIN',
+  DEVELOPER = 'DEVELOPER',
+  DESIGNER = 'DESIGNER',
+  TEAMLEADER = 'TEAMLEADER',
+  MANAGER = 'MANAGER',
+}
+
 export interface IUser {
   id: string;
   firstName: string;
@@ -6,6 +14,7 @@ export interface IUser {
   roleId?: number;
   teamId?: string | null;
   email?: string;
+  roles: Role[]; 
 }
 
 // export interface ITeamLeader {

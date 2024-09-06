@@ -1,9 +1,9 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createCourseApi } from "@/app/api";
+import { createCourseApi, updateCourseApi, getCourseByIdApi } from "@/app/api";
 import { ICourse } from "@/app/interfaces/interfaces";
 import { useUser } from "@/app/hooks/auth.hook";
 
@@ -23,12 +23,17 @@ interface FormValues {
   materialsInput: string;
 }
 
-export default function Course() {
+interface CourseFormProps {
+  courseId?: string;
+}
+
+export default function CourseForm({ courseId }: CourseFormProps) {
   const user = useUser();
-  if (!user) return;
   const router = useRouter();
+  if (!user) return null;
   const [tags, setTags] = useState<string[]>([]);
   const [materials, setMaterials] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -42,20 +47,51 @@ export default function Course() {
     validationSchema,
     onSubmit: async (values) => {
       const newCourse: ICourse = {
+        id: courseId,
         name: values.courseName,
         tags: values.tags,
         description: values.description,
         materials: values.materials,
         authorId: user.id,
       };
+
       try {
-        await createCourseApi(newCourse);
+        if (courseId) {
+          await updateCourseApi(newCourse);
+        } else {
+          await createCourseApi(newCourse);
+        }
         router.push("/");
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
   });
+
+  useEffect(() => {
+    if (courseId) {
+      setIsLoading(true);
+      getCourseByIdApi(courseId)
+        .then((course) => {
+          formik.setValues({
+            courseName: course.name || "",
+            tags: course.tags || [],
+            description: course.description || "",
+            materials: course.materials || [],
+            tagsInput: "",
+            materialsInput: "",
+          });
+          setTags(course.tags || []);
+          setMaterials(course.materials || []);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch course data", error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [courseId]);
 
   const handleAddTag = () => {
     if (formik.values.tagsInput) {
@@ -100,10 +136,17 @@ export default function Course() {
     );
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>; // Можно сделать лучшее отображение загрузки
+  }
+
   return (
     <div className="p-6 max-w-2xl mx-auto bg-white shadow-lg rounded-lg">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Create a Course</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">
+        {courseId ? "Edit Course" : "Create a Course"}
+      </h1>
       <form onSubmit={formik.handleSubmit} className="space-y-6">
+        {/* Поле для названия курса */}
         <div className="form-control">
           <label
             htmlFor="courseName"
@@ -131,6 +174,7 @@ export default function Course() {
           ) : null}
         </div>
 
+        {/* Поле для тегов */}
         <div className="form-control">
           <label
             htmlFor="tagsInput"
@@ -180,6 +224,7 @@ export default function Course() {
           ) : null}
         </div>
 
+        {/* Описание курса */}
         <div className="form-control">
           <label
             htmlFor="description"
@@ -193,7 +238,7 @@ export default function Course() {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.description}
-            className={`w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500`}
+            className="w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             rows={3}
           />
           {formik.touched.description && formik.errors.description ? (
@@ -203,6 +248,7 @@ export default function Course() {
           ) : null}
         </div>
 
+        {/* Материалы */}
         <div className="form-control">
           <label
             htmlFor="materialsInput"
@@ -234,14 +280,7 @@ export default function Course() {
                 key={index}
                 className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full border border-gray-300 flex items-center gap-2"
               >
-                <a
-                  href={material}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="truncate"
-                >
-                  {material}
-                </a>
+                <span>{material}</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveMaterial(material)}
@@ -261,9 +300,9 @@ export default function Course() {
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600"
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
         >
-          Create Course
+          {courseId ? "Update Course" : "Create Course"}
         </button>
       </form>
     </div>

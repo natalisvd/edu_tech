@@ -34,4 +34,5 @@ export const updateCourseApi = (body: ICourse) =>
   patch(`/courses/${body.id}`, body);
 export const getCourseByIdApi = (courseId: string): Promise<ICourse> =>
   get(`/courses/${courseId}`);
-export const getAllCourse = () => get(`/courses`);
+export const getAllCourseApi = (): Promise<ICourse[]> => get(`/courses`);
+export const deleteCourseApi =(id:string)=> httpDelete(`/courses/${id}`)

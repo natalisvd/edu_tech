@@ -13,6 +13,7 @@ export const UserMenu = () => {
       {isTeamLeader(user) && (
         <MenuItem href="/create-course">Create course</MenuItem>
       )}
+      <MenuItem href="/courses-list">Courses</MenuItem>
     </>
   );
 };

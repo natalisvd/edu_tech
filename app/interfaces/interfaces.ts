@@ -1,9 +1,9 @@
 export enum Role {
-  ADMIN = 'ADMIN',
-  DEVELOPER = 'DEVELOPER',
-  DESIGNER = 'DESIGNER',
-  TEAMLEADER = 'TEAMLEADER',
-  MANAGER = 'MANAGER',
+  ADMIN = "ADMIN",
+  DEVELOPER = "DEVELOPER",
+  DESIGNER = "DESIGNER",
+  TEAMLEADER = "TEAMLEADER",
+  MANAGER = "MANAGER",
 }
 
 export interface IUser {
@@ -14,14 +14,8 @@ export interface IUser {
   roleId?: number;
   teamId?: string | null;
   email?: string;
-  roles: Role[]; 
+  roles: Role[];
 }
-
-// export interface ITeamLeader {
-//   id: string;
-//   leader_id: string;
-//   team_id?: string;
-// }
 
 export interface ITeamList {
   team_name: string;
@@ -30,9 +24,6 @@ export interface ITeamList {
 export interface IUserWithTeam extends IUser {
   teams: ITeam[];
 }
-// export interface ITeamLeaderWithTeams extends ITeamLeader {
-//   teams: ITeam[];
-// }
 
 export interface IAuth {
   email: string;
@@ -42,9 +33,9 @@ export interface IAuth {
 export interface ITeam {
   id?: string;
   teamName: string;
-  teamLeaderId?: string
-  teamLeader: IUser ;
-  participants: IUser[]; 
+  teamLeaderId?: string;
+  teamLeader: IUser;
+  participants: IUser[];
 }
 
 export interface ICourse {
@@ -54,4 +45,8 @@ export interface ICourse {
   tags: string[];
   materials: string[];
   authorId: string;
+}
+export interface ICourseWithAuthor extends ICourse {
+  id: string;
+  author: IUser;
 }

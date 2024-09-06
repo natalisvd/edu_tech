@@ -1,5 +1,5 @@
 import { boolean } from "yup";
-import { IAuth, ICourse, ITeam, IUser } from "../interfaces/interfaces";
+import { IAuth, ICourse, ICourseWithAuthor, ITeam, IUser } from "../interfaces/interfaces";
 import { get, post, patch, httpDelete } from "./axios";
 
 export const login = (body: IAuth) =>
@@ -34,5 +34,5 @@ export const updateCourseApi = (body: ICourse) =>
   patch(`/courses/${body.id}`, body);
 export const getCourseByIdApi = (courseId: string): Promise<ICourse> =>
   get(`/courses/${courseId}`);
-export const getAllCourseApi = (): Promise<ICourse[]> => get(`/courses`);
+export const getAllCourseApi = (): Promise<ICourseWithAuthor[]> => get(`/courses`);
 export const deleteCourseApi =(id:string)=> httpDelete(`/courses/${id}`)

@@ -60,7 +60,7 @@ export default function CourseForm({ courseId }: CourseFormProps) {
         } else {
           await createCourseApi(newCourse);
         }
-        router.push("/");
+        router.push("/courses-list");
       } catch (error) {
         console.error(error);
       }

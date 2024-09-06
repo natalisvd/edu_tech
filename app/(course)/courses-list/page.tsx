@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useUser } from "@/app/hooks/auth.hook";
-import { deleteCourseApi, getAllCourseApi } from "@/app/api"; 
-import { ICourse } from "@/app/interfaces/interfaces"; 
+import { deleteCourseApi, getAllCourseApi } from "@/app/api";
+import { ICourse, ICourseWithAuthor } from "@/app/interfaces/interfaces";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { getAvatarUrl } from "@/app/helpers/image.helper";
 
 export default function CoursesList() {
-  const [courses, setCourses] = useState<ICourse[]>([]);
+  const [courses, setCourses] = useState<ICourseWithAuthor[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const user = useUser();
   const router = useRouter();
@@ -47,42 +49,86 @@ export default function CoursesList() {
   if (!user || isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Courses List</h1>
+    <div className="p-6 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold text-gray-800 mb-8">Courses List</h1>
       {courses.length === 0 ? (
         <p className="text-gray-600">No courses available</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.map((course) => (
-            <div key={course.id} className="bg-white p-4 rounded-lg shadow-md">
-              <h2 className="text-xl font-bold text-gray-800">{course.name}</h2>
-              <p className="text-gray-600 mt-2">{course.description}</p>
-              <div className="flex gap-2 mt-4">
+            <div
+              key={course.id}
+              className="bg-white p-6 rounded-lg shadow-lg relative"
+            >
+              {user.id === course.author.id && (
+                <div className="absolute top-4 right-4 flex gap-2">
+                  <button
+                    onClick={() => handleEdit(course.id)}
+                    className="text-blue-500 hover:text-blue-700"
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(course.id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
+              )}
+
+              <h2 className="text-xl font-bold text-gray-900 mb-2">
+                {course.name}
+              </h2>
+              <p className="text-gray-600 mb-4">{course.description}</p>
+
+              <div className="flex flex-wrap gap-2 mb-4">
                 {course.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded-full"
+                    className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
                   >
                     {tag}
                   </span>
                 ))}
               </div>
-              {user.id === course.authorId && (
-                <div className="flex gap-4 mt-4">
-                  <button
-                    onClick={() => handleEdit(course.id + "")}
-                    className="flex items-center gap-2 text-blue-500 hover:text-blue-700"
-                  >
-                    <FaEdit /> Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(course.id + "")}
-                    className="flex items-center gap-2 text-red-500 hover:text-red-700"
-                  >
-                    <FaTrash /> Delete
-                  </button>
+
+              <div className="mb-4">
+                <h3 className="text-md font-semibold text-gray-800">
+                  Materials:
+                </h3>
+                <ul className="list-disc pl-5 mt-2 space-y-1">
+                  {course.materials.map((material, index) => (
+                    <li key={index}>
+                      <a
+                        href={material}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        {material}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex items-center gap-3 mt-6">
+                <Image
+                  src={getAvatarUrl(course.author.avatarUrl)}
+                  alt={`${course.author.firstName} ${course.author.lastName}`}
+                  className="w-10 h-10 rounded-full"
+                  width={114}
+                  height={114}
+                  priority
+                />
+                <div>
+                  <p className="text-sm text-gray-500">Author:</p>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {course.author.firstName} {course.author.lastName}
+                  </p>
                 </div>
-              )}
+              </div>
             </div>
           ))}
         </div>

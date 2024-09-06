@@ -31,7 +31,7 @@ export const createTeamApi = (body: ITeam) => post("/team", body);
 // /* courses requests */
 export const createCourseApi = (body: ICourse) => post("/courses", body);
 export const updateCourseApi = (body: ICourse) =>
-  post(`/courses/${body.id}`, body);
+  patch(`/courses/${body.id}`, body);
 export const getCourseByIdApi = (courseId: string): Promise<ICourse> =>
   get(`/courses/${courseId}`);
 export const getAllCourse = () => get(`/courses`);

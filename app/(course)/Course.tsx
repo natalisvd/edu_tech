@@ -30,11 +30,10 @@ interface CourseFormProps {
 export default function CourseForm({ courseId }: CourseFormProps) {
   const user = useUser();
   const router = useRouter();
-  if (!user) return null;
   const [tags, setTags] = useState<string[]>([]);
   const [materials, setMaterials] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const formik = useFormik<FormValues>({
     initialValues: {
       courseName: "",
@@ -52,7 +51,7 @@ export default function CourseForm({ courseId }: CourseFormProps) {
         tags: values.tags,
         description: values.description,
         materials: values.materials,
-        authorId: user.id,
+        authorId: user!.id,
       };
 
       try {

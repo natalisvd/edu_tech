@@ -73,7 +73,7 @@ export default function CourseForm({ courseId }: CourseFormProps) {
   }, [courseId]);
 
   if (isLoading) {
-    return <div>Loading...</div>; // Можно сделать лучшее отображение загрузки
+    return <div>Loading...</div>; 
   }
 
   return (
@@ -82,7 +82,6 @@ export default function CourseForm({ courseId }: CourseFormProps) {
         {courseId ? "Edit Course" : "Create a Course"}
       </h1>
       <form onSubmit={formik.handleSubmit} className="space-y-6">
-        {/* Поле для названия курса */}
         <div className="form-control">
           <label
             htmlFor="courseName"
@@ -110,7 +109,6 @@ export default function CourseForm({ courseId }: CourseFormProps) {
           ) : null}
         </div>
 
-        {/* Описание курса */}
         <div className="form-control">
           <label
             htmlFor="description"

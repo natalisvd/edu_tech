@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useUser } from "@/app/hooks/auth.hook";
 import { deleteCourseApi, getAllCourseApi } from "@/app/api";
-import { ICourse, ICourseWithAuthor } from "@/app/interfaces/interfaces";
+import { ICourseWithAuthor } from "@/app/interfaces/interfaces";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { getAvatarUrl } from "@/app/helpers/image.helper";
@@ -81,37 +81,6 @@ export default function CoursesList() {
                 {course.name}
               </h2>
               <p className="text-gray-600 mb-4">{course.description}</p>
-
-              <div className="flex flex-wrap gap-2 mb-4">
-                {course.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mb-4">
-                <h3 className="text-md font-semibold text-gray-800">
-                  Materials:
-                </h3>
-                <ul className="list-disc pl-5 mt-2 space-y-1">
-                  {course.materials.map((material, index) => (
-                    <li key={index}>
-                      <a
-                        href={material}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                      >
-                        {material}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
 
               <div className="flex items-center gap-3 mt-6">
                 <Image

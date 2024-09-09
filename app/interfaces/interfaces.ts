@@ -42,8 +42,8 @@ export interface ICourse {
   id?: string;
   name: string;
   description: string;
-  tags: string[];
-  materials: string[];
+  // tags: string[];
+  // materials: string[];
   authorId: string;
 }
 export interface ICourseWithAuthor extends ICourse {

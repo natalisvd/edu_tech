@@ -59,6 +59,6 @@ export const resizeImage = (
 
 export const getFullUrl = (filename: string | null | undefined) => {
   if (!filename) return 'null';
-  const baseUrl = process.env.NEXT_PUBLIC_AVATAR_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_IMAGES_URL;
   return `${baseUrl}/${filename}`
 };

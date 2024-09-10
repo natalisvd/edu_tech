@@ -14,6 +14,7 @@
     "@supabase/auth-helpers-nextjs": "^0.9.0",
     "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.43.4",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "axios": "^1.7.3",
     "dotenv": "^16.4.5",
     "formik": "^2.4.6",

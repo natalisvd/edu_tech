@@ -32,7 +32,7 @@ const config: Config = {
           "base-100": "#101010",
           "base-200": "#232323",
           "base-300": "#5B5B5B",
-          "base-content": "#888"
+          "base-content": "#888",
         },
       },
     ],
@@ -46,6 +46,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [daisyui],
+  plugins: [daisyui, require("@tailwindcss/line-clamp")],
 };
 export default config;

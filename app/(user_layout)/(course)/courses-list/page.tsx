@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { getFullUrl } from "@/app/helpers/image.helper";
 
+const DEFAULT_IMAGE_URL = "https://erudyt.net/wp-content/uploads/2020/09/recursosprogramadores.png";
+
 export default function CoursesList() {
   const [courses, setCourses] = useState<ICourseWithAuthor[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,11 +56,11 @@ export default function CoursesList() {
       {courses.length === 0 ? (
         <p className="text-gray-600">No courses available</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
           {courses.map((course) => (
             <div
               key={course.id}
-              className="bg-white p-6 rounded-lg shadow-lg relative"
+              className="bg-white p-6 rounded-lg shadow-lg relative flex"
             >
               {user.id === course.author.id && (
                 <div className="absolute top-4 right-4 flex gap-2">
@@ -77,25 +79,40 @@ export default function CoursesList() {
                 </div>
               )}
 
-              <h2 className="text-xl font-bold text-gray-900 mb-2">
-                {course.name}
-              </h2>
-              <p className="text-gray-600 mb-4">{course.description}</p>
-
-              <div className="flex items-center gap-3 mt-6">
+              {/* Image */}
+              <div className="w-1/3 h-auto">
                 <Image
-                  src={getFullUrl(course.author.avatarUrl)}
-                  alt={`${course.author.firstName} ${course.author.lastName}`}
-                  className="w-10 h-10 rounded-full"
-                  width={114}
-                  height={114}
+                  src={course.courseImageUrl ? getFullUrl(course.courseImageUrl) : DEFAULT_IMAGE_URL}
+                  alt={`${course.name} Image`}
+                  className="w-full h-full object-cover rounded-lg"
+                  width={300}
+                  height={200}
                   priority
                 />
-                <div>
-                  <p className="text-sm text-gray-500">Author:</p>
-                  <p className="text-sm font-semibold text-gray-900">
-                    {course.author.firstName} {course.author.lastName}
-                  </p>
+              </div>
+
+              {/* Course Details */}
+              <div className="ml-6 flex-1">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  {course.name}
+                </h2>
+                <p className="text-gray-600 mb-4 line-clamp-3">{course.description}</p>
+
+                <div className="flex items-center gap-3 mt-6">
+                  <Image
+                    src={getFullUrl(course.author.avatarUrl)}
+                    alt={`${course.author.firstName} ${course.author.lastName}`}
+                    className="w-12 h-12 rounded-full"
+                    width={48}
+                    height={48}
+                    priority
+                  />
+                  <div>
+                    <p className="text-sm text-gray-500">Author:</p>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {course.author.firstName} {course.author.lastName}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

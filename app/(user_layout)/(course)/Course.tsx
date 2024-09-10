@@ -10,7 +10,6 @@ import { getFullUrl } from "@/app/helpers/image.helper";
 const validationSchema = Yup.object({
   courseName: Yup.string().required("Course name is required"),
   description: Yup.string().required("Description is required"),
-  courseImage: Yup.mixed().required("Course image is required"),
 });
 
 interface FormValues {

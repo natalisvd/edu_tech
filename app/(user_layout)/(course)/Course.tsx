@@ -4,8 +4,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { createCourseApi, updateCourseApi, getCourseByIdApi } from "@/app/api";
-import { ICourse } from "@/app/interfaces/interfaces";
 import { useUser } from "@/app/hooks/auth.hook";
+import { getFullUrl } from "@/app/helpers/image.helper"; 
 
 const validationSchema = Yup.object({
   courseName: Yup.string().required("Course name is required"),
@@ -15,6 +15,7 @@ const validationSchema = Yup.object({
 interface FormValues {
   courseName: string;
   description: string;
+  courseImage: File | null; 
 }
 
 interface CourseFormProps {
@@ -25,26 +26,29 @@ export default function CourseForm({ courseId }: CourseFormProps) {
   const user = useUser();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [previewImage, setPreviewImage] = useState<string | null>(null); 
   const formik = useFormik<FormValues>({
     initialValues: {
       courseName: "",
       description: "",
+      courseImage: null, 
     },
     validationSchema,
     onSubmit: async (values) => {
-      const newCourse: ICourse = {
-        id: courseId,
-        name: values.courseName,
-        description: values.description,
-        authorId: user!.id,
-      };
+      const formData = new FormData();
+      formData.append("name", values.courseName);
+      formData.append("description", values.description);
+      formData.append("authorId", user!.id);
+      
+      if (values.courseImage) {
+        formData.append("image", values.courseImage); 
+      }
 
       try {
         if (courseId) {
-          await updateCourseApi(newCourse);
+          await updateCourseApi(courseId, formData);
         } else {
-          await createCourseApi(newCourse);
+          await createCourseApi(formData);
         }
         router.push("/courses-list");
       } catch (error) {
@@ -61,7 +65,11 @@ export default function CourseForm({ courseId }: CourseFormProps) {
           formik.setValues({
             courseName: course.name || "",
             description: course.description || "",
+            courseImage: null, 
           });
+          if (course.courseImageUrl) {
+            setPreviewImage(getFullUrl(course.courseImageUrl)); 
+          }
         })
         .catch((error) => {
           console.error("Failed to fetch course data", error);
@@ -71,6 +79,16 @@ export default function CourseForm({ courseId }: CourseFormProps) {
         });
     }
   }, [courseId]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    formik.setFieldValue("courseImage", file); 
+    if (file) {
+      setPreviewImage(URL.createObjectURL(file)); 
+    } else {
+      setPreviewImage(null); 
+    }
+  };
 
   if (isLoading) {
     return <div>Loading...</div>; 
@@ -82,6 +100,36 @@ export default function CourseForm({ courseId }: CourseFormProps) {
         {courseId ? "Edit Course" : "Create a Course"}
       </h1>
       <form onSubmit={formik.handleSubmit} className="space-y-6">
+        <div className="flex flex-col items-center mb-6">
+          <label
+            htmlFor="courseImage"
+            className="relative w-40 h-40 bg-gray-200 rounded-lg overflow-hidden cursor-pointer hover:bg-gray-300 flex items-center justify-center"
+          >
+            {previewImage ? (
+              <img
+                src={previewImage}
+                alt="Preview"
+                className="object-cover w-full h-full"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-500">
+                No image
+              </div>
+            )}
+            <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+              <span className="text-white text-3xl">+</span>
+            </div>
+          </label>
+          <input
+            id="courseImage"
+            name="courseImage"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+        </div>
+
         <div className="form-control">
           <label
             htmlFor="courseName"

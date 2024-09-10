@@ -13,7 +13,7 @@ import { TrashIcon } from "@/app/components/Icons/TrashIcon";
 import { EditIcon } from "@/app/components/Icons/EditIcon";
 import { createClient } from "@/utils/supabase/client";
 import { AvatarProps, AvatarUrl } from "./types";
-import { getAvatarUrl } from "@/app/helpers/image.helper";
+import { getFullUrl } from "@/app/helpers/image.helper";
 
 const INPUT_ID = "avatar-input";
 
@@ -59,7 +59,7 @@ export const Avatar = ({ url }: AvatarProps) => {
   const { file, resetFile } = useContext(AvatarContext);
   useEffect(() => {
     if (url) {
-      setAvatarUrl(getAvatarUrl(url));
+      setAvatarUrl(getFullUrl(url));
     }
   }, [url]);
 

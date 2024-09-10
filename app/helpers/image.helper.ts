@@ -57,7 +57,7 @@ export const resizeImage = (
   });
 };
 
-export const getAvatarUrl = (filename: string | null | undefined) => {
+export const getFullUrl = (filename: string | null | undefined) => {
   if (!filename) return 'null';
   const baseUrl = process.env.NEXT_PUBLIC_AVATAR_URL;
   return `${baseUrl}/${filename}`

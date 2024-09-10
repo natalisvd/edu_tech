@@ -1,4 +1,4 @@
-import { getAvatarUrl } from "@/app/helpers/image.helper";
+import { getFullUrl } from "@/app/helpers/image.helper";
 import { useUser } from "@/app/hooks/auth.hook";
 import { ITeam, IUser } from "@/app/interfaces/interfaces";
 import Image from "next/image";
@@ -32,7 +32,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
       </div>
       <div className="flex items-center gap-4">
         <Image
-          src={getAvatarUrl(team.teamLeader.avatarUrl)}
+          src={getFullUrl(team.teamLeader.avatarUrl)}
           alt="avatar"
           width={114}
           height={114}
@@ -57,7 +57,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
                 title={`${participant.firstName} ${participant.lastName}`}
               >
                 <Image
-                  src={getAvatarUrl(participant.avatarUrl)}
+                  src={getFullUrl(participant.avatarUrl)}
                   alt="participant avatar"
                   width={32}
                   height={32}

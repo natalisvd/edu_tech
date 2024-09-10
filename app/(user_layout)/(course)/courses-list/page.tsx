@@ -7,7 +7,7 @@ import { deleteCourseApi, getAllCourseApi } from "@/app/api";
 import { ICourseWithAuthor } from "@/app/interfaces/interfaces";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { getAvatarUrl } from "@/app/helpers/image.helper";
+import { getFullUrl } from "@/app/helpers/image.helper";
 
 export default function CoursesList() {
   const [courses, setCourses] = useState<ICourseWithAuthor[]>([]);
@@ -84,7 +84,7 @@ export default function CoursesList() {
 
               <div className="flex items-center gap-3 mt-6">
                 <Image
-                  src={getAvatarUrl(course.author.avatarUrl)}
+                  src={getFullUrl(course.author.avatarUrl)}
                   alt={`${course.author.firstName} ${course.author.lastName}`}
                   className="w-10 h-10 rounded-full"
                   width={114}

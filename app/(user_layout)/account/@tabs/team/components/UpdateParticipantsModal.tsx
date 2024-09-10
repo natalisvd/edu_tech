@@ -4,7 +4,7 @@ import { IUser } from "@/app/interfaces/interfaces";
 import React, { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import Image from "next/image";
-import { getAvatarUrl } from "@/app/helpers/image.helper";
+import { getFullUrl } from "@/app/helpers/image.helper";
 
 interface UpdateParticipantsModalProps {
   teamId: string;
@@ -139,7 +139,7 @@ const UpdateParticipantsModal: React.FC<UpdateParticipantsModalProps> = ({
                     className="flex flex-col items-center gap-2 mb-4"
                   >
                     <Image
-                      src={getAvatarUrl(worker.avatarUrl)}
+                      src={getFullUrl(worker.avatarUrl)}
                       alt="avatar"
                       width={60}
                       height={60}

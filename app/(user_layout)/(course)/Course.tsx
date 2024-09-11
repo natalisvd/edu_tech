@@ -28,7 +28,6 @@ export default function CourseForm({ courseId }: CourseFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [isLessonModalOpen, setIsLessonModalOpen] = useState(false);
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -93,9 +92,6 @@ export default function CourseForm({ courseId }: CourseFormProps) {
     }
   };
 
-  const openLessonModal = () => setIsLessonModalOpen(true);
-  const closeLessonModal = () => setIsLessonModalOpen(false);
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -106,15 +102,12 @@ export default function CourseForm({ courseId }: CourseFormProps) {
         {courseId ? "Edit Course" : "Create a Course"}
       </h1>
 
-      <form
-        onSubmit={formik.handleSubmit}
-        className="flex-1 space-y-6 flex flex-col justify-between"
-      >
-        <div className="flex gap-6">
-          <div className="flex flex-col items-center">
+      <form onSubmit={formik.handleSubmit} className="flex flex-col gap-6">
+        <div className="flex flex-col sm:flex-row gap-6 flex-1">
+          <div className="w-full sm:w-1/3 flex flex-col items-center">
             <label
               htmlFor="courseImage"
-              className="relative w-[260px] h-[calc(100%_-_24px)] bg-gray-200 rounded-lg overflow-hidden cursor-pointer hover:bg-gray-300 flex items-center justify-center"
+              className="relative w-full h-[250px] bg-gray-200 rounded-lg overflow-hidden cursor-pointer hover:bg-gray-300 flex items-center justify-center"
             >
               {previewImage ? (
                 <img
@@ -144,9 +137,20 @@ export default function CourseForm({ courseId }: CourseFormProps) {
                 {formik.errors.courseImage}
               </div>
             ) : null}
+
+            <div className="flex flex-col gap-4 mt-auto w-full">
+              {courseId && <LessonModal courseId={courseId} />}
+
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+              >
+                {courseId ? "Update Course" : "Create Course"}
+              </button>
+            </div>
           </div>
 
-          <div className="flex-1 flex flex-col justify-between">
+          <div className="w-full sm:w-2/3 flex flex-col">
             <div className="form-control mb-4">
               <label
                 htmlFor="courseName"
@@ -174,7 +178,7 @@ export default function CourseForm({ courseId }: CourseFormProps) {
               ) : null}
             </div>
 
-            <div className="form-control">
+            <div className="form-control mb-6">
               <label
                 htmlFor="description"
                 className="block text-gray-700 font-medium mb-2"
@@ -198,15 +202,6 @@ export default function CourseForm({ courseId }: CourseFormProps) {
             </div>
           </div>
         </div>
-
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 self-end"
-        >
-          {courseId ? "Update Course" : "Create Course"}
-        </button>
-
-        {courseId && <LessonModal courseId={courseId} />}
       </form>
     </div>
   );

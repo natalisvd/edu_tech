@@ -5,13 +5,13 @@ import { IAuth, IUser } from "@/app/interfaces/interfaces";
 import { currentUser, login, register, updateUser } from "@/app/api";
 import { sliceHelper } from "./sliceHelper";
 
-interface CurrentUserState {
+interface ICurrentUserState {
   user: IUser | null;
   loading: boolean;
   error: string | null;
 }
 
-const initialState: CurrentUserState = {
+const initialState: ICurrentUserState = {
   user: null,
   loading: false,
   error: null,

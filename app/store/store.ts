@@ -1,3 +1,4 @@
+import coursesSlice from "./slices/coursesSlice";
 import currentUserSlice from "./slices/userSlice";
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -5,6 +6,7 @@ export const makeStore = () => {
   return configureStore({
     reducer: {
       currentUser: currentUserSlice,
+      courses: coursesSlice
     },
   });
 };

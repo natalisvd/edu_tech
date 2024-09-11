@@ -44,6 +44,7 @@ export interface ICourse {
   description: string;
   courseImageUrl?: string
   authorId: string;
+  lessons?: string[]
 }
 export interface ICourseWithAuthor extends ICourse {
   id: string;

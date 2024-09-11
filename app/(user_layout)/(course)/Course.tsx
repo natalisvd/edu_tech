@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createCourseApi, updateCourseApi, getCourseByIdApi } from "@/app/api";
 import { useUser } from "@/app/hooks/auth.hook";
 import { getFullUrl } from "@/app/helpers/image.helper";
+import LessonModal from "@/app/components/Modals/LessonModal";
 
 const validationSchema = Yup.object({
   courseName: Yup.string().required("Course name is required"),
@@ -27,6 +28,7 @@ export default function CourseForm({ courseId }: CourseFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [isLessonModalOpen, setIsLessonModalOpen] = useState(false);
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -91,6 +93,9 @@ export default function CourseForm({ courseId }: CourseFormProps) {
     }
   };
 
+  const openLessonModal = () => setIsLessonModalOpen(true);
+  const closeLessonModal = () => setIsLessonModalOpen(false);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -101,7 +106,10 @@ export default function CourseForm({ courseId }: CourseFormProps) {
         {courseId ? "Edit Course" : "Create a Course"}
       </h1>
 
-      <form onSubmit={formik.handleSubmit} className="flex-1 space-y-6 flex flex-col justify-between">
+      <form
+        onSubmit={formik.handleSubmit}
+        className="flex-1 space-y-6 flex flex-col justify-between"
+      >
         <div className="flex gap-6">
           <div className="flex flex-col items-center">
             <label
@@ -180,7 +188,7 @@ export default function CourseForm({ courseId }: CourseFormProps) {
                 onBlur={formik.handleBlur}
                 value={formik.values.description}
                 className="w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                rows={9} 
+                rows={9}
               />
               {formik.touched.description && formik.errors.description ? (
                 <div className="text-red-500 text-sm mt-1">
@@ -197,6 +205,8 @@ export default function CourseForm({ courseId }: CourseFormProps) {
         >
           {courseId ? "Update Course" : "Create Course"}
         </button>
+
+        {courseId && <LessonModal courseId={courseId} />}
       </form>
     </div>
   );

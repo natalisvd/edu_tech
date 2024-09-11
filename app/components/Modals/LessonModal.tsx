@@ -17,14 +17,14 @@ interface LessonModalProps {
 }
 
 const LessonModal = ({ courseId, lessonId }: LessonModalProps) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
       title: "",
       text: "",
-      materials: [""], 
+      materials: [""],
       indexNumber: 1,
     },
     validationSchema,
@@ -66,7 +66,6 @@ const LessonModal = ({ courseId, lessonId }: LessonModalProps) => {
       //     setIsLoading(false);
       //   });
       console.log("Fetched lesson for editing:", lessonId);
-      // For demonstration, assume the lesson data is fetched and set:
       formik.setValues({
         title: "Sample Title",
         text: "Sample Text",
@@ -96,108 +95,122 @@ const LessonModal = ({ courseId, lessonId }: LessonModalProps) => {
     setIsOpen(false);
   };
 
-  if (!isOpen) return null;
+  const openModal = () => {
+    setIsOpen(true);
+  };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-        <h2 className="text-2xl font-bold mb-4">{lessonId ? "Edit Lesson" : "Create Lesson"}</h2>
-        <form onSubmit={formik.handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="title" className="block text-gray-700 font-medium mb-1">Title</label>
-            <input
-              id="title"
-              name="title"
-              type="text"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.title}
-              className={`w-full p-2 border rounded ${formik.touched.title && formik.errors.title ? "border-red-500" : "border-gray-300"}`}
-            />
-            {formik.touched.title && formik.errors.title ? (
-              <div className="text-red-500 text-sm">{formik.errors.title}</div>
-            ) : null}
-          </div>
+    <>
+      <button
+        type="button"
+        onClick={openModal}
+        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 self-end"
+      >
+        {lessonId ? "Edit Lesson" : "Add Lesson"}
+      </button>
 
-          <div>
-            <label htmlFor="text" className="block text-gray-700 font-medium mb-1">Text</label>
-            <textarea
-              id="text"
-              name="text"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.text}
-              className="w-full p-2 border rounded border-gray-300"
-              rows={4}
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Materials</label>
-            {formik.values.materials.map((material, index) => (
-              <div key={index} className="flex items-center space-x-2 mb-2">
+      {isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 className="text-2xl font-bold mb-4">{lessonId ? "Edit Lesson" : "Create Lesson"}</h2>
+            <form onSubmit={formik.handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="title" className="block text-gray-700 font-medium mb-1">Title</label>
                 <input
+                  id="title"
+                  name="title"
                   type="text"
-                  value={material}
-                  onChange={(event) => handleMaterialChange(index, event)}
-                  className="flex-1 p-2 border rounded border-gray-300"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.title}
+                  className={`w-full p-2 border rounded ${formik.touched.title && formik.errors.title ? "border-red-500" : "border-gray-300"}`}
                 />
+                {formik.touched.title && formik.errors.title ? (
+                  <div className="text-red-500 text-sm">{formik.errors.title}</div>
+                ) : null}
+              </div>
+
+              <div>
+                <label htmlFor="text" className="block text-gray-700 font-medium mb-1">Text</label>
+                <textarea
+                  id="text"
+                  name="text"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.text}
+                  className="w-full p-2 border rounded border-gray-300"
+                  rows={4}
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Materials</label>
+                {formik.values.materials.map((material, index) => (
+                  <div key={index} className="flex items-center space-x-2 mb-2">
+                    <input
+                      type="text"
+                      value={material}
+                      onChange={(event) => handleMaterialChange(index, event)}
+                      className="flex-1 p-2 border rounded border-gray-300"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeMaterialField(index)}
+                      className="text-red-500"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
                 <button
                   type="button"
-                  onClick={() => removeMaterialField(index)}
-                  className="text-red-500"
+                  onClick={addMaterialField}
+                  className="text-blue-500"
                 >
-                  Remove
+                  Add Material
+                </button>
+                {formik.touched.materials && formik.errors.materials ? (
+                  <div className="text-red-500 text-sm">{formik.errors.materials}</div>
+                ) : null}
+              </div>
+
+              <div>
+                <label htmlFor="indexNumber" className="block text-gray-700 font-medium mb-1">Index Number</label>
+                <input
+                  id="indexNumber"
+                  name="indexNumber"
+                  type="number"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.indexNumber}
+                  className={`w-full p-2 border rounded ${formik.touched.indexNumber && formik.errors.indexNumber ? "border-red-500" : "border-gray-300"}`}
+                />
+                {formik.touched.indexNumber && formik.errors.indexNumber ? (
+                  <div className="text-red-500 text-sm">{formik.errors.indexNumber}</div>
+                ) : null}
+              </div>
+
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="bg-gray-300 text-white px-4 py-2 rounded"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Saving..." : lessonId ? "Update Lesson" : "Create Lesson"}
                 </button>
               </div>
-            ))}
-            <button
-              type="button"
-              onClick={addMaterialField}
-              className="text-blue-500"
-            >
-              Add Material
-            </button>
-            {formik.touched.materials && formik.errors.materials ? (
-              <div className="text-red-500 text-sm">{formik.errors.materials}</div>
-            ) : null}
+            </form>
           </div>
-
-          <div>
-            <label htmlFor="indexNumber" className="block text-gray-700 font-medium mb-1">Index Number</label>
-            <input
-              id="indexNumber"
-              name="indexNumber"
-              type="number"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.indexNumber}
-              className={`w-full p-2 border rounded ${formik.touched.indexNumber && formik.errors.indexNumber ? "border-red-500" : "border-gray-300"}`}
-            />
-            {formik.touched.indexNumber && formik.errors.indexNumber ? (
-              <div className="text-red-500 text-sm">{formik.errors.indexNumber}</div>
-            ) : null}
-          </div>
-
-          <div className="flex justify-end space-x-2">
-            <button
-              type="button"
-              onClick={closeModal}
-              className="bg-gray-300 text-white px-4 py-2 rounded"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-              disabled={isLoading}
-            >
-              {isLoading ? "Saving..." : lessonId ? "Update Lesson" : "Create Lesson"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 

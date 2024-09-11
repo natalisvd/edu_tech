@@ -9,9 +9,14 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { getFullUrl } from "@/app/helpers/image.helper";
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
-import { fetchGetAllCourses, selectCourses } from "@/app/store/slices/coursesSlice";
+import {
+  fetchDeleteCourse,
+  fetchGetAllCourses,
+  selectCourses,
+} from "@/app/store/slices/coursesSlice";
 
-const DEFAULT_IMAGE_URL = "https://erudyt.net/wp-content/uploads/2020/09/recursosprogramadores.png";
+const DEFAULT_IMAGE_URL =
+  "https://erudyt.net/wp-content/uploads/2020/09/recursosprogramadores.png";
 
 export default function CoursesList() {
   const user = useUser();
@@ -26,8 +31,7 @@ export default function CoursesList() {
   const handleDelete = async (courseId: string) => {
     if (confirm("Are you sure you want to delete this course?")) {
       try {
-        await deleteCourseApi(courseId);
-        dispatch(fetchGetAllCourses);
+        await dispatch(fetchDeleteCourse(courseId));
       } catch (error) {
         console.error("Failed to delete course", error);
       }
@@ -38,7 +42,7 @@ export default function CoursesList() {
     router.push(`/update-course/${courseId}`);
   };
 
-  if (!user || loading) return <div>Loading...</div>;
+  if (!user || loading || !allCourses) return <div>Loading...</div>;
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -72,7 +76,11 @@ export default function CoursesList() {
               {/* Image */}
               <div className="w-1/3 h-auto">
                 <Image
-                  src={course.courseImageUrl ? getFullUrl(course.courseImageUrl) : DEFAULT_IMAGE_URL}
+                  src={
+                    course.courseImageUrl
+                      ? getFullUrl(course.courseImageUrl)
+                      : DEFAULT_IMAGE_URL
+                  }
                   alt={`${course.name} Image`}
                   className="w-full h-full object-cover rounded-lg"
                   width={300}
@@ -86,7 +94,9 @@ export default function CoursesList() {
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
                   {course.name}
                 </h2>
-                <p className="text-gray-600 mb-4 line-clamp-3">{course.description}</p>
+                <p className="text-gray-600 mb-4 line-clamp-3">
+                  {course.description}
+                </p>
 
                 <div className="flex items-center gap-3 mt-6">
                   <Image

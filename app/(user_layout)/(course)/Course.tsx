@@ -7,6 +7,8 @@ import { createCourseApi, updateCourseApi, getCourseByIdApi } from "@/app/api";
 import { useUser } from "@/app/hooks/auth.hook";
 import { getFullUrl } from "@/app/helpers/image.helper";
 import LessonModal from "@/app/components/Modals/LessonModal";
+import { useAppDispatch } from "@/app/store/hooks";
+import { fetchCreateCourse, fetchUpdateCourse } from "@/app/store/slices/coursesSlice";
 
 const validationSchema = Yup.object({
   courseName: Yup.string().required("Course name is required"),
@@ -28,6 +30,7 @@ export default function CourseForm({ courseId }: CourseFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -48,12 +51,15 @@ export default function CourseForm({ courseId }: CourseFormProps) {
 
       try {
         if (courseId) {
-          await updateCourseApi(courseId, formData);
+          await dispatch(fetchUpdateCourse({courseId, formData}))
+          // await updateCourseApi(courseId, formData);
         } else {
-          await createCourseApi(formData);
+          // fetchCreateCourse
+          await dispatch(fetchCreateCourse(formData));
         }
         router.push("/courses-list");
       } catch (error) {
+        debugger
         console.error(error);
       }
     },

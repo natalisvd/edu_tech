@@ -11,13 +11,13 @@ import {
 import { sliceHelper } from "./sliceHelper";
 import exp from "constants";
 
-interface ICourseState {
+interface ICoursesState {
   allCourses: ICourseWithAuthor[] | null;
   loading: boolean;
   error: string | null;
 }
 
-const initialState: ICourseState = {
+const initialState: ICoursesState = {
   allCourses: null,
   loading: false,
   error: null,

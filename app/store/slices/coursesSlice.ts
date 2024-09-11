@@ -9,7 +9,6 @@ import {
   updateCourseApi,
 } from "@/app/api";
 import { sliceHelper } from "./sliceHelper";
-import exp from "constants";
 
 interface ICoursesState {
   allCourses: ICourseWithAuthor[] | null;
@@ -23,7 +22,7 @@ const initialState: ICoursesState = {
   error: null,
 };
 
-export const fetchGetAllCourses = createAsyncThunk("getAllCorses", async () => {
+export const fetchGetAllCourses = createAsyncThunk("fetchGetAllCourses", async () => {
   try {
     return await getAllCourseApi();
   } catch (error) {

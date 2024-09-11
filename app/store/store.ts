@@ -1,4 +1,5 @@
 import coursesSlice from "./slices/coursesSlice";
+import currentCourseSlice from "./slices/currentCourseSlice";
 import currentUserSlice from "./slices/userSlice";
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -6,7 +7,8 @@ export const makeStore = () => {
   return configureStore({
     reducer: {
       currentUser: currentUserSlice,
-      courses: coursesSlice
+      courses: coursesSlice,
+      currentCourse: currentCourseSlice,
     },
   });
 };

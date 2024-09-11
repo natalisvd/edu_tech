@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { createCourseApi, updateCourseApi, getCourseByIdApi } from "@/app/api";
 import { useUser } from "@/app/hooks/auth.hook";
 import { getFullUrl } from "@/app/helpers/image.helper";
 import LessonModal from "@/app/components/Modals/LessonModal";
-import { useAppDispatch } from "@/app/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import { fetchCreateCourse, fetchUpdateCourse } from "@/app/store/slices/coursesSlice";
+import { fetchGetCourseById, selectCourses } from "@/app/store/slices/currentCourseSlice";
 
 const validationSchema = Yup.object({
   courseName: Yup.string().required("Course name is required"),
@@ -28,9 +28,9 @@ interface CourseFormProps {
 export default function CourseForm({ courseId }: CourseFormProps) {
   const user = useUser();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const dispatch = useAppDispatch();
+  const { currentCourse, loading } = useAppSelector(selectCourses);
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -51,15 +51,12 @@ export default function CourseForm({ courseId }: CourseFormProps) {
 
       try {
         if (courseId) {
-          await dispatch(fetchUpdateCourse({courseId, formData}))
-          // await updateCourseApi(courseId, formData);
+          await dispatch(fetchUpdateCourse({ courseId, formData }));
         } else {
-          // fetchCreateCourse
           await dispatch(fetchCreateCourse(formData));
         }
         router.push("/courses-list");
       } catch (error) {
-        debugger
         console.error(error);
       }
     },
@@ -67,26 +64,22 @@ export default function CourseForm({ courseId }: CourseFormProps) {
 
   useEffect(() => {
     if (courseId) {
-      setIsLoading(true);
-      getCourseByIdApi(courseId)
-        .then((course) => {
-          formik.setValues({
-            courseName: course.name || "",
-            description: course.description || "",
-            courseImage: null,
-          });
-          if (course.courseImageUrl) {
-            setPreviewImage(getFullUrl(course.courseImageUrl));
-          }
-        })
-        .catch((error) => {
-          console.error("Failed to fetch course data", error);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+      dispatch(fetchGetCourseById(courseId));
     }
-  }, [courseId]);
+  }, [courseId, dispatch]);
+
+  useEffect(() => {
+    if (currentCourse) {
+      formik.setValues({
+        courseName: currentCourse.name || "",
+        description: currentCourse.description || "",
+        courseImage: null,
+      });
+      if (currentCourse.courseImageUrl) {
+        setPreviewImage(getFullUrl(currentCourse.courseImageUrl));
+      }
+    }
+  }, [currentCourse]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -98,7 +91,7 @@ export default function CourseForm({ courseId }: CourseFormProps) {
     }
   };
 
-  if (isLoading) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
@@ -138,11 +131,6 @@ export default function CourseForm({ courseId }: CourseFormProps) {
               onChange={handleImageChange}
               className="hidden"
             />
-            {formik.touched.courseImage && formik.errors.courseImage ? (
-              <div className="text-red-500 text-sm mt-1">
-                {formik.errors.courseImage}
-              </div>
-            ) : null}
 
             <div className="flex flex-col gap-4 mt-auto w-full">
               {courseId && <LessonModal courseId={courseId} />}

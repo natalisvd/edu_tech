@@ -13,14 +13,12 @@ import exp from "constants";
 
 interface ICourseState {
   allCourses: ICourseWithAuthor[] | null;
-  currentCourse: ICourseWithAuthor | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: ICourseState = {
   allCourses: null,
-  currentCourse: null,
   loading: false,
   error: null,
 };

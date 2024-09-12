@@ -7,8 +7,15 @@ import { useUser } from "@/app/hooks/auth.hook";
 import { getFullUrl } from "@/app/helpers/image.helper";
 import LessonModal from "@/app/components/Modals/LessonModal";
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
-import { fetchCreateCourse, fetchUpdateCourse } from "@/app/store/slices/coursesSlice";
-import { fetchGetCourseById, selectCourses } from "@/app/store/slices/currentCourseSlice";
+import {
+  fetchCreateCourse,
+  fetchUpdateCourse,
+} from "@/app/store/slices/coursesSlice";
+import {
+  fetchGetCourseById,
+  selectCourses,
+} from "@/app/store/slices/currentCourseSlice";
+import LessonsList from "@/app/components/Lesson/LessonsList";
 
 const validationSchema = Yup.object({
   courseName: Yup.string().required("Course name is required"),
@@ -196,6 +203,10 @@ export default function CourseForm({ courseId }: CourseFormProps) {
             </div>
           </div>
         </div>
+
+            {currentCourse?.lessons && (
+              <LessonsList lessons={currentCourse.lessons} />
+            )}
       </form>
     </div>
   );

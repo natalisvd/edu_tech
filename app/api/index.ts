@@ -1,5 +1,12 @@
 import { boolean } from "yup";
-import { IAuth, ICourse, ICourseWithAuthor, ITeam, IUser } from "../interfaces/interfaces";
+import {
+  IAuth,
+  ICourse,
+  ICourseWithAuthor,
+  ILesson,
+  ITeam,
+  IUser,
+} from "../interfaces/interfaces";
 import { get, post, patch, httpDelete } from "./axios";
 
 export const login = (body: IAuth) =>
@@ -30,9 +37,13 @@ export const createTeamApi = (body: ITeam) => post("/team", body);
 
 // /* courses requests */
 export const createCourseApi = (body: FormData) => post("/courses", body);
-export const updateCourseApi = (corseId :string,body: FormData) =>
+export const updateCourseApi = (corseId: string, body: FormData) =>
   patch(`/courses/${corseId}`, body);
 export const getCourseByIdApi = (courseId: string): Promise<ICourse> =>
   get(`/courses/${courseId}`);
-export const getAllCourseApi = (): Promise<ICourseWithAuthor[]> => get(`/courses`);
-export const deleteCourseApi =(id:string)=> httpDelete(`/courses/${id}`)
+export const getAllCourseApi = (): Promise<ICourseWithAuthor[]> =>
+  get(`/courses`);
+export const deleteCourseApi = (id: string) => httpDelete(`/courses/${id}`);
+
+// /* lessons requests */
+export const addLessonToCourseApi = (body:ILesson) => post(`/lessons`, body);

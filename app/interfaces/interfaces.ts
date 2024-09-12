@@ -42,11 +42,20 @@ export interface ICourse {
   id?: string;
   name: string;
   description: string;
-  courseImageUrl?: string
+  courseImageUrl?: string;
   authorId: string;
-  lessons?: string[]
+  lessons?: ILesson[];
 }
 export interface ICourseWithAuthor extends ICourse {
   id: string;
   author: IUser;
+}
+
+export interface ILesson {
+  id?: string;
+  courseId: string;
+  indexNumber: number;
+  title: string;
+  text?: string;
+  materials: string[];
 }

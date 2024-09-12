@@ -47,3 +47,4 @@ export const deleteCourseApi = (id: string) => httpDelete(`/courses/${id}`);
 
 // /* lessons requests */
 export const addLessonToCourseApi = (body:ILesson) => post(`/lessons`, body);
+export const deleteLessonById = (id: string) => httpDelete(`/lessons/${id}`);

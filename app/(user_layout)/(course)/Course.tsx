@@ -140,8 +140,6 @@ export default function CourseForm({ courseId }: CourseFormProps) {
             />
 
             <div className="flex flex-col gap-4 mt-auto w-full">
-              {courseId && <LessonModal courseId={courseId} />}
-
               <button
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
@@ -202,12 +200,12 @@ export default function CourseForm({ courseId }: CourseFormProps) {
               ) : null}
             </div>
           </div>
-        </div>
-
-            {currentCourse?.lessons && (
-              <LessonsList lessons={currentCourse.lessons} />
-            )}
+        </div>{" "}
       </form>
+      <div>{courseId && <LessonModal courseId={courseId} />}</div>
+      {currentCourse?.lessons && (
+        <LessonsList lessons={currentCourse.lessons} />
+      )}
     </div>
   );
 }

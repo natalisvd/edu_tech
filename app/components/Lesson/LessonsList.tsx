@@ -6,8 +6,9 @@ interface LessonsListProps {
 }
 
 const LessonsList: React.FC<LessonsListProps> = ({ lessons }) => {
-  const sortedLessons = lessons.sort((a, b) => a.indexNumber - b.indexNumber);
-
+  const sortedLessons = [...lessons].sort(
+    (a, b) => a.indexNumber - b.indexNumber
+  );
   const deleteHandle = (e: any, id: string) => {
     e.preventDefault();
   };

@@ -202,6 +202,7 @@ export default function CourseForm({ courseId }: CourseFormProps) {
           </div>
         </div>{" "}
       </form>
+      {/* Do not transfer to the form, this will cause the page to reload when submitting the modal!!! */}
       <div>{courseId && <LessonModal courseId={courseId} />}</div>
       {currentCourse?.lessons && (
         <LessonsList lessons={currentCourse.lessons} />

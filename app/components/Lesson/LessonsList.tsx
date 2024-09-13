@@ -1,4 +1,6 @@
 import { ILesson } from "@/app/interfaces/interfaces";
+import { useAppDispatch } from "@/app/store/hooks";
+import { fetchDeleteLesson } from "@/app/store/slices/currentCourseSlice";
 import React from "react";
 
 interface LessonsListProps {
@@ -9,12 +11,13 @@ const LessonsList: React.FC<LessonsListProps> = ({ lessons }) => {
   const sortedLessons = [...lessons].sort(
     (a, b) => a.indexNumber - b.indexNumber
   );
-  const deleteHandle = (e: any, id: string) => {
-    e.preventDefault();
+
+  const dispatch = useAppDispatch();
+
+  const deleteHandle = (id: string) => {
+    dispatch(fetchDeleteLesson(id))
   };
-  const editHandle = (e: any, lesson: ILesson) => {
-    e.preventDefault();
-  };
+  const editHandle = (lesson: ILesson) => {};
 
   return (
     <div className="flex flex-col gap-4">
@@ -29,13 +32,13 @@ const LessonsList: React.FC<LessonsListProps> = ({ lessons }) => {
           </div>
           <div className="flex gap-2">
             <button
-              onClick={(e) => editHandle(e, lesson)}
+              onClick={() => editHandle(lesson)}
               className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
             >
               Edit
             </button>
             <button
-              onClick={(e) => deleteHandle(e, lesson.id + "")}
+              onClick={() => deleteHandle(lesson.id + "")}
               className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
             >
               Delete

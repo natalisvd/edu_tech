@@ -2,6 +2,7 @@ import { ILesson } from "@/app/interfaces/interfaces";
 import { useAppDispatch } from "@/app/store/hooks";
 import { fetchDeleteLesson } from "@/app/store/slices/currentCourseSlice";
 import React from "react";
+import LessonModal from "../Modals/LessonModal";
 
 interface LessonsListProps {
   lessons: ILesson[];
@@ -15,7 +16,7 @@ const LessonsList: React.FC<LessonsListProps> = ({ lessons }) => {
   const dispatch = useAppDispatch();
 
   const deleteHandle = (id: string) => {
-    dispatch(fetchDeleteLesson(id))
+    dispatch(fetchDeleteLesson(id));
   };
   const editHandle = (lesson: ILesson) => {};
 
@@ -31,12 +32,7 @@ const LessonsList: React.FC<LessonsListProps> = ({ lessons }) => {
             <p className="text-gray-700">{lesson.title}</p>
           </div>
           <div className="flex gap-2">
-            <button
-              onClick={() => editHandle(lesson)}
-              className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-            >
-              Edit
-            </button>
+            <LessonModal lesson={lesson} key={lesson.id} />
             <button
               onClick={() => deleteHandle(lesson.id + "")}
               className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"

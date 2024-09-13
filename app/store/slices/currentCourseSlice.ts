@@ -7,8 +7,9 @@ import {
 } from "@/app/interfaces/interfaces";
 import {
   addLessonToCourseApi,
-  deleteLessonById,
+  deleteLessonByIdApi,
   getCourseByIdApi,
+  updateLessonByIdApi,
 } from "@/app/api";
 import { sliceHelper } from "./sliceHelper";
 
@@ -49,7 +50,18 @@ export const fetchDeleteLesson = createAsyncThunk(
   "fetchDeleteLesson",
   async (id: string) => {
     try {
-      return await deleteLessonById(id);
+      return await deleteLessonByIdApi(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const fetchUpdateLesson = createAsyncThunk(
+  "fetchUpdateLesson",
+  async ({ id, lesson }: { id: string; lesson: ILesson }) => {
+    try {
+      return await updateLessonByIdApi(id, lesson);
     } catch (error) {
       throw error;
     }
@@ -88,6 +100,21 @@ const currentCourseSlice = createSlice({
           lessons: [
             ...state.currentCourse.lessons.filter(
               (lesson: ILesson) => lesson.id !== action.payload.id
+            ),
+          ],
+        };
+      }
+    );
+
+    sliceHelper(builder, fetchUpdateLesson).addCase(
+      fetchUpdateLesson.fulfilled,
+      (state: any, action: any) => {
+        state.loading = false;
+        state.currentCourse = {
+          ...state.currentCourse,
+          lessons: [
+            ...state.currentCourse.lessons.map((lesson: ILesson) =>
+              lesson.id === action.payload.id ? action.payload : lesson
             ),
           ],
         };

@@ -53,7 +53,7 @@ export interface ICourseWithAuthor extends ICourse {
 
 export interface ILesson {
   id?: string;
-  courseId: string;
+  courseId?: string;
   indexNumber: number;
   title: string;
   text?: string;

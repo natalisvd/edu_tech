@@ -3,7 +3,11 @@ import React, { useState, useCallback } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useAppDispatch } from "@/app/store/hooks";
-import { fetchAddLessonToCourse } from "@/app/store/slices/currentCourseSlice";
+import {
+  fetchAddLessonToCourse,
+  fetchUpdateLesson,
+} from "@/app/store/slices/currentCourseSlice";
+import { ILesson } from "@/app/interfaces/interfaces";
 
 const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
@@ -16,27 +20,28 @@ const validationSchema = Yup.object({
 });
 
 interface LessonModalProps {
-  courseId: string;
-  lessonId?: string;
+  courseId?: string;
+  lesson?: ILesson;
 }
 
-const LessonModal = ({ courseId, lessonId }: LessonModalProps) => {
+const LessonModal = ({ courseId, lesson }: LessonModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useAppDispatch();
 
   const formik = useFormik({
     initialValues: {
-      title: "",
-      text: "",
-      materials: [""],
-      indexNumber: 1,
+      title: lesson?.title || "",
+      text: lesson?.text || "",
+      materials: lesson?.materials || [""],
+      indexNumber: lesson?.indexNumber || 1,
     },
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        if (lessonId) {
-          // TODO: Update lesson logic
-        } else {
+        if (lesson?.id) {
+          await dispatch(fetchUpdateLesson({ lesson: values, id: lesson.id }));
+        }
+        if (courseId && !lesson?.id) {
           await dispatch(fetchAddLessonToCourse({ ...values, courseId }));
         }
         closeModal();
@@ -86,7 +91,7 @@ const LessonModal = ({ courseId, lessonId }: LessonModalProps) => {
         onClick={openModal}
         className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
       >
-        {lessonId ? "Edit Lesson" : "Add Lesson"}
+        {lesson?.id ? "Edit Lesson" : "Add Lesson"}
       </button>
 
       {isOpen && (
@@ -99,15 +104,15 @@ const LessonModal = ({ courseId, lessonId }: LessonModalProps) => {
             onClick={(e) => e.stopPropagation()} // Prevent closing modal when clicking inside
           >
             <h2 className="text-2xl font-bold mb-4">
-              {lessonId ? "Edit Lesson" : "Create Lesson"}
+              {lesson?.id ? "Edit Lesson" : "Create Lesson"}
             </h2>
             <form
-             onSubmit={(e) => {
-              e.preventDefault();
-              console.log('Before Formik Submit');
-              formik.handleSubmit(e);
-              console.log('After Formik Submit');
-            }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                console.log("Before Formik Submit");
+                formik.handleSubmit(e);
+                console.log("After Formik Submit");
+              }}
               className="space-y-4"
             >
               <div>
@@ -229,7 +234,7 @@ const LessonModal = ({ courseId, lessonId }: LessonModalProps) => {
                   type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded"
                 >
-                  {lessonId ? "Update Lesson" : "Create Lesson"}
+                  {lesson?.id ? "Update Lesson" : "Create Lesson"}
                 </button>
               </div>
             </form>

@@ -46,5 +46,7 @@ export const getAllCourseApi = (): Promise<ICourseWithAuthor[]> =>
 export const deleteCourseApi = (id: string) => httpDelete(`/courses/${id}`);
 
 // /* lessons requests */
-export const addLessonToCourseApi = (body:ILesson) => post(`/lessons`, body);
-export const deleteLessonById = (id: string) => httpDelete(`/lessons/${id}`);
+export const addLessonToCourseApi = (body: ILesson) => post(`/lessons`, body);
+export const deleteLessonByIdApi = (id: string) => httpDelete(`/lessons/${id}`);
+export const updateLessonByIdApi = (id: string, body: ILesson) =>
+  patch(`/lessons/${id}`, body);

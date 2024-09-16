@@ -28,7 +28,8 @@ export default function CoursesList() {
     dispatch(fetchGetAllCourses());
   }, [dispatch]);
 
-  const handleDelete = async (courseId: string) => {
+  const handleDelete = async (courseId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // отмена всплытия события
     if (confirm("Are you sure you want to delete this course?")) {
       try {
         await dispatch(fetchDeleteCourse(courseId));
@@ -38,11 +39,16 @@ export default function CoursesList() {
     }
   };
 
-  const handleEdit = (courseId: string) => {
+  const handleEdit = (courseId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // отмена всплытия события
     router.push(`/update-course/${courseId}`);
   };
 
   if (!user || loading || !allCourses) return <div>Loading...</div>;
+
+  const handleCourseSelect = (courseId: string) => {
+    router.push(`/current-course/${courseId}`);
+  };
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -54,21 +60,22 @@ export default function CoursesList() {
           {allCourses?.map((course: ICourseWithAuthor) => (
             <div
               key={course.id}
-              className="bg-white p-6 rounded-lg shadow-lg relative flex"
+              className="bg-white p-6 rounded-lg shadow-lg relative flex cursor-pointer transition-transform transform hover:scale-105 hover:shadow-2xl"
+              onClick={() => handleCourseSelect(course.id)}
             >
               {user.id === course.author.id && (
                 <div className="absolute top-4 right-4 flex gap-2">
                   <button
-                    onClick={() => handleEdit(course.id)}
+                    onClick={(e) => handleEdit(course.id, e)}
                     className="text-blue-500 hover:text-blue-700"
                   >
-                    <FaEdit />
+                    <FaEdit className="transition-transform transform hover:scale-150 hover:opacity-80" />
                   </button>
                   <button
-                    onClick={() => handleDelete(course.id)}
+                    onClick={(e) => handleDelete(course.id, e)}
                     className="text-red-500 hover:text-red-700"
                   >
-                    <FaTrash />
+                    <FaTrash className="transition-transform transform hover:scale-150 hover:opacity-80" />
                   </button>
                 </div>
               )}

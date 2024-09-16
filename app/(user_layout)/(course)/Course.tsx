@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useUser } from "@/app/hooks/auth.hook";
 import { getFullUrl } from "@/app/helpers/image.helper";
 import LessonModal from "@/app/components/Modals/LessonModal";
@@ -16,6 +16,7 @@ import {
   selectCurrnetCourse,
 } from "@/app/store/slices/currentCourseSlice";
 import LessonsList from "@/app/components/Lesson/LessonsList";
+import { ILesson } from "@/app/interfaces/interfaces";
 
 const validationSchema = Yup.object({
   courseName: Yup.string().required("Course name is required"),
@@ -35,7 +36,9 @@ interface CourseFormProps {
 export default function CourseForm({ courseId }: CourseFormProps) {
   const user = useUser();
   const router = useRouter();
+  const pathname = usePathname();
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [lessons, setLessons] = useState<ILesson[]>([]);
   const dispatch = useAppDispatch();
   const { currentCourse, loading } = useAppSelector(selectCurrnetCourse);
 
@@ -62,6 +65,9 @@ export default function CourseForm({ courseId }: CourseFormProps) {
         } else {
           await dispatch(fetchCreateCourse(formData));
         }
+        formik.resetForm(); 
+        setPreviewImage(null); 
+        setLessons([]); 
         router.push("/courses-list");
       } catch (error) {
         console.error(error);
@@ -72,6 +78,10 @@ export default function CourseForm({ courseId }: CourseFormProps) {
   useEffect(() => {
     if (courseId) {
       dispatch(fetchGetCourseById(courseId));
+    } else {
+      formik.resetForm();
+      setPreviewImage(null);
+      setLessons([]);
     }
   }, [courseId, dispatch]);
 
@@ -85,8 +95,15 @@ export default function CourseForm({ courseId }: CourseFormProps) {
       if (currentCourse.courseImageUrl) {
         setPreviewImage(getFullUrl(currentCourse.courseImageUrl));
       }
+      setLessons(currentCourse.lessons || []); 
     }
   }, [currentCourse]);
+
+  useEffect(() => {
+    formik.resetForm();
+    setPreviewImage(null);
+    setLessons([]); 
+  }, [pathname]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -204,9 +221,7 @@ export default function CourseForm({ courseId }: CourseFormProps) {
       </form>
       {/* Do not transfer to the form, this will cause the page to reload when submitting the modal!!! */}
       <div>{courseId && <LessonModal courseId={courseId} />}</div>
-      {currentCourse?.lessons && (
-        <LessonsList lessons={currentCourse.lessons} />
-      )}
+      {lessons.length > 0 && <LessonsList lessons={lessons} />}
     </div>
   );
 }

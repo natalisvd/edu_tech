@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useUser } from "@/app/hooks/auth.hook";
-import { deleteCourseApi } from "@/app/api";
 import { ICourseWithAuthor } from "@/app/interfaces/interfaces";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -14,6 +13,7 @@ import {
   fetchGetAllCourses,
   selectCourses,
 } from "@/app/store/slices/coursesSlice";
+import { motion } from "framer-motion"; // Добавил импорт framer-motion
 
 const DEFAULT_IMAGE_URL =
   "https://erudyt.net/wp-content/uploads/2020/09/recursosprogramadores.png";
@@ -29,7 +29,7 @@ export default function CoursesList() {
   }, [dispatch]);
 
   const handleDelete = async (courseId: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // отмена всплытия события
+    e.stopPropagation();
     if (confirm("Are you sure you want to delete this course?")) {
       try {
         await dispatch(fetchDeleteCourse(courseId));
@@ -40,7 +40,7 @@ export default function CoursesList() {
   };
 
   const handleEdit = (courseId: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // отмена всплытия события
+    e.stopPropagation();
     router.push(`/update-course/${courseId}`);
   };
 
@@ -58,10 +58,13 @@ export default function CoursesList() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
           {allCourses?.map((course: ICourseWithAuthor) => (
-            <div
+            <motion.div
               key={course.id}
               className="bg-white p-6 rounded-lg shadow-lg relative flex cursor-pointer transition-transform transform hover:scale-105 hover:shadow-2xl"
               onClick={() => handleCourseSelect(course.id)}
+              initial={{ opacity: 0, y: 20 }} // Начальная анимация
+              animate={{ opacity: 1, y: 0 }} // Анимация при загрузке
+              transition={{ duration: 0.3 }}
             >
               {user.id === course.author.id && (
                 <div className="absolute top-4 right-4 flex gap-2">
@@ -122,7 +125,7 @@ export default function CoursesList() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}

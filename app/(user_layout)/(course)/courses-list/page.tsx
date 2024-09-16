@@ -13,7 +13,7 @@ import {
   fetchGetAllCourses,
   selectCourses,
 } from "@/app/store/slices/coursesSlice";
-import { motion } from "framer-motion"; // Добавил импорт framer-motion
+import { motion } from "framer-motion"; 
 
 const DEFAULT_IMAGE_URL =
   "https://erudyt.net/wp-content/uploads/2020/09/recursosprogramadores.png";
@@ -62,8 +62,8 @@ export default function CoursesList() {
               key={course.id}
               className="bg-white p-6 rounded-lg shadow-lg relative flex cursor-pointer transition-transform transform hover:scale-105 hover:shadow-2xl"
               onClick={() => handleCourseSelect(course.id)}
-              initial={{ opacity: 0, y: 20 }} // Начальная анимация
-              animate={{ opacity: 1, y: 0 }} // Анимация при загрузке
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
               transition={{ duration: 0.3 }}
             >
               {user.id === course.author.id && (

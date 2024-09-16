@@ -13,7 +13,7 @@ import {
 } from "@/app/store/slices/coursesSlice";
 import {
   fetchGetCourseById,
-  selectCourses,
+  selectCurrnetCourse,
 } from "@/app/store/slices/currentCourseSlice";
 import LessonsList from "@/app/components/Lesson/LessonsList";
 
@@ -37,7 +37,7 @@ export default function CourseForm({ courseId }: CourseFormProps) {
   const router = useRouter();
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const dispatch = useAppDispatch();
-  const { currentCourse, loading } = useAppSelector(selectCourses);
+  const { currentCourse, loading } = useAppSelector(selectCurrnetCourse);
 
   const formik = useFormik<FormValues>({
     initialValues: {

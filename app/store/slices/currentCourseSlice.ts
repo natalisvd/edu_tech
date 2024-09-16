@@ -123,6 +123,6 @@ const currentCourseSlice = createSlice({
   },
 });
 
-export const selectCourses = (state: RootState) => state.currentCourse;
+export const selectCurrnetCourse = (state: RootState) => state.currentCourse;
 
 export default currentCourseSlice.reducer;

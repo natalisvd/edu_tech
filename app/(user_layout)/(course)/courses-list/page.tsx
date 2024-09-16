@@ -13,7 +13,7 @@ import {
   fetchGetAllCourses,
   selectCourses,
 } from "@/app/store/slices/coursesSlice";
-import { motion } from "framer-motion"; 
+import { motion } from "framer-motion";
 
 const DEFAULT_IMAGE_URL =
   "https://erudyt.net/wp-content/uploads/2020/09/recursosprogramadores.png";
@@ -62,9 +62,10 @@ export default function CoursesList() {
               key={course.id}
               className="bg-white p-6 rounded-lg shadow-lg relative flex cursor-pointer transition-transform transform hover:scale-105 hover:shadow-2xl"
               onClick={() => handleCourseSelect(course.id)}
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
+              whileHover={{ scale: 1.05, boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)" }}
             >
               {user.id === course.author.id && (
                 <div className="absolute top-4 right-4 flex gap-2">
@@ -83,7 +84,6 @@ export default function CoursesList() {
                 </div>
               )}
 
-              {/* Image */}
               <div className="w-1/3 h-auto">
                 <Image
                   src={
@@ -99,7 +99,6 @@ export default function CoursesList() {
                 />
               </div>
 
-              {/* Course Details */}
               <div className="ml-6 flex-1">
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
                   {course.name}

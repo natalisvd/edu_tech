@@ -8,6 +8,7 @@ import {
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { getFullUrl } from "@/app/helpers/image.helper";
+import { motion } from "framer-motion";
 
 interface CourseFormProps {
   courseId?: string;
@@ -36,7 +37,12 @@ export const CurrentCourse = ({ courseId }: CourseFormProps) => {
   };
 
   return (
-    <div className="max-w-[90%] mx-auto p-12"> 
+    <motion.div
+      className="max-w-[90%] mx-auto p-12"
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.5 }}
+    >
       <div className="flex flex-col gap-12 bg-white p-8 rounded-lg shadow-lg">
         <div className="flex flex-col lg:flex-row gap-12">
           <div className="w-full lg:w-1/2">
@@ -82,18 +88,21 @@ export const CurrentCourse = ({ courseId }: CourseFormProps) => {
           {currentCourse.lessons && currentCourse.lessons.length > 0 ? (
             <ul>
               {currentCourse.lessons.map((lesson, index) => (
-                <li
+                <motion.li
                   key={lesson.id}
-                  onClick={() => handleLessonClick(lesson.id+'')} 
-                  className={`p-4 rounded-lg mb-4 text-white cursor-pointer transition-transform transform hover:scale-105 ${
+                  onClick={() => handleLessonClick(lesson.id + '')}
+                  className={`p-4 rounded-lg mb-4 text-white cursor-pointer transition-transform transform ${
                     index % 2 === 0 ? "bg-gray-800" : "bg-gray-600"
                   }`}
+                  initial={{ scale: 1 }}
+                  whileHover={{ scale: 1.05 }} 
+                  transition={{ duration: 0.2 }}
                 >
                   <div className="text-2xl font-bold text-gray-200">
                     {formatLessonNumber(index)}. {lesson.title}
                   </div>
                   <p className="text-lg text-gray-300 mt-2">{lesson.text}</p>
-                </li>
+                </motion.li>
               ))}
             </ul>
           ) : (
@@ -101,6 +110,8 @@ export const CurrentCourse = ({ courseId }: CourseFormProps) => {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
+
+export default CurrentCourse;

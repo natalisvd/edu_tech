@@ -9,7 +9,7 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import { getFullUrl } from "@/app/helpers/image.helper";
 import { motion } from "framer-motion";
-
+import { useRouter } from "next/navigation";
 interface CourseFormProps {
   courseId?: string;
 }
@@ -17,6 +17,7 @@ interface CourseFormProps {
 export const CurrentCourse = ({ courseId }: CourseFormProps) => {
   const user = useUser();
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const { currentCourse, loading } = useAppSelector(selectCurrnetCourse);
 
@@ -33,7 +34,8 @@ export const CurrentCourse = ({ courseId }: CourseFormProps) => {
   };
 
   const handleLessonClick = (lessonId: string) => {
-    console.log(`Lesson clicked: ${lessonId}`);
+     router.push(`/current-lesson/${lessonId}`);
+
   };
 
   return (

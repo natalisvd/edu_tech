@@ -4,6 +4,7 @@ import {
   ICourse,
   ICourseWithAuthor,
   ILesson,
+  ILessonWithCourse,
   ITeam,
   IUser,
 } from "../interfaces/interfaces";
@@ -50,5 +51,5 @@ export const addLessonToCourseApi = (body: ILesson) => post(`/lessons`, body);
 export const deleteLessonByIdApi = (id: string) => httpDelete(`/lessons/${id}`);
 export const updateLessonByIdApi = (id: string, body: ILesson) =>
   patch(`/lessons/${id}`, body);
-export const getLessonByIdApi = (id: string): Promise<ILesson> =>
+export const getLessonByIdApi = (id: string): Promise<ILessonWithCourse> =>
   get(`/lessons/${id}`);

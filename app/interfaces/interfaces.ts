@@ -59,3 +59,7 @@ export interface ILesson {
   text?: string;
   materials: string[];
 }
+
+export interface ILessonWithCourse extends ILesson {
+  Course: ICourse;
+}

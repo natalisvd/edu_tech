@@ -50,4 +50,5 @@ export const addLessonToCourseApi = (body: ILesson) => post(`/lessons`, body);
 export const deleteLessonByIdApi = (id: string) => httpDelete(`/lessons/${id}`);
 export const updateLessonByIdApi = (id: string, body: ILesson) =>
   patch(`/lessons/${id}`, body);
-export const getLessonByIdApi = (id: string) => get(`/lessons/${id}`);
+export const getLessonByIdApi = (id: string): Promise<ILesson> =>
+  get(`/lessons/${id}`);

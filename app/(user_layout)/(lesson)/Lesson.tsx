@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getLessonByIdApi } from "../../api";
 import { ILessonWithCourse } from "../../interfaces/interfaces";
 // import { getFullUrl } from "../helpers/image.helper";
+import { motion } from "framer-motion";
 
 export const Lesson = ({ lessonId }: { lessonId: string }) => {
   const [lesson, setLesson] = useState<ILessonWithCourse | null>(null);
@@ -19,7 +20,12 @@ export const Lesson = ({ lessonId }: { lessonId: string }) => {
 
   // TODO need normal layout
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <motion.div
+      className="max-w-[90%] mx-auto p-6 bg-white shadow-lg rounded-lg"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* 
       <div className="flex items-start mb-6">
         {lesson.Course.courseImageUrl ? (
@@ -71,6 +77,8 @@ export const Lesson = ({ lessonId }: { lessonId: string }) => {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
+
+export default Lesson;

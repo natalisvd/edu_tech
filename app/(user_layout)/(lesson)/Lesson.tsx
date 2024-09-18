@@ -6,6 +6,7 @@ import { getLessonByIdApi } from "../../api";
 import { ILessonWithCourse } from "../../interfaces/interfaces";
 // import { getFullUrl } from "../helpers/image.helper";
 import { motion } from "framer-motion";
+import PaginatedText from "./PaginatedText"; 
 
 export const Lesson = ({ lessonId }: { lessonId: string }) => {
   const [lesson, setLesson] = useState<ILessonWithCourse | null>(null);
@@ -18,10 +19,9 @@ export const Lesson = ({ lessonId }: { lessonId: string }) => {
     return <p>Loading...</p>;
   }
 
-  // TODO need normal layout
   return (
     <motion.div
-      className="max-w-[90%] mx-auto p-6 bg-white shadow-lg rounded-lg"
+      className="max-w-[90%] mx-auto p-6 bg-white shadow-lg rounded-lg w-full" 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -51,9 +51,9 @@ export const Lesson = ({ lessonId }: { lessonId: string }) => {
         <h1 className="text-3xl font-bold text-gray-800 mb-4">
           {`Lesson ${lesson.indexNumber}: ${lesson.title}`}
         </h1>
-        <p className="text-gray-700 text-lg leading-relaxed mb-6">
-          {lesson.text}
-        </p>
+
+        {/* Используем компонент PaginatedText для отображения текста с пагинацией */}
+        <PaginatedText text={lesson.text} />
 
         <div>
           <h2 className="text-xl font-semibold mb-4">Materials</h2>

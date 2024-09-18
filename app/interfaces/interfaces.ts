@@ -56,7 +56,7 @@ export interface ILesson {
   courseId?: string;
   indexNumber: number;
   title: string;
-  text?: string;
+  text: string;
   materials: string[];
 }
 

@@ -61,7 +61,7 @@ const PaginatedText: React.FC<PaginatedTextProps> = ({ text }) => {
         {visibleText}
       </div>
 
-      <div className="mt-4 flex justify-between">
+      <div className="mt-4 flex items-center">
         {page > 1 && (
           <button
             onClick={() => setPage(page - 1)}
@@ -70,14 +70,15 @@ const PaginatedText: React.FC<PaginatedTextProps> = ({ text }) => {
             Previous Page
           </button>
         )}
-        {page < pages.length && (
-          <button
-            onClick={() => setPage(page + 1)}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Next Page
-          </button>
-        )}
+        <button
+          onClick={() => setPage(page + 1)}
+          disabled={page >= pages.length}
+          className={`ml-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${
+            page >= pages.length ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          Next Page
+        </button>
       </div>
     </div>
   );

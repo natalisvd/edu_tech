@@ -1,5 +1,5 @@
-"use client";
-import React, { useState, useEffect, useRef } from "react";
+"use client"
+import React, { useState, useLayoutEffect, useRef } from "react";
 
 interface PaginatedTextProps {
   text: string;
@@ -8,46 +8,48 @@ interface PaginatedTextProps {
 const PaginatedText: React.FC<PaginatedTextProps> = ({ text }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [visibleText, setVisibleText] = useState<string>("");
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
+  const [pages, setPages] = useState<string[]>([]);
 
-  useEffect(() => {
-    const container = containerRef.current;
+  // Function to split text into pages based on container size
+  const paginateText = (container: HTMLDivElement | null): string[] => {
+    const pages: string[] = [];
+    if (!container) return pages;
 
-    if (!container) return;
-
-    let index = currentIndex;
-
-    const checkTextFit = () => {
-      while (index < text.length) {
-        const currentText = text.substring(currentIndex, index + 1);
+    let index = 0;
+    while (index < text.length) {
+      let currentIndex = index;
+      while (currentIndex < text.length) {
+        const currentText = text.substring(index, currentIndex + 1);
         container.innerText = currentText;
 
+        // If the text overflows, end the current page
         if (container.scrollHeight > container.clientHeight) {
           break;
         }
-        index++;
+        currentIndex++;
       }
 
-      setVisibleText(text.substring(currentIndex, index));
-    };
-
-    checkTextFit();
-  }, [page, text, currentIndex]);
-
-  const handleNextPage = () => {
-    if (currentIndex + visibleText.length < text.length) {
-      setCurrentIndex(currentIndex + visibleText.length);
-      setPage(page + 1);
+      pages.push(text.substring(index, currentIndex));
+      index = currentIndex;
     }
+
+    return pages;
   };
 
-  const handlePreviousPage = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(Math.max(currentIndex - visibleText.length, 0));
-      setPage(page - 1);
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      setPages(paginateText(container));
     }
-  };
+  }, [text]);
+
+  useLayoutEffect(() => {
+    // Update visible text when `page` changes
+    if (pages.length > 0) {
+      setVisibleText(pages[page - 1] || "");
+    }
+  }, [page, pages]);
 
   return (
     <div>
@@ -62,15 +64,15 @@ const PaginatedText: React.FC<PaginatedTextProps> = ({ text }) => {
       <div className="mt-4 flex justify-between">
         {page > 1 && (
           <button
-            onClick={handlePreviousPage}
+            onClick={() => setPage(page - 1)}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
             Previous Page
           </button>
         )}
-        {currentIndex + visibleText.length < text.length && (
+        {page < pages.length && (
           <button
-            onClick={handleNextPage}
+            onClick={() => setPage(page + 1)}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
             Next Page

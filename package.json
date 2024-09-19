@@ -10,6 +10,11 @@
   },
   "dependencies": {
     "@ariakit/react": "^0.4.7",
+    "@react-page/editor": "^5.4.4",
+    "@react-page/plugins-divider": "^5.4.4",
+    "@react-page/plugins-image": "^5.4.4",
+    "@react-page/plugins-slate": "^5.4.4",
+    "@react-page/plugins-spacer": "^5.4.4",
     "@reduxjs/toolkit": "^2.2.7",
     "@supabase/auth-helpers-nextjs": "^0.9.0",
     "@supabase/ssr": "^0.3.0",

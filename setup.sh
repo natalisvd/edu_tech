@@ -74,8 +74,10 @@ npm install
 green_echo "Filling in the .env file for frontend..."
 
 # Creating .env file if it doesn't exist
-if [ ! -f .env ]; then
-    touch .env
+if [ -f .env.example ]; then
+    cp .env.example .env
+else
+    green_echo ".env.example not found!"
 fi
 
 # Checking if .env.example exists

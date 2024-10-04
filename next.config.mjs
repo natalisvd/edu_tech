@@ -6,13 +6,19 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "img.daisyui.com", // -- change the hostname to db storage source
+        hostname: "img.daisyui.com", 
         port: "",
-        pathname: "/images/**", // -- edit storage path if it needed
+        pathname: "/images/**",
+      },
+      {
+        protocol: "http", 
+        hostname: "localhost", 
+        port: "5000",
+        pathname: "/images/**", 
       },
       {
         protocol: "http",
-        hostname: "localhost", 
+        hostname: "app", 
         port: "5000",
         pathname: "/images/**", 
       },

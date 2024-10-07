@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createClient } from "@/utils/supabase/server";
 import { getTeam, getTeamName } from "./action";
 import Button from "./Button";

@@ -13,4 +13,4 @@ ENV NODE_ENV=${NODE_ENV}
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npm run dev & (while ! nc -z localhost 3000; do sleep 1; done) && curl http://localhost:3000"]

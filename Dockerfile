@@ -46,12 +46,16 @@ COPY --from=builder /app/public ./public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 USER nextjs
 
 EXPOSE 3000
 
 ENV PORT 3000
+
+ENV HOSTNAME="0.0.0.0"
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD [ "wget", "-q0", "http://localhost:3000/health" ]
 
 # CMD ["npm", "run", "dev"]
 # CMD ["sh", "-c", "npm run dev & (while ! nc -z 0.0.0.0 3000; do sleep 1; done) && curl http://0.0.0.0:3000"]

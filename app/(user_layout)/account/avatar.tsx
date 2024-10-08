@@ -51,15 +51,19 @@ const DeleteButton = ({
   </button>
 );
 
-
-
 export const Avatar = ({ url }: AvatarProps) => {
   const [avatarUrl, setAvatarUrl] = useState<AvatarUrl>(url);
   const { register, setValue } = useFormContext();
   const { file, resetFile } = useContext(AvatarContext);
+
+  const isExternalUrl = (url: string) => {
+    return url.startsWith("http") || url.startsWith("https");
+  };
+
   useEffect(() => {
     if (url) {
-      setAvatarUrl(getFullUrl(url));
+      const fullUrl = isExternalUrl(url) ? url : getFullUrl(url);
+      setAvatarUrl(fullUrl);
     }
   }, [url]);
 
@@ -67,7 +71,7 @@ export const Avatar = ({ url }: AvatarProps) => {
     setValue("avatar_url", null);
     setAvatarUrl("");
   };
-
+  
   return (
     <div className="pt-2">
       <div className="avatar placeholder rounded border border-base-300">

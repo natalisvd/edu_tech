@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, createContext } from "react";
+import { useCallback, useEffect, useState, createContext, memo } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, FormProvider } from "react-hook-form";
 import { AccountFormValues as FormValues, AlertProps } from "./types";
@@ -25,7 +25,7 @@ export const AvatarContext = createContext<{
   resetFile: () => void;
 }>({ file: null, resetFile: () => {} });
 
-export default function AccountForm() {
+export default memo(function AccountForm()  {
   const router = useRouter();
   const { user } = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
@@ -34,6 +34,7 @@ export default function AccountForm() {
   const [alert, setAlert] = useState<AlertProps | null>(null);
   const [bufferImage, setBufferImage] = useState<File | null>(null);
 
+
   const methods = useForm<FormValues & AvatarFileProps>({
     defaultValues: initialValues,
     ...values,
@@ -41,19 +42,17 @@ export default function AccountForm() {
 
   useEffect(() => {
     if (!user) return;
-    setValues({
-      ...initialValues,
-      firstName: user?.firstName ?? "",
-      lastName: user?.lastName ?? "",
-      avatar_url: user?.avatarUrl ?? "",
-    });
+    if (user) {
+      const newValues = {
+        ...initialValues,
+        firstName: user.firstName ?? "",
+        lastName: user.lastName ?? "",
+        avatar_url: user.avatarUrl ?? "",
+      };
 
-    methods.reset({
-      ...initialValues,
-      firstName: user?.firstName ?? "",
-      lastName: user?.lastName ?? "",
-      avatar_url: user?.avatarUrl ?? "",
-    });
+      setValues(newValues);
+      methods.reset(newValues);
+    }
   }, [user?.id]);
 
   const {
@@ -204,4 +203,4 @@ export default function AccountForm() {
       </div>
     </FormProvider>
   );
-}
+})

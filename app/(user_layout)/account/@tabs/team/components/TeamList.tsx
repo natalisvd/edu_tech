@@ -2,9 +2,10 @@ import { getFullUrl } from "@/app/helpers/image.helper";
 import { useUser } from "@/app/hooks/auth.hook";
 import { ITeam, IUser } from "@/app/interfaces/interfaces";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import UpdateParticipantsModal from "./UpdateParticipantsModal";
+import { Avatar } from "../../../../account/avatar";
 
 interface TeamCardProps {
   team: ITeam;
@@ -15,10 +16,19 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const user = useUser();
   const isYourTeam = user ? teamLeaderId === user.id : false;
   const [participants, setParticipants] = useState(team.participants);
-
+ 
   const handleUpdateParticipants = (selectedWorkersList: IUser[]) => {
     setParticipants(selectedWorkersList);
   };
+
+
+
+
+  const avatarUrl = team?.teamLeader?.avatarUrl;
+
+  console.log('Raw Avatar URL:', avatarUrl); 
+  
+  const fullAvatarUrl = avatarUrl ? getFullUrl(avatarUrl) : '';
 
   return (
     <div className="bg-gray-100 border border-gray-300 shadow-md rounded-lg p-4 mb-4 flex flex-col gap-4">
@@ -31,13 +41,16 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
         )}
       </div>
       <div className="flex items-center gap-4">
-        <Image
-          src={getFullUrl(team.teamLeader.avatarUrl)}
+
+       {team && <Image
+        src={fullAvatarUrl || ''}
+
           alt="avatar"
           width={114}
           height={114}
           priority
-        />
+          unoptimized
+        /> }
         <div>
           <h3 className="text-lg font-semibold text-gray-900">
             {team.teamLeader.firstName} {team.teamLeader.lastName}
@@ -56,14 +69,14 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
                 className="relative"
                 title={`${participant.firstName} ${participant.lastName}`}
               >
-                <Image
-                  src={getFullUrl(participant.avatarUrl)}
+                 {team && <Image
+                  src={getFullUrl(participant?.avatarUrl) || ''}
                   alt="participant avatar"
                   width={32}
                   height={32}
                   className="w-8 h-8 rounded-full"
-                />
-              </div>
+                />}
+              </div> 
             ))}
           </div>
         </div>

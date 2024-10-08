@@ -12,18 +12,24 @@ const nextConfig = {
       },
       {
         protocol: "http",
-        hostname: "localhost", 
+        hostname: "localhost",
         port: "5000",
-        pathname: "/images/**", 
+        pathname: "/images/**",
       },
       {
         protocol: "https",
-        hostname: "erudyt.net", 
+        hostname: "img.freepik.com",
+      },
+
+      {
+        protocol: "https",
+        hostname: "erudyt.net",
         port: "",
-        pathname: "/wp-content/uploads/**", 
+        pathname: "/wp-content/uploads/**",
       },
     ],
   },
+  reactStrictMode: false,
 };
 
 export default nextConfig;

@@ -53,4 +53,5 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npm run dev & (while ! nc -z 0.0.0.0 3000; do sleep 1; done) && curl http://0.0.0.0:3000"]

@@ -16,16 +16,10 @@ const nextConfig = {
         hostname: "localhost",
         port: "5000",
         pathname: "/images/**",
-<<<<<<< HEAD
       },
       {
         protocol: "https",
         hostname: "img.freepik.com",
-      },
-
-      {
-        protocol: "https",
-=======
       },
       {
         protocol: "http",
@@ -35,7 +29,6 @@ const nextConfig = {
       },
       {
         protocol: "https",
->>>>>>> dev
         hostname: "erudyt.net",
         port: "",
         pathname: "/wp-content/uploads/**",

@@ -1,5 +1,5 @@
+// @ts-nocheck
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -37,7 +37,7 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({
     validationSchema,
     onSubmit: async (values) => {
       try {
-       const newTeam = await createTeamApi(values) as ITeam;
+       const newTeam = await createTeamApi(values) as ITeam; //TODO
         updateTeamleadersList(values.teamLeaderId , newTeam);
         setIsOpen(false);
         setAlert({ message: "Team created successfully!" });

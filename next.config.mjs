@@ -2,19 +2,21 @@
 const nextConfig = {
   // -- To use a remote image with Next <Image /> need to define remote storage in config --
   swcMinify: true,
+  output: "standalone",
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "img.daisyui.com", // -- change the hostname to db storage source
+        hostname: "img.daisyui.com",
         port: "",
-        pathname: "/images/**", // -- edit storage path if it needed
+        pathname: "/images/**",
       },
       {
         protocol: "http",
         hostname: "localhost",
         port: "5000",
         pathname: "/images/**",
+<<<<<<< HEAD
       },
       {
         protocol: "https",
@@ -23,6 +25,17 @@ const nextConfig = {
 
       {
         protocol: "https",
+=======
+      },
+      {
+        protocol: "http",
+        hostname: "app",
+        port: "5000",
+        pathname: "/images/**",
+      },
+      {
+        protocol: "https",
+>>>>>>> dev
         hostname: "erudyt.net",
         port: "",
         pathname: "/wp-content/uploads/**",

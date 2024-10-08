@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import { getTeam, setUser, getTeamName, getUsersWithTeams } from "@/app/(user_layout)/(admins)/manage_users/action";

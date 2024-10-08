@@ -11,6 +11,7 @@ import { Input } from "@/app/components/Input";
 import { FormCard } from "@/app/components/FormCard";
 import { useAppDispatch } from "@/app/store/hooks";
 import { fetchRegistration } from "@/app/store/slices/userSlice";
+import { EmailIcon } from "@/app/components/Icons/EmailIcon";
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
@@ -26,6 +27,8 @@ const SignUp = () => {
 
   const formik = useFormik({
     initialValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -49,12 +52,56 @@ const SignUp = () => {
         </h2>
 
         <Input
+          id="firstName"
+          name="firstName"
+          type="firstName"
+          required
+          placeholder="First Name"
+          icon={<UserIcon className="input-icon w-5 h-5" />}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.firstName}
+          className={
+            formik.touched.firstName && formik.errors.firstName
+              ? "input-error"
+              : ""
+          }
+        />
+        {formik.touched.firstName && formik.errors.firstName ? (
+          <div className="alert alert-error text-xs p-2 rounded">
+            {formik.errors.firstName}
+          </div>
+        ) : null}
+
+        <Input
+          id="lastName"
+          name="lastName"
+          type="lastName"
+          required
+          placeholder="Last Name"
+          icon={<UserIcon className="input-icon w-5 h-5" />}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.lastName}
+          className={
+            formik.touched.lastName && formik.errors.lastName
+              ? "input-error"
+              : ""
+          }
+        />
+        {formik.touched.lastName && formik.errors.lastName ? (
+          <div className="alert alert-error text-xs p-2 rounded">
+            {formik.errors.lastName}
+          </div>
+        ) : null}
+
+        <Input
           id="email"
           name="email"
           type="email"
           required
           placeholder="Email"
-          icon={<UserIcon className="input-icon w-5 h-5" />}
+          icon={<EmailIcon className=" input-icon w-5 h-5" />}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.email}

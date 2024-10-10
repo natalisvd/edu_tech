@@ -18,6 +18,10 @@ const nextConfig = {
         pathname: "/images/**",
       },
       {
+        protocol: "https",
+        hostname: "img.freepik.com",
+      },
+      {
         protocol: "http",
         hostname: "app",
         port: "5000",
@@ -31,6 +35,7 @@ const nextConfig = {
       },
     ],
   },
+  reactStrictMode: false,
 };
 
 export default nextConfig;

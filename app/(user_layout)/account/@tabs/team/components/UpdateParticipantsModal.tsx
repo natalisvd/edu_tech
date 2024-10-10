@@ -109,7 +109,7 @@ const UpdateParticipantsModal: React.FC<UpdateParticipantsModalProps> = ({
       )
     );
   };
-
+console.log('getFullUrl(worker.avatarUrl)', filteredWorkers)
   return (
     <>
       <button
@@ -139,7 +139,7 @@ const UpdateParticipantsModal: React.FC<UpdateParticipantsModalProps> = ({
                     className="flex flex-col items-center gap-2 mb-4"
                   >
                     <Image
-                      src={getFullUrl(worker.avatarUrl)}
+                      src={worker?.avatarUrl ? getFullUrl(worker?.avatarUrl) : "https://www.w3schools.com/howto/img_avatar.png"}
                       alt="avatar"
                       width={60}
                       height={60}

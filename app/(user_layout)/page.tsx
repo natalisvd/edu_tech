@@ -22,7 +22,7 @@ export default function Home() {
               </h1>
               <p className="py-6"></p>
               <Link href="/courses" className="btn btn-active btn-primary">
-                Browse Our Courses
+                Browse Our Courses auto deploy test
               </Link>
             </div>
           </div>

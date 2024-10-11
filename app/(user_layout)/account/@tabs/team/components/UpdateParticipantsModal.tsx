@@ -1,5 +1,6 @@
 "use client";
 import { getAllWorkers, updateUserMultiple } from "@/app/api";
+import { useRouter } from "next/navigation";
 import { IUser } from "@/app/interfaces/interfaces";
 import React, { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
@@ -22,6 +23,7 @@ const UpdateParticipantsModal: React.FC<UpdateParticipantsModalProps> = ({
     new Set()
   );
   const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     if (!isModalOpen) return;
@@ -109,7 +111,7 @@ const UpdateParticipantsModal: React.FC<UpdateParticipantsModalProps> = ({
       )
     );
   };
-console.log('getFullUrl(worker.avatarUrl)', filteredWorkers)
+console.log('filteredWorkers', filteredWorkers)
   return (
     <>
       <button
@@ -136,7 +138,12 @@ console.log('getFullUrl(worker.avatarUrl)', filteredWorkers)
                 {filteredWorkers.map((worker) => (
                   <div
                     key={worker.id}
-                    className="flex flex-col items-center gap-2 mb-4"
+                    className="flex flex-col items-center gap-2 mb-4 cursor-pointer"
+                    onClick={() => {
+                      console.log('worker', worker)
+                      router.push(`/user/${worker?.id}`);
+
+                    }}
                   >
                     <Image
                       src={worker?.avatarUrl ? getFullUrl(worker?.avatarUrl) : "https://www.w3schools.com/howto/img_avatar.png"}

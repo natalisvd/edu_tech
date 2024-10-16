@@ -1,7 +1,7 @@
 'use client'; 
 
 
-import React, { useState, useRef, useMemo, LegacyRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 

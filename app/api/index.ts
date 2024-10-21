@@ -32,6 +32,9 @@ export const getAllWorkers = () => get(`/user/workers`);
 export const updateUserMultiple = (body: IUser[]) =>
   patch("/user/updateUserMultiple", body);
 
+// /* skill */ //
+export const getSkills = () => get("/skill");
+
 // /* teams requests */
 export const getAllTeams = () => get("/team");
 export const createTeamApi = (body: ITeam) => post("/team", body);

@@ -37,7 +37,7 @@ export const getSkills = () => get("/skill");
 
 // /* teams requests */
 export const getAllTeams = () => get("/team");
-export const createTeamApi = (body: ITeam) => post("/team", body);
+export const createTeamApi = (body: Pick<ITeam, "teamName" | "teamLeaderId">) => post("/team", body);
 
 // /* courses requests */
 export const createCourseApi = (body: FormData) => post("/courses", body);

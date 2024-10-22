@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { AccountFormValues as FormValues, AlertProps } from "./types";
 import { Avatar } from "./avatar";
-import { getProfileData, updateProfileData } from "./actions";
 import { resizeImage } from "@/app/helpers/image.helper";
 import { Alert } from "@/app/(routes)/courses/components/Alert/Alert";
 import { IUser } from "@/app/interfaces/interfaces";

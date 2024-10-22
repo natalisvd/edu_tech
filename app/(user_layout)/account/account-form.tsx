@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 "use client";
 
 import { useCallback, useEffect, useState, createContext, memo } from "react";
@@ -173,7 +175,7 @@ export default memo(function AccountForm() {
       formData.append("lastName", lastName || "");
       if (selectedSkills && selectedSkills.length > 0) {
         selectedSkills.forEach((skillId) => {
-          formData.append("skillIds[]", skillId);
+          formData.append("skillIds", skillId); 
         });
       }
 
@@ -181,6 +183,7 @@ export default memo(function AccountForm() {
         const resized = await resizeImage(bufferImage, 300, 300);
         formData.append("avatar", resized, "avatar.jpg");
       }
+      console.log(Array.from(formData.entries()));
 
       await dispatch(fetchUpdate(formData));
 

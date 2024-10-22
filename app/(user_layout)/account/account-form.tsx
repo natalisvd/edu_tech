@@ -246,7 +246,7 @@ export default memo(function AccountForm() {
                 id="skillIds"
                 isMulti
                 options={skills}
-                value={skills[0]}
+           
                 onChange={onSkillsChange}
                 styles={customStylesSelect}
                 classNamePrefix="select"

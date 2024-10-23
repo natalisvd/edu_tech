@@ -170,18 +170,23 @@ export default memo(function AccountForm() {
 
       formData.append("firstName", firstName || "");
       formData.append("lastName", lastName || "");
-      if (selectedSkills && selectedSkills.length > 0) {
-        selectedSkills.forEach((skillId) => {
-          formData.append("skillIds[]", skillId);
-        });
-      }
 
+      formData.append("skillIds", JSON.stringify(selectedSkills));
+      
       if (bufferImage) {
         const resized = await resizeImage(bufferImage, 300, 300);
         formData.append("avatar", resized, "avatar.jpg");
       }
 
-      await dispatch(fetchUpdate(formData));
+      // Формуємо об'єкт з даними з FormData
+const payload: { firstName: string; lastName: string; avatar: File | null, skillIds: any } = {
+  firstName: formData.get("firstName") as string,
+  lastName: formData.get("lastName") as string,
+  avatar: formData.get("avatar") as File | null,
+  skillIds: selectedSkills
+};
+
+      await dispatch(fetchUpdate(payload));
 
       setAlert({ message: "Profile updated!" });
     } catch (error) {
